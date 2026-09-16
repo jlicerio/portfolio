@@ -246,8 +246,8 @@
       "year": "2025",
       "slug": "river-pierce",
       "href": "projects/river-pierce.html",
-      "image": "assets/images/river-pierce-foundation.png",
-      "summary": "Augmented reality showcase. Under construction.",
+      "image": "assets/images/river-pierce-teaching-hands.png",
+      "summary": "Commissioned augmented reality project for River Pierce Foundation's 2025 event program.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -264,12 +264,12 @@
           "height": 930
         }
       ],
-      "description": "Under construction.",
+      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
       "tools": "",
       "links": [
         {
-          "label": "River Pierce Foundation event page",
-          "href": "https://www.riverpierce.org/event-details/split-sketches-a-site-specific-exhibition-and-installation-by-artist-tim-gonchoroff"
+          "label": "The Teaching of the Hands event page",
+          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
         }
       ]
     }
