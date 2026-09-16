@@ -246,7 +246,7 @@
       "year": "2025",
       "slug": "river-pierce",
       "href": "projects/river-pierce.html",
-      "image": "assets/images/river-pierce.jpg",
+      "image": "assets/images/river-pierce-foundation.png",
       "summary": "Augmented reality showcase. Under construction.",
       "tags": [],
       "gallery": [],
@@ -266,7 +266,12 @@
       ],
       "description": "Under construction.",
       "tools": "",
-      "links": []
+      "links": [
+        {
+          "label": "River Pierce Foundation event page",
+          "href": "https://www.riverpierce.org/event-details/split-sketches-a-site-specific-exhibition-and-installation-by-artist-tim-gonchoroff"
+        }
+      ]
     }
   ],
   "contact": {
