@@ -1,0 +1,295 @@
+{
+  "name": "Juan Licerio",
+  "title": "Juan Licerio",
+  "tagline": "Emerging Media and Digital Art",
+  "publicDomain": "juanclicerio.myportfolio.com",
+  "source": "",
+  "nav": [
+    {
+      "id": "work",
+      "label": "Work",
+      "href": "work.html"
+    },
+    {
+      "id": "cv",
+      "label": "CV",
+      "href": "cv.html"
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "href": "contact.html"
+    }
+  ],
+  "bio": "Emerging media and digital art, shaped by architectural design technology and software engineering. The work combines 3D, motion, projection mapping, and XR.",
+  "projects": [
+    {
+      "id": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "slug": "motion",
+      "href": "projects/motion.html",
+      "image": "assets/images/motion.png",
+      "summary": "Personal experiments in motion graphics, abstract form, and procedural animation.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1280
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 900
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1024
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 360,
+          "height": 640
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
+      "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
+      "links": []
+    },
+    {
+      "id": "forget-me-not",
+      "title": "Forget Me Not Exhibition",
+      "year": "2025",
+      "slug": "forget-me-not",
+      "href": "projects/forget-me-not.html",
+      "image": "assets/images/forget-me-not.png",
+      "summary": "Projection mapping and technical integration for an immersive light and video installation.",
+      "tags": [],
+      "gallery": [
+        "assets/images/projects/forget-me-not/01.jpg",
+        "assets/images/projects/forget-me-not/02.png",
+        "assets/images/projects/forget-me-not/03.png",
+        "assets/images/projects/forget-me-not/04.png",
+        "assets/images/projects/forget-me-not/05.png"
+      ],
+      "videos": [],
+      "description": "Provided technical setup and specialized support for this immersive light and video installation by Victoria. My role was projection mapping and technical integration. I was responsible for fitting the artist's video content onto the complex surfaces of the exhibition space, including the bed, walls, and sink.",
+      "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
+      "links": []
+    },
+    {
+      "id": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "slug": "9ine5ive6eis",
+      "href": "projects/9ine5ive6eis.html",
+      "image": "assets/images/9ine5ive6eis.jpg",
+      "summary": "Visual identity, cloud graphic, custom typography, and a motion loop for a limited apparel release.",
+      "tags": [],
+      "gallery": [
+        "assets/images/projects/9ine5ive6eis/01.jpg",
+        "assets/images/projects/9ine5ive6eis/02.jpg",
+        "assets/images/projects/9ine5ive6eis/03.jpg",
+        "assets/images/projects/9ine5ive6eis/04.png",
+        "assets/images/projects/9ine5ive6eis/05.png",
+        "assets/images/projects/9ine5ive6eis/06.png"
+      ],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/DZmtpbNVCa9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 800
+        },
+        {
+          "type": "instagram-reel",
+          "embedUrl": "https://www.instagram.com/reel/C7eBuTOgjdz/embed",
+          "url": "https://www.instagram.com/reel/C7eBuTOgjdz/",
+          "width": 9,
+          "height": 16
+        }
+      ],
+      "description": "This project was an assignment to create the visual identity for a specific release within an ongoing apparel series. My contribution centered on the creation of the cloud graphic and custom typography, which was produced for a limited run on t-shirts and tote bags. I also created the accompanying brand motion graphic loop. This was a collaborative effort, with my work integrating into the final product photography provided by other artists.",
+      "tools": "",
+      "links": [
+        {
+          "label": "Instagram reel",
+          "href": "https://www.instagram.com/reel/C7eBuTOgjdz/"
+        },
+        {
+          "label": "9ine5ive6eis on Instagram",
+          "href": "https://www.instagram.com/9ine5ive6eis/"
+        }
+      ]
+    },
+    {
+      "id": "triqueta",
+      "title": "Triqueta AR/VR Exhibition",
+      "year": "2023",
+      "slug": "triqueta",
+      "href": "projects/triqueta.html",
+      "image": "assets/images/triqueta.jpg",
+      "summary": "AR overlays and a VR experience built around Michael Flanagan's paintings and video works.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/7Myv_Tp3Zb9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1280
+        }
+      ],
+      "description": "Triqueta was a collaborative exhibition project developed for the McAllen Creative Incubator. The project allowed me to develop and experiment with Augmented Reality and Virtual Reality, integrating them with the established artistic practice of filmmaker and artist Michael Flanagan. I focused on the technical development, creating a unique VR experience that incorporated Flanagan's video works, and building AR overlays for his original paintings, which also featured AI-generated elements. This installation explored the intersection of traditional painting, AI, and new media.",
+      "tools": "VR (Unreal), AR, and AI-assisted art. Collaborator: Michael Flanagan.",
+      "links": []
+    },
+    {
+      "id": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "slug": "tigers-blood",
+      "href": "projects/tigers-blood.html",
+      "image": "assets/images/tigers-blood.jpg",
+      "summary": "A commissioned 3D animation of a static 2D logo, finished with metallic textures and analog video effects.",
+      "tags": [],
+      "gallery": [
+        "assets/images/projects/tigers-blood/01.jpg",
+        "assets/images/projects/tigers-blood/02.jpg"
+      ],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/IdbY_pPbY9G/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1080,
+          "height": 1080
+        }
+      ],
+      "description": "Commissioned to create a dynamic digital asset from the client's static 2D logo. The process involved converting the original artwork into a 3D model, then applying a distinct lo-fi chromotype aesthetic with metallic textures and analog video effects. The final animation uses keyframed movement and a subtle glitch/vibration to transform the identity into a bold promotional graphic.",
+      "tools": "3D modeling, texturing, lighting, animation, and compositing",
+      "links": []
+    },
+    {
+      "id": "archived",
+      "title": "Archived Works",
+      "year": "2022",
+      "slug": "archived",
+      "href": "projects/archived.html",
+      "image": "assets/images/archived.jpg",
+      "summary": "Older studies and experiments.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Rv-tfoUQJum/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 1138
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/3oJpfJXneBR/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 1138
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/AQJQ7q8nU52/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 480,
+          "height": 854
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/K_48h_zn--8/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 1138
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/GrQmmTV7QKT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 1138
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/2NyhrUVTu8A/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 640,
+          "height": 1138
+        }
+      ],
+      "description": "",
+      "tools": "",
+      "links": []
+    },
+    {
+      "id": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "slug": "river-pierce",
+      "href": "projects/river-pierce.html",
+      "image": "assets/images/river-pierce.jpg",
+      "summary": "Augmented reality showcase. Under construction.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1536,
+          "height": 916
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1798,
+          "height": 930
+        }
+      ],
+      "description": "Under construction.",
+      "tools": "",
+      "links": []
+    }
+  ],
+  "contact": {
+    "note": "",
+    "links": []
+  },
+  "cv": {
+    "focus": [
+      "Emerging Media and Digital Art",
+      "Architectural Design Technology",
+      "Software Engineering",
+      "3D Art and Animation",
+      "Projection Mapping",
+      "XR / AR / VR"
+    ],
+    "selectedWork": [
+      "Motion (2022)",
+      "Forget Me Not Exhibition \u2014 Technical Setup (2025)",
+      "9ine5ive6eis (2023)",
+      "Triqueta AR/VR Exhibition (2023)",
+      "Tigers Blood (2023)",
+      "River Pierce Foundation AR Showcase (2025)"
+    ]
+  },
+  "bioDetails": []
+}
