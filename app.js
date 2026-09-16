@@ -91,7 +91,7 @@ function renderProject(site) {
 
 async function init() {
   setupTheme();
-  const response = await fetch(`${root}data/site.json`);
+  const response = await fetch(`${root}data/site.json?v=2`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Portfolio data request failed: ${response.status}`);
   const site = await response.json();
   if (page === 'home') renderHome(site);
