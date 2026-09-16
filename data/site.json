@@ -30,12 +30,12 @@
       "slug": "hypergraphia",
       "href": "projects/hypergraphia.html",
       "image": "assets/images/hypergraphia.svg",
-      "summary": "A media-art studio practice connecting art, engineering, and place through immersive systems.",
+      "summary": "A media-art and film studio practice connecting art, engineering, and place through immersive systems.",
       "tags": ["studio", "media art", "creative technology"],
       "gallery": [],
       "videos": [],
-      "description": "Hypergraphia Studio connects art, engineering, and place through immersive AV, LED, projection, XR, and public storytelling. The practice moves from first sketch to final signal through creative direction, system design, content, installation, documentation, and care.",
-      "tools": "Creative direction, AV integration, LED, projection, AR/VR, system design, documentation",
+      "description": "Hypergraphia Studio connects art, engineering, and film through immersive AV, LED, projection, XR, and public storytelling. The practice moves from first idea to final signal through story development, creative direction, system design, production, installation, documentation, and care.",
+      "tools": "Story development, film, creative direction, AV integration, LED, projection, AR/VR, system design, documentation",
       "links": [
         {
           "label": "Open Hypergraphia Studio",
