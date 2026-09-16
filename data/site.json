@@ -24,6 +24,30 @@
   "bio": "Emerging media and digital art, shaped by architectural design technology and software engineering. The work combines 3D, motion, projection mapping, and XR.",
   "projects": [
     {
+      "id": "hypergraphia",
+      "title": "Hypergraphia Studio",
+      "year": "2026",
+      "slug": "hypergraphia",
+      "href": "projects/hypergraphia.html",
+      "image": "assets/images/hypergraphia.svg",
+      "summary": "A media-art studio practice connecting art, engineering, and place through immersive systems.",
+      "tags": ["studio", "media art", "creative technology"],
+      "gallery": [],
+      "videos": [],
+      "description": "Hypergraphia Studio connects art, engineering, and place through immersive AV, LED, projection, XR, and public storytelling. The practice moves from first sketch to final signal through creative direction, system design, content, installation, documentation, and care.",
+      "tools": "Creative direction, AV integration, LED, projection, AR/VR, system design, documentation",
+      "links": [
+        {
+          "label": "Open Hypergraphia Studio",
+          "href": "https://jlicerio.github.io/hypergraphia-studio/"
+        },
+        {
+          "label": "Hypergraphia work",
+          "href": "https://jlicerio.github.io/hypergraphia-studio/index.html#work"
+        }
+      ]
+    },
+    {
       "id": "motion",
       "title": "Motion",
       "year": "2022",
@@ -288,6 +312,7 @@
       "XR / AR / VR"
     ],
     "selectedWork": [
+      "Hypergraphia Studio (2026)",
       "Motion (2022)",
       "Forget Me Not Exhibition \u2014 Technical Setup (2025)",
       "9ine5ive6eis (2023)",
