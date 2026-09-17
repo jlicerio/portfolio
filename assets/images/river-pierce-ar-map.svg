@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">River Pierce AR Map</title>
+  <desc id="desc">A black and white map-inspired cover with a flowing river line and location markers.</desc>
+  <rect width="1200" height="760" fill="#0b0b0b"/>
+  <g stroke="#242424" stroke-width="2" opacity=".8">
+    <path d="M0 125h1200M0 250h1200M0 375h1200M0 500h1200M0 625h1200"/>
+    <path d="M150 0v760M300 0v760M450 0v760M600 0v760M750 0v760M900 0v760M1050 0v760"/>
+  </g>
+  <path d="M120 60C310 170 220 280 430 350S640 300 760 430s130 180 320 250" fill="none" stroke="#e6e2d7" stroke-width="32" opacity=".95"/>
+  <path d="M120 60C310 170 220 280 430 350S640 300 760 430s130 180 320 250" fill="none" stroke="#c9f2e9" stroke-width="12"/>
+  <g fill="#ff4b5c" stroke="#0b0b0b" stroke-width="8">
+    <circle cx="302" cy="230" r="18"/><circle cx="512" cy="343" r="18"/><circle cx="768" cy="438" r="18"/><circle cx="962" cy="590" r="18"/>
+  </g>
+  <text x="72" y="160" fill="#f4f4f0" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700" letter-spacing="5">RIVER PIERCE</text>
+  <text x="78" y="215" fill="#c9f2e9" font-family="Arial, Helvetica, sans-serif" font-size="24" letter-spacing="7">AR MAP / PLACE + STORY</text>
+  <text x="78" y="660" fill="#f4f4f0" font-family="monospace" font-size="18" letter-spacing="4">LOCATIONS / MEDIA / PUBLIC HERITAGE</text>
+  <text x="78" y="708" fill="#ff4b5c" font-family="monospace" font-size="16" letter-spacing="3">PROTOTYPE · SOUTH TEXAS</text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">RGVXR public heritage AR platform</title>
+  <desc id="desc">A black and white technical cover with a cyan coordinate grid and a red location marker.</desc>
+  <rect width="1200" height="760" fill="#0b0b0b"/>
+  <g stroke="#1b3c45" stroke-width="1" opacity=".8">
+    <path d="M0 120h1200M0 240h1200M0 360h1200M0 480h1200M0 600h1200"/>
+    <path d="M120 0v760M240 0v760M360 0v760M480 0v760M600 0v760M720 0v760M840 0v760M960 0v760M1080 0v760"/>
+  </g>
+  <g fill="none" stroke="#55d6e6" stroke-width="3" opacity=".9">
+    <circle cx="870" cy="260" r="150"/>
+    <circle cx="870" cy="260" r="92"/>
+    <circle cx="870" cy="260" r="34"/>
+    <path d="M870 84v352M694 260h352"/>
+  </g>
+  <path d="M870 218c-29 0-52 23-52 52 0 39 52 96 52 96s52-57 52-96c0-29-23-52-52-52Z" fill="#ff4b5c"/>
+  <circle cx="870" cy="270" r="17" fill="#0b0b0b"/>
+  <text x="72" y="180" fill="#f4f4f0" font-family="Arial, Helvetica, sans-serif" font-size="118" font-weight="700" letter-spacing="8">RGVXR</text>
+  <text x="78" y="242" fill="#55d6e6" font-family="Arial, Helvetica, sans-serif" font-size="25" letter-spacing="7">PUBLIC HERITAGE AR PLATFORM</text>
+  <text x="78" y="632" fill="#f4f4f0" font-family="monospace" font-size="18" letter-spacing="4">GPS / IMAGE RECOGNITION / 3D OBJECTS / REVIEW</text>
+  <text x="78" y="682" fill="#ff4b5c" font-family="monospace" font-size="16" letter-spacing="3">PROTOTYPE · RIO GRANDE VALLEY</text>
+</svg>
