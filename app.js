@@ -30,18 +30,22 @@ function projectRow(project) {
   return `<a class="work-row" href="${localUrl(project.href)}"><span class="work-thumb"><img src="${localUrl(project.image)}" alt=""></span><span class="work-row-copy"><span class="work-row-title">${escapeHtml(project.title)}</span><span class="work-row-summary">${escapeHtml(project.summary)}</span></span><span class="work-row-year">${escapeHtml(project.year)} <b>↗</b></span></a>`;
 }
 
+function visibleProjects(site) {
+  return site.projects.filter(project => !project.archived);
+}
+
 function renderHome(site) {
   const name = document.querySelector('[data-name]');
   const bio = document.querySelector('[data-bio]');
   const projects = document.querySelector('[data-home-projects]');
   if (name) name.textContent = site.name;
   if (bio) bio.textContent = site.bio;
-  if (projects) projects.innerHTML = site.projects.map(projectRow).join('');
+  if (projects) projects.innerHTML = visibleProjects(site).map(projectRow).join('');
 }
 
 function renderWork(site) {
   const list = document.querySelector('[data-work-projects]');
-  if (list) list.innerHTML = site.projects.map(projectRow).join('');
+  if (list) list.innerHTML = visibleProjects(site).map(projectRow).join('');
 }
 
 function renderCv(site) {
