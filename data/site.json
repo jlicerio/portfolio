@@ -21,7 +21,7 @@
       "href": "contact.html"
     }
   ],
-  "bio": "Emerging media and digital art across 3D, motion, projection mapping, and XR. Software engineering drives the process. A background in architectural design technology informs selected projects.",
+  "bio": "Emerging media and digital art across 3D, motion, projection mapping, and XR. Software engineering drives the process.",
   "projects": [
     {
       "id": "hypergraphia",
@@ -352,7 +352,6 @@
   "cv": {
     "focus": [
       "Emerging Media and Digital Art",
-      "Architectural Design Technology",
       "Software Engineering",
       "3D Art and Animation",
       "Projection Mapping",
