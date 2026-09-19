@@ -24,77 +24,6 @@
   "bio": "A multidisciplinary practice across emerging media and digital art: 3D, motion, projection mapping, and XR. Software engineering drives the process.",
   "projects": [
     {
-      "id": "hypergraphia",
-      "title": "Hypergraphia Studio",
-      "year": "2026",
-      "slug": "hypergraphia",
-      "href": "projects/hypergraphia.html",
-      "image": "assets/images/hypergraphia.svg",
-      "archived": true,
-      "summary": "A multidisciplinary studio practice connecting art, design, computer science, engineering, film, and place through immersive systems.",
-      "tags": ["studio", "media art", "creative technology"],
-      "gallery": [],
-      "videos": [],
-      "description": "Hypergraphia Studio is a multidisciplinary practice connecting art, design, computer science, engineering, film, and place through immersive AV, LED, projection, XR, and public storytelling. The practice moves from first idea to final signal through research, story development, design, code, production, installation, documentation, and care.",
-      "tools": "Research, design, computer science, story development, film, creative direction, AV integration, LED, projection, AR/VR, system design, documentation",
-      "links": [
-        {
-          "label": "Open Hypergraphia Studio",
-          "href": "https://jlicerio.github.io/hypergraphia-studio/"
-        },
-        {
-          "label": "Hypergraphia work",
-          "href": "https://jlicerio.github.io/hypergraphia-studio/index.html#work"
-        }
-      ]
-    },
-    {
-      "id": "rgvxr",
-      "title": "RGVXR Public Heritage AR Platform",
-      "year": "2025–2026",
-      "slug": "rgvxr",
-      "href": "projects/rgvxr.html",
-      "image": "assets/images/rgvxr.svg",
-      "archived": true,
-      "summary": "An open-source AR platform for location-based heritage stories, scanned objects, and community-reviewed experiences.",
-      "tags": ["XR", "public heritage", "software"],
-      "gallery": [],
-      "videos": [],
-      "description": "RGVXR is a prototype platform for public-facing augmented reality. It combines GPS and image recognition, 3D object viewing, Gaussian-splat experiments, and a submission and review workflow. The repository includes heritage-oriented project records and a configurable browser viewer. This page presents the platform as a technical prototype, not a completed public installation.",
-      "tools": "Node.js, Express, model-viewer, A-Frame, AR.js, MindAR, WebXR, Three.js, Gaussian splats, GPS",
-      "links": [
-        {
-          "label": "RGVXR on GitHub",
-          "href": "https://github.com/jlicerio/RGVXR"
-        }
-      ]
-    },
-    {
-      "id": "river-pierce-ar-map",
-      "title": "River Pierce AR Map",
-      "year": "2025",
-      "slug": "river-pierce-ar-map",
-      "href": "projects/river-pierce-ar-map.html",
-      "image": "assets/images/river-pierce-ar-map.svg",
-      "archived": true,
-      "summary": "A map-based AR prototype connecting River Pierce stories, locations, and event media.",
-      "tags": ["AR", "mapping", "public heritage"],
-      "gallery": [],
-      "videos": [],
-      "description": "River Pierce AR Map is a place-based web prototype for public stories and event locations. It combines map content, location records, and media assets as an early model for heritage-focused AR interpretation. The project provides a place layer that complements RGVXR's object and experience platform.",
-      "tools": "JavaScript, Express, Mapbox, geospatial data, AR prototyping, web mapping",
-      "links": [
-        {
-          "label": "River Pierce AR Map on GitHub",
-          "href": "https://github.com/jlicerio/rparmap"
-        },
-        {
-          "label": "River Pierce event context",
-          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
-        }
-      ]
-    },
-    {
       "id": "motion",
       "title": "Motion",
       "year": "2022",
@@ -358,9 +287,6 @@
       "XR / AR / VR"
     ],
     "selectedWork": [
-      "Hypergraphia Studio (2026)",
-      "RGVXR Public Heritage AR Platform (2025–2026)",
-      "River Pierce AR Map (2025)",
       "Motion (2022)",
       "Forget Me Not Exhibition \u2014 Technical Setup (2025)",
       "9ine5ive6eis (2023)",
