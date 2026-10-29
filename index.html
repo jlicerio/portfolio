@@ -28,6 +28,7 @@
         <span class="world-title" id="world-title">Warp and Weft</span>
         <span class="world-medium" id="world-medium">WebGPU</span>
         <span class="world-nav">
+          <button type="button" id="world-pause" aria-label="Pause rotation" aria-pressed="false">❚❚</button>
           <button type="button" id="world-prev" aria-label="Previous study">←</button>
           <button type="button" id="world-next" aria-label="Next study">→</button>
         </span>
@@ -104,6 +105,13 @@
 
   document.querySelector('#world-next').addEventListener('click', () => show(active + 1));
   document.querySelector('#world-prev').addEventListener('click', () => show(active - 1));
+  const pauseButton = document.querySelector('#world-pause');
+  pauseButton.addEventListener('click', () => {
+    paused = !paused;
+    pauseButton.setAttribute('aria-pressed', String(paused));
+    pauseButton.setAttribute('aria-label', paused ? 'Play rotation' : 'Pause rotation');
+    pauseButton.textContent = paused ? '▶' : '❚❚';
+  });
   host.addEventListener('mouseenter', () => { paused = true; });
   host.addEventListener('mouseleave', () => { paused = false; });
   document.addEventListener('keydown', (event) => {
