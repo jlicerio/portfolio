@@ -24,6 +24,23 @@
   "bio": "A multidisciplinary practice across emerging media and digital art: 3D, motion, projection mapping, and XR. Procedural design shapes the work.",
   "projects": [
     {
+      "id": "warp-and-weft",
+      "title": "Warp and Weft",
+      "year": "2026",
+      "summary": "A real-time WebGPU meadow cut into a checker, with one white chair as the only object.",
+      "description": "A field of grass blades is mown into a checker and one plastic chair stands on a dark square. Three hundred thousand blades bend in the wind in real time, and the pointer parts them. Built in WebGPU with a film pass for halation, grain, and vignette.",
+      "tools": "WebGPU, WGSL, GLB",
+      "href": "projects/warp-and-weft.html",
+      "image": "assets/images/warp-and-weft.svg",
+      "archived": false,
+      "links": [
+        {
+          "label": "Open full screen",
+          "href": "https://jlicerio.github.io/portfolio/projects/warp-and-weft.html"
+        }
+      ]
+    },
+    {
       "id": "motion",
       "title": "Motion",
       "year": "2022",
@@ -264,7 +281,7 @@
           "height": 930
         }
       ],
-      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
+      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Trevi\u00f1o\u2013Uribe Rancho in San Ygnacio, Texas.",
       "tools": "",
       "links": [
         {
