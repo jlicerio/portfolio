@@ -27,3 +27,64 @@
 @media (max-width: 700px) {
   .live-stage { aspect-ratio: 3 / 4; max-height: 70svh; }
 }
+
+/* Home hero: rotating worlds */
+.cover--worlds { position: relative; overflow: hidden; }
+.cover--worlds .worlds { position: absolute; inset: 0; z-index: 0; background: #05070a; }
+.cover--worlds .world-embed {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0; opacity: 0; display: none;
+  transition: opacity .85s ease;
+}
+.cover--worlds .world-embed[data-active="true"] { opacity: 1; }
+.cover--worlds .scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(7,8,10,.92) 0%, rgba(7,8,10,.62) 24%, rgba(7,8,10,.22) 48%, rgba(7,8,10,0) 68%),
+    linear-gradient(0deg, rgba(7,8,10,.97) 0%, rgba(7,8,10,.72) 14%, rgba(7,8,10,.28) 26%, rgba(7,8,10,0) 40%);
+}
+.cover--worlds .cover-stack { position: relative; z-index: 2; width: 100%; }
+.world-row {
+  display: flex; align-items: center; gap: 18px;
+  margin-top: 30px;
+  font: 11px/1.6 'DM Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.world-row .world-title { color: var(--ink); }
+.world-row .world-medium { opacity: .7; }
+.world-row .world-nav { margin-left: auto; display: flex; gap: 8px; }
+.world-row button {
+  width: 32px; height: 26px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.world-row button:hover, .world-row button:focus-visible {
+  color: var(--ink); border-color: var(--ink); outline: none;
+}
+.world-progress {
+  display: block; height: 1px; margin-top: 14px;
+  background: rgba(242, 240, 236, .12);
+  overflow: hidden;
+}
+.world-progress span {
+  display: block; height: 100%;
+  background: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+@media (max-width: 700px) {
+  .cover--worlds .scrim {
+    background: linear-gradient(0deg, rgba(7,8,10,.96) 0%, rgba(7,8,10,.9) 46%, rgba(7,8,10,.34) 78%, rgba(7,8,10,.2) 100%);
+  }
+  .world-row { gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover--worlds .world-embed { transition: none; }
+}
