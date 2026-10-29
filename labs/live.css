@@ -1,0 +1,29 @@
+.project-live { border-top: 1px solid var(--line); padding: 25px 0 90px; }
+.live-stage {
+  position: relative;
+  margin-top: 26px;
+  background: #050d06;
+  box-shadow: inset 0 0 0 1px var(--line);
+  aspect-ratio: 4 / 5;
+  max-height: 86svh;
+  width: 100%;
+  overflow: hidden;
+}
+.live-stage canvas { display: block; width: 100%; height: 100%; }
+.live-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 12px;
+  color: var(--muted);
+  font: 11px 'DM Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.live-foot [data-error="true"] { color: #c25a3a; }
+@media (min-width: 900px) {
+  .live-stage { width: min(56ch, 62svh); }
+}
+@media (max-width: 700px) {
+  .live-stage { aspect-ratio: 3 / 4; max-height: 70svh; }
+}
