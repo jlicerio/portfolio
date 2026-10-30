@@ -1,7 +1,7 @@
 # Labs
 
-Live studies that run in the browser on WebGPU.
-Each study is one page beside a shared engine.
+Live studies that run in the browser. Three use WebGPU; Viscous Orb uses WebGL2 for its fluid
+feedback solver. Each study is one page beside a shared engine.
 
 ## Layout
 
@@ -16,6 +16,7 @@ Each study is one page beside a shared engine.
 | warp-and-weft.html | Study 01, linked from Work. |
 | isolines.html | Study 02. |
 | strata.html | Study 03. |
+| viscous-orb.html | Study 04. WebGL2 fluid and dither veil. |
 
 ## Add a study
 

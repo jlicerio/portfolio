@@ -41,6 +41,23 @@
       ]
     },
     {
+      "id": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "summary": "A fluid orb with a living dye trail, spectral rim, and a moving dither veil.",
+      "description": "A single glowing sphere holds a real-time fluid surface. Pointer motion and an invisible mover push velocity and dye through the field, and the surface settles after each pass. The veil turns the moving liquid into coarse Bayer pixels. The rim stays analytic, and no tiled texture is sampled in the reflection.",
+      "tools": "WebGL2, GLSL, Three.js",
+      "href": "projects/viscous-orb.html",
+      "image": "assets/images/viscous-orb.svg",
+      "archived": false,
+      "links": [
+        {
+          "label": "Open study",
+          "href": "https://jlicerio.github.io/portfolio/labs/embed/viscous-orb.html"
+        }
+      ]
+    },
+    {
       "id": "motion",
       "title": "Motion",
       "year": "2022",
