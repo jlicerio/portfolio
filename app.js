@@ -31,7 +31,19 @@ function projectRow(project) {
 }
 
 function visibleProjects(site) {
-  return site.projects.filter(project => !project.archived);
+  return site.projects.filter(project => !project.archived && project.id !== 'archived');
+}
+
+function workRow(project, index) {
+  const discipline = String(project.tools || '').split(',')[0].trim() || '—';
+  const number = String(index + 1).padStart(2, '0');
+  return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
+    <span class="work-index-number">${number}</span>
+    <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
+    <span class="work-index-discipline">${escapeHtml(discipline)}</span>
+    <span class="work-index-year">${escapeHtml(project.year)}</span>
+    <span class="work-index-preview" aria-hidden="true"><img src="${escapeHtml(localUrl(project.image))}" alt="" loading="lazy" decoding="async"></span>
+  </a></li>`;
 }
 
 function renderHome(site) {
@@ -45,7 +57,7 @@ function renderHome(site) {
 
 function renderWork(site) {
   const list = document.querySelector('[data-work-projects]');
-  if (list) list.innerHTML = visibleProjects(site).map(projectRow).join('');
+  if (list) list.innerHTML = visibleProjects(site).map(workRow).join('');
 }
 
 function renderCv(site) {
@@ -103,6 +115,7 @@ function renderCaseStudy(project) {
 
   const list = (items = []) => items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const credits = (items = []) => items.map(item => `<dt>${escapeHtml(item.role)}</dt><dd>${escapeHtml(item.name)}</dd>`).join('');
+  const figures = (items = []) => items.map((image, index) => `<figure><img src="${localUrl(image.src)}" alt="${escapeHtml(image.alt)}" loading="lazy" decoding="async"><figcaption><span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(image.caption || '')}</figcaption></figure>`).join('');
   const section = document.createElement('section');
   section.className = 'project-case';
   section.innerHTML = `
@@ -112,7 +125,8 @@ function renderCaseStudy(project) {
       <div class="case-block"><h2>Process</h2><ol>${list(study.process)}</ol></div>
       <div class="case-block"><h2>Result</h2><ul>${list(study.result)}</ul></div>
       <div class="case-block"><h2>Credits</h2><dl>${credits(study.credits)}</dl></div>
-    </div>`;
+    </div>
+    ${study.images?.length ? `<div class="case-gallery">${figures(study.images)}</div>` : ''}`;
   anchor.after(section);
 }
 

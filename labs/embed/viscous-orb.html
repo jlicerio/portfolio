@@ -29,10 +29,14 @@ const stillMode = query.has('still');
 const ditherMode = query.get('dither') || 'veil';
 const fixedTime = query.has('t') ? Number(query.get('t')) : null;
 const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+const studyMode = stillMode ? 'still' : reduceMotion ? 'reduced' : demoMode ? 'demo' : 'auto';
 
 const MAX_DPR = 1.5;
 const MAX_WIDTH = 1728;
-const pixelRatio = () => Math.max(0.75, Math.min(window.devicePixelRatio || 1, MAX_DPR, MAX_WIDTH / Math.max(window.innerWidth, 1)));
+const pixelRatio = () => Math.min(
+  Math.max(0.75, Math.min(window.devicePixelRatio || 1, MAX_DPR)),
+  MAX_WIDTH / Math.max(window.innerWidth, 1)
+);
 
 const PARAMS = {
   trigger: 'Hover',
@@ -68,6 +72,45 @@ renderer.toneMapping = THREE.NoToneMapping;
 document.body.appendChild(renderer.domElement);
 
 const canvas = renderer.domElement;
+const study = {
+  ready: false,
+  frames: 0,
+  fps: 0,
+  error: null,
+  mode: studyMode,
+  canvas: { width: canvas.width, height: canvas.height },
+  paused: false
+};
+window.__study = study;
+
+let sampledFrames = 0;
+let sampledAt = performance.now();
+let renderPaused = false;
+let renderRunning = false;
+let canvasInView = true;
+
+function failStudy(reason) {
+  const message = reason instanceof Error ? reason.message : String(reason);
+  if (study.error === null) study.error = message;
+  study.ready = false;
+  stopLoop();
+}
+
+function publishStudy(now) {
+  const elapsedMs = now - sampledAt;
+  if (elapsedMs >= 1000) {
+    study.fps = Math.round(((study.frames - sampledFrames) * 1000 / elapsedMs) * 10) / 10;
+    sampledFrames = study.frames;
+    sampledAt = now;
+  }
+  study.mode = studyMode;
+  study.canvas.width = canvas.width;
+  study.canvas.height = canvas.height;
+  study.paused = renderPaused;
+}
+
+window.addEventListener('error', (event) => failStudy(event.error || event.message));
+window.addEventListener('unhandledrejection', (event) => failStudy(event.reason));
 const quadScene = new THREE.Scene();
 const quadCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 const quadGeometry = new THREE.BufferGeometry();
@@ -916,10 +959,12 @@ function resize() {
   renderer.setPixelRatio(pixelRatio());
   renderer.setSize(width, height);
   const aspect = width / Math.max(height, 1);
+  const orbRadius = Math.min(0.42 * aspect, 0.31);
+  const orbDiameterDevice = orbRadius * 2 * canvas.height;
   displayMat.uniforms.uResolution.value.set(width, height);
   displayMat.uniforms.uAspect.value = aspect;
-  displayMat.uniforms.uOrbRadius.value = Math.min(0.415 * aspect, 0.31);
-  compositeMat.uniforms.uCellPx.value = 3 * renderer.getPixelRatio();
+  displayMat.uniforms.uOrbRadius.value = orbRadius;
+  compositeMat.uniforms.uCellPx.value = Math.max(1, orbDiameterDevice / 360);
   compositeMat.uniforms.uResolution.value.set(canvas.width, canvas.height);
   compositeMat.uniforms.uAspect.value = aspect;
   compositeMat.uniforms.uOrbRadius.value = displayMat.uniforms.uOrbRadius.value;
@@ -938,7 +983,7 @@ const ambient = { x: 0.5, y: 0.5, px: 0.5, py: 0.5, ready: false };
 window.__FLUID__ = { renderer, sim, PARAMS };
 
 function updateAmbient(now, dt) {
-  if (stillMode || demoMode || now - lastHumanInput < 1200) {
+  if (stillMode || reduceMotion || demoMode || now - lastHumanInput < 1200) {
     ambient.ready = false;
     return;
   }
@@ -968,63 +1013,102 @@ function updateAmbient(now, dt) {
   splat(ambient.px, ambient.py, ambient.x, ambient.y, dx * simSize.x * f, dy * simSize.y * f);
 }
 
-renderer.setAnimationLoop(() => {
-  const now = performance.now();
-  const dt = stillMode || reduceMotion ? 0 : Math.min(Math.max((now - lastTime) / 1000, 1 / 240), 1 / 30);
-  lastTime = now;
-  elapsed += dt;
+function renderFrame() {
+  try {
+    const now = performance.now();
+    const dt = stillMode ? 0 : Math.min(Math.max((now - lastTime) / 1000, 1 / 240), 1 / 30);
+    lastTime = now;
+    elapsed += dt;
 
-  if (demoMode && !stillMode) {
-    pointer.inside = true;
-    pointer.ready = true;
-    pointer.tx = 0.5 + Math.cos(elapsed * 0.9) * 0.18;
-    pointer.ty = 0.5 + Math.sin(elapsed * 1.2) * 0.15;
+    if (demoMode && !stillMode && !reduceMotion) {
+      pointer.inside = true;
+      pointer.ready = true;
+      pointer.tx = 0.5 + Math.cos(elapsed * 0.9) * 0.18;
+      pointer.ty = 0.5 + Math.sin(elapsed * 1.2) * 0.15;
+    }
+
+    if (dt > 0) {
+      updatePointer(dt);
+      if (!reduceMotion) updateAmbient(now, dt);
+      stepFluid(dt);
+    }
+
+    const visualTime = reduceMotion || stillMode ? (fixedTime ?? 0) : elapsed;
+    displayMat.uniforms.uDisplacement.value = sim.displacement.read.texture;
+    displayMat.uniforms.uDye.value = sim.dye.read.texture;
+    displayMat.uniforms.uVelocity.value = sim.velocity.read.texture;
+    displayMat.uniforms.uTime.value = visualTime;
+    compositeMat.uniforms.uTime.value = visualTime;
+
+    blit(displayMat, sceneTarget);
+
+    brightMat.uniforms.uScene.value = sceneTarget.texture;
+    blit(brightMat, bloomTargetA);
+
+    blurMat.uniforms.uTexture.value = bloomTargetA.texture;
+    blurMat.uniforms.uDirection.value.set(1, 0);
+    blurMat.uniforms.uRadius.value = 1.35;
+    blit(blurMat, bloomTargetB);
+
+    blurMat.uniforms.uTexture.value = bloomTargetB.texture;
+    blurMat.uniforms.uDirection.value.set(0, 1);
+    blit(blurMat, bloomTargetA);
+
+    blurMat.uniforms.uTexture.value = bloomTargetA.texture;
+    blurMat.uniforms.uDirection.value.set(1, 0);
+    blurMat.uniforms.uRadius.value = 2.8;
+    blit(blurMat, bloomTargetB);
+
+    blurMat.uniforms.uTexture.value = bloomTargetB.texture;
+    blurMat.uniforms.uDirection.value.set(0, 1);
+    blit(blurMat, bloomTargetA);
+
+    ditherMat.uniforms.uTime.value = visualTime;
+    blit(ditherMat, ditherTarget);
+
+    compositeMat.uniforms.uScene.value = sceneTarget.texture;
+    compositeMat.uniforms.uBloom.value = bloomTargetA.texture;
+    compositeMat.uniforms.uDye.value = sim.dye.read.texture;
+    compositeMat.uniforms.uVelocity.value = sim.velocity.read.texture;
+    blit(compositeMat, null);
+
+    study.frames += 1;
+    study.ready = true;
+    if (now - sampledAt >= 1000) publishStudy(now);
+  } catch (error) {
+    failStudy(error);
   }
+}
 
-  if (dt > 0) {
-    updatePointer(dt);
-    updateAmbient(now, dt);
-    stepFluid(dt);
-  }
+function startLoop() {
+  if (renderRunning || study.error !== null) return;
+  renderRunning = true;
+  renderPaused = false;
+  lastTime = performance.now();
+  renderer.setAnimationLoop(renderFrame);
+  publishStudy(performance.now());
+}
 
-  displayMat.uniforms.uDisplacement.value = sim.displacement.read.texture;
-  displayMat.uniforms.uDye.value = sim.dye.read.texture;
-  displayMat.uniforms.uVelocity.value = sim.velocity.read.texture;
-  displayMat.uniforms.uTime.value = elapsed;
-  compositeMat.uniforms.uTime.value = elapsed;
+function stopLoop() {
+  if (!renderRunning) return;
+  renderRunning = false;
+  renderPaused = true;
+  renderer.setAnimationLoop(null);
+  publishStudy(performance.now());
+}
 
-  blit(displayMat, sceneTarget);
+function syncLoop() {
+  if (document.hidden || !canvasInView || study.error !== null) stopLoop();
+  else startLoop();
+}
 
-  brightMat.uniforms.uScene.value = sceneTarget.texture;
-  blit(brightMat, bloomTargetA);
-
-  blurMat.uniforms.uTexture.value = bloomTargetA.texture;
-  blurMat.uniforms.uDirection.value.set(1, 0);
-  blurMat.uniforms.uRadius.value = 1.35;
-  blit(blurMat, bloomTargetB);
-
-  blurMat.uniforms.uTexture.value = bloomTargetB.texture;
-  blurMat.uniforms.uDirection.value.set(0, 1);
-  blit(blurMat, bloomTargetA);
-
-  blurMat.uniforms.uTexture.value = bloomTargetA.texture;
-  blurMat.uniforms.uDirection.value.set(1, 0);
-  blurMat.uniforms.uRadius.value = 2.8;
-  blit(blurMat, bloomTargetB);
-
-  blurMat.uniforms.uTexture.value = bloomTargetB.texture;
-  blurMat.uniforms.uDirection.value.set(0, 1);
-  blit(blurMat, bloomTargetA);
-
-  ditherMat.uniforms.uTime.value = elapsed;
-  blit(ditherMat, ditherTarget);
-
-  compositeMat.uniforms.uScene.value = sceneTarget.texture;
-  compositeMat.uniforms.uBloom.value = bloomTargetA.texture;
-  compositeMat.uniforms.uDye.value = sim.dye.read.texture;
-  compositeMat.uniforms.uVelocity.value = sim.velocity.read.texture;
-  blit(compositeMat, null);
-});
+const canvasObserver = new IntersectionObserver(([entry]) => {
+  canvasInView = entry.isIntersecting && entry.intersectionRatio > 0;
+  syncLoop();
+}, { threshold: 0 });
+canvasObserver.observe(canvas);
+document.addEventListener('visibilitychange', syncLoop);
+syncLoop();
 </script>
 </body>
 </html>

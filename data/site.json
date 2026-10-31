@@ -70,6 +70,23 @@
             "role": "Chair model",
             "name": "3D scan"
           }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/warp-and-weft/01.jpg",
+            "alt": "Warp and Weft checker field at desktop width",
+            "caption": "Checker field at 1440 x 900."
+          },
+          {
+            "src": "assets/images/projects/warp-and-weft/02.jpg",
+            "alt": "Warp and Weft at phone width",
+            "caption": "Phone crop at 390 x 844. The chair stays readable."
+          },
+          {
+            "src": "assets/images/projects/warp-and-weft/03.jpg",
+            "alt": "Warp and Weft at portrait width",
+            "caption": "Portrait frame at 1350 x 1800."
+          }
         ]
       }
     },
@@ -100,9 +117,9 @@
           "The portfolio embed sets a 1728 px drawing buffer cap. The study scales the fluid field and the bloom pass to that cap, so the frame rate holds at desktop and phone width."
         ],
         "result": [
-          "60.5 fps at 1350 x 1800 and 60.3 fps at 390 x 844 in headless Chrome 156.",
+          "59.7 fps at 1440 x 900 and 59.4 fps at 390 x 844 in headless Chrome 156.",
           "The portfolio embed caps the drawing buffer at 1728 px.",
-          "Chrome reports no console errors at desktop or phone width.",
+          "Chrome reports no console errors at desktop and phone width.",
           "The still shows the dither veil and the spectral rim. The touch frame shows the dye trail."
         ],
         "credits": [
@@ -117,6 +134,28 @@
           {
             "role": "Renderer",
             "name": "Three.js r170, MIT"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/viscous-orb/01.jpg",
+            "alt": "Viscous Orb at rest with the dither veil active",
+            "caption": "Idle orb at 1350 x 1800. The dye field rests in the lower half."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/02.jpg",
+            "alt": "Viscous Orb after a pointer pass",
+            "caption": "Pointer pass. Velocity and dye move through the surface."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/03.jpg",
+            "alt": "Close view of the Bayer dither veil",
+            "caption": "Veil close-up. The cell size floors at one device pixel."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/04.jpg",
+            "alt": "Viscous Orb with bloom and soft focus",
+            "caption": "Bloom and soft focus at rest. The rim stays analytic."
           }
         ]
       }

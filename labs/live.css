@@ -23,7 +23,7 @@
 }
 .live-foot [data-error="true"] { color: #c25a3a; }
 @media (min-width: 900px) {
-  .live-stage { width: min(56ch, 62svh); }
+  .live-stage { width: 100%; aspect-ratio: 16 / 10; max-height: 82svh; }
 }
 @media (max-width: 700px) {
   .live-stage { aspect-ratio: 3 / 4; max-height: 70svh; }

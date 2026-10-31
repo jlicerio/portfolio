@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          "work.html"
+        ],
+        "createdAt": "2026-10-31T21:19:32.582Z",
+        "reason": "Agent: 0.08em applies only to short uppercase mono nav and index labels in the existing site system"
+      },
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-10-31T21:19:37.482Z",
+        "reason": "Agent: established portfolio typeface in style.css:3; the Work index inherits the existing site system"
+      }
+    ]
+  }
+}
