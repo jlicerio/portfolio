@@ -153,3 +153,8 @@ A jury can reject it because polished effects lack demonstrated originality, rel
 - Who created the chair, and what licence permits its use?
 - Which email address can the site publish?
 - What single artistic concern connects your browser, film, and exhibition work?
+
+## Follow-up
+
+Resolved 31 October 2026: the chair is a 3D scan. The credit now reads "3D scan".
+Open: the public contact address.
