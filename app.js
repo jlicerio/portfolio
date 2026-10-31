@@ -91,6 +91,29 @@ function renderProject(site) {
     linksSection.hidden = false;
     document.querySelector('[data-project-links]').innerHTML = project.links.map(link => `<a href="${externalUrl(link.href)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)} ↗</a>`).join('');
   }
+
+  renderCaseStudy(project);
+}
+
+function renderCaseStudy(project) {
+  const study = project.caseStudy;
+  if (!study?.brief) return;
+  const anchor = document.querySelector('.project-description');
+  if (!anchor) return;
+
+  const list = (items = []) => items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const credits = (items = []) => items.map(item => `<dt>${escapeHtml(item.role)}</dt><dd>${escapeHtml(item.name)}</dd>`).join('');
+  const section = document.createElement('section');
+  section.className = 'project-case';
+  section.innerHTML = `
+    <div class="section-label"><span>CASE STUDY</span><span>${escapeHtml(project.year || '')}</span></div>
+    <div class="case-grid">
+      <div class="case-block"><h2>Brief</h2><p>${escapeHtml(study.brief)}</p></div>
+      <div class="case-block"><h2>Process</h2><ol>${list(study.process)}</ol></div>
+      <div class="case-block"><h2>Result</h2><ul>${list(study.result)}</ul></div>
+      <div class="case-block"><h2>Credits</h2><dl>${credits(study.credits)}</dl></div>
+    </div>`;
+  anchor.after(section);
 }
 
 async function init() {

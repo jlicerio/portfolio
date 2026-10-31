@@ -55,7 +55,35 @@
           "label": "Open study",
           "href": "https://jlicerio.github.io/portfolio/labs/embed/viscous-orb.html"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "A single sphere must hold a real-time fluid interior and keep a clean silhouette. The reflection must show liquid motion, not a repeating texture. The page must hold 60 fps at portrait size.",
+        "process": [
+          "A pointer ray writes velocity and dye into a 256 x 256 simulation field.",
+          "A pressure solve and a vorticity pass move the dye through the surface.",
+          "A Bayer veil reads the dye and clears as the liquid settles.",
+          "Bloom, soft focus, and an analytic rim finish the frame."
+        ],
+        "result": [
+          "60.5 fps at 1350 x 1800 and 60.3 fps at 390 x 844 in headless Chrome 156.",
+          "The portfolio embed caps the drawing buffer at 1728 px.",
+          "Chrome reports no console errors at desktop or phone width."
+        ],
+        "credits": [
+          {
+            "role": "Design and code",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Fluid solver reference",
+            "name": "sabosugi, CodePen (adapted)"
+          },
+          {
+            "role": "Renderer",
+            "name": "Three.js r170, MIT"
+          }
+        ]
+      }
     },
     {
       "id": "motion",
@@ -298,7 +326,7 @@
           "height": 930
         }
       ],
-      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Trevi\u00f1o\u2013Uribe Rancho in San Ygnacio, Texas.",
+      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
       "tools": "",
       "links": [
         {
@@ -322,7 +350,7 @@
     ],
     "selectedWork": [
       "Motion (2022)",
-      "Forget Me Not Exhibition \u2014 Technical Setup (2025)",
+      "Forget Me Not Exhibition — Technical Setup (2025)",
       "9ine5ive6eis (2023)",
       "Triqueta AR/VR Exhibition (2023)",
       "Tigers Blood (2023)",
