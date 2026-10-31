@@ -57,17 +57,20 @@
         }
       ],
       "caseStudy": {
-        "brief": "A single sphere must hold a real-time fluid interior and keep a clean silhouette. The reflection must show liquid motion, not a repeating texture. The page must hold 60 fps at portrait size.",
+        "brief": "A single sphere had to hold a real-time fluid interior and keep a clean silhouette. The earlier build used a tiled caustic texture, and the grid repeated in the reflection. The target was a liquid surface that reacts to a pointer, settles on its own, and holds 60 fps at portrait size. The page also had to run inside a portfolio iframe with a capped drawing buffer.",
         "process": [
-          "A pointer ray writes velocity and dye into a 256 x 256 simulation field.",
-          "A pressure solve and a vorticity pass move the dye through the surface.",
-          "A Bayer veil reads the dye and clears as the liquid settles.",
-          "Bloom, soft focus, and an analytic rim finish the frame."
+          "The study renders one sphere and one full-screen fluid pass. A pointer ray hits the sphere, and the hit point writes velocity and dye into a 256 x 256 field. An invisible mover crosses the orb on a loop, so the surface moves without input.",
+          "A pressure solve and a vorticity pass move the dye through the field. The velocity decays after each pass. The dye carries the colour, and the field returns to rest in about one second.",
+          "The first build sampled a tiled caustic texture. The tiles showed as a grid in the reflection. I removed the texture and drove the reflection from the fluid field. The grid artifact disappeared.",
+          "A Bayer veil reads the dye and turns the moving liquid into coarse pixels. The veil clears as the field settles. A toggle keeps the veil off for clean stills.",
+          "Bloom runs at quarter resolution with two blur passes. Soft focus mixes the blurred frame at 0.42. An analytic rim keeps the silhouette sharp while the interior stays soft.",
+          "The portfolio embed sets a 1728 px drawing buffer cap. The study scales the fluid field and the bloom pass to that cap, so the frame rate holds at desktop and phone width."
         ],
         "result": [
           "60.5 fps at 1350 x 1800 and 60.3 fps at 390 x 844 in headless Chrome 156.",
           "The portfolio embed caps the drawing buffer at 1728 px.",
-          "Chrome reports no console errors at desktop or phone width."
+          "Chrome reports no console errors at desktop or phone width.",
+          "The still shows the dither veil and the spectral rim. The touch frame shows the dye trail."
         ],
         "credits": [
           {

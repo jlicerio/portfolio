@@ -17,6 +17,12 @@ const completeCaseStudy = (study) => {
   return Boolean(study.brief) && steps >= 3 && results >= 2 && credits >= 1;
 };
 
+const caseWords = (study) => {
+  if (!study) return null;
+  const text = [study.brief, ...(study.process || []), ...(study.result || [])].filter(Boolean).join(' ');
+  return text.split(/\s+/).filter(Boolean).length;
+};
+
 const rows = site.projects.map((project) => {
   const reportPath = resolve(root, 'pipeline/reports/' + project.id + '.json');
   const report = existsSync(reportPath) ? JSON.parse(readFileSync(reportPath, 'utf8')) : null;
@@ -38,13 +44,14 @@ const rows = site.projects.map((project) => {
     errors: desktop ? desktop.errors.length : null,
     checked: report?.checkedAt ? report.checkedAt.slice(0, 10) : null,
     caseStudy,
+    words: caseWords(project.caseStudy),
   };
 });
 
-const header = '| Study | Stage | FPS | Errors | Case study | Checked |\n| :--- | :--- | ---: | ---: | :---: | :--- |';
+const header = '| Study | Stage | FPS | Errors | Case study | Words | Checked |\n| :--- | :--- | ---: | ---: | :---: | ---: | :--- |';
 const body = rows
   .filter((row) => !row.archived)
-  .map((row) => '| ' + row.title + ' | ' + row.stage + ' | ' + (row.fps ?? '-') + ' | ' + (row.errors ?? '-') + ' | ' + (row.caseStudy ? 'yes' : 'no') + ' | ' + (row.checked ?? '-') + ' |')
+  .map((row) => '| ' + row.title + ' | ' + row.stage + ' | ' + (row.fps ?? '-') + ' | ' + (row.errors ?? '-') + ' | ' + (row.caseStudy ? 'yes' : 'no') + ' | ' + (row.words ?? '-') + ' | ' + (row.checked ?? '-') + ' |')
   .join('\n');
 
 const counts = rows.filter((row) => !row.archived).reduce((all, row) => {
