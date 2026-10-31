@@ -23,6 +23,7 @@ const minFps = Number(readFlag('min-fps', '50'));
 const settleMs = Number(readFlag('settle', '3500'));
 const sizesArg = readFlag('sizes', 'desktop:1440x900,phone:390x844');
 const fullPage = args.includes('--full');
+const pageMode = args.includes('--page');
 
 if (!slug || !url) {
   console.error('Usage: node pipeline/verify.mjs --slug <slug> --url <url> [--sizes desktop:1440x900,phone:390x844] [--min-fps 50] [--full]');
@@ -292,6 +293,11 @@ try {
       badResponses: [...new Set(badResponses)],
       screenshot: shotPath,
     };
+    const mediaGate = pageMode
+      ? true
+      : Boolean(entry.canvas)
+        && (entry.study ? entry.frames >= 5 : entry.pixelsChanged)
+        && entry.fps >= minFps;
     entry.pass = !entry.bodyError
       && !entry.studyError
       && !entry.navError
@@ -299,9 +305,7 @@ try {
       && entry.errors.length === 0
       && entry.networkErrors.length === 0
       && entry.badResponses.length === 0
-      && Boolean(entry.canvas)
-      && (entry.study ? entry.frames >= 5 : entry.pixelsChanged)
-      && entry.fps >= minFps;
+      && mediaGate;
     report.sizes.push(entry);
   }
 

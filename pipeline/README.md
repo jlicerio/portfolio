@@ -26,6 +26,10 @@ node pipeline/verify.mjs --slug viscous-orb \
   --url http://127.0.0.1:8142/projects/viscous-orb.html \
   --sizes desktop:1440x900,phone:390x844,portrait:1350x1800 --min-fps 55
 
+# Check a page with no canvas (video or static page).
+node pipeline/verify.mjs --slug surveillance-status \
+  --url http://127.0.0.1:8142/projects/surveillance-status.html --page
+
 # Build the status table.
 node pipeline/status.mjs
 ```

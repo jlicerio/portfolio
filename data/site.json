@@ -161,6 +161,116 @@
       }
     },
     {
+      "id": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "summary": "Two public live cameras read by a browser vision model, with a language model writing a line for each tracked object.",
+      "description": "Two public camera feeds, one at the Zócalo in Mexico City and one at Times Square in New York. A browser vision model tracks each person and object, and a small language model writes one line for each. The overlay logs object IDs, position, velocity, and a status panel. The Mexico City cut writes in Spanish; the New York cut writes in English. The overlay is the work: boxes, IDs, velocities, and a line of prose over a live street.",
+      "tools": "MediaPipe, YOLOv8n, Web LLM, live camera",
+      "href": "projects/surveillance-status.html",
+      "image": "assets/images/surveillance-status.jpg",
+      "archived": false,
+      "links": [
+        {
+          "label": "Instagram / Mexico City",
+          "href": "https://www.instagram.com/p/DO32xsEjbGT/"
+        },
+        {
+          "label": "Instagram / New York",
+          "href": "https://www.instagram.com/p/DO3xi58Ddyl/"
+        }
+      ],
+      "caseStudy": {
+        "brief": "Two public squares run through one browser pipeline. The Zócalo in Mexico City and Times Square in New York are already watched by cameras, phones, and algorithms. The piece adds a narrator. A vision model tracks each person and object, and a small language model writes one line for each. The line appears beside the box, in the language of the place. The feed is live, so each pass is a new cut. The overlay is the work: boxes, IDs, velocities, and a line of prose over a live street.",
+        "process": [
+          "A public camera feed runs in the browser. The detector reports 8 fps and 19 tracked objects in the logged frames.",
+          "The vision pass assigns an ID to each person and object. Boxes and labels sit over the feed. The tracker keeps position and velocity for each ID.",
+          "Each label reports class, speed, and distance. The status panel prints the model, frame rate, object count, and a live list of IDs. The panel is part of the image, not a debug view.",
+          "A small language model writes one line for each tracked object. The prompt asks for one sentence in the language of the place. Mexico City writes in Spanish; New York writes in English.",
+          "The line sits beside the box. Long lines wrap; short lines leave space. The overlay stays legible at phone width.",
+          "The piece runs as one take. There is no narration, no cutaway, and no post-production overlay. The text arrives while the crowd moves.",
+          "The web cut is silent. The original post carries a soundtrack."
+        ],
+        "result": [
+          "Two cities, two languages, one pipeline.",
+          "19 tracked objects at 8 fps in the logged frames.",
+          "33.2 s Mexico City; 64.7 s New York.",
+          "The text is generated per object, not scripted per scene.",
+          "Each pass produces a different set of lines."
+        ],
+        "credits": [
+          {
+            "role": "Concept, code, camera pipeline",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Vision",
+            "name": "YOLOv8n (Ultralytics); licence terms apply"
+          },
+          {
+            "role": "Language model",
+            "name": "Small local model"
+          },
+          {
+            "role": "Audio",
+            "name": "Original post soundtrack, removed for the web cut"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/surveillance-status/01.jpg",
+            "alt": "Zócalo feed with boxes on the flag and towers",
+            "caption": "Zócalo, 00:02. Boxes find the flag and the towers."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/02.jpg",
+            "alt": "Zócalo feed with generated Spanish lines",
+            "caption": "Zócalo, 00:08. A line appears beside each tracked object."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/03.jpg",
+            "alt": "Status panel with object IDs",
+            "caption": "Zócalo, 00:14. The panel lists 19 objects at 8 fps."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/04.jpg",
+            "alt": "Spanish lines stacked over the square",
+            "caption": "Zócalo, 00:22. Spanish lines stack over the square."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/05.jpg",
+            "alt": "Last Zócalo pass",
+            "caption": "Zócalo, 00:30. Last pass. The flag keeps its box."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/06.jpg",
+            "alt": "Times Square feed with billboards tracked",
+            "caption": "Times Square, 00:04. Billboards enter the track list."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/07.jpg",
+            "alt": "Times Square feed with generated English lines",
+            "caption": "Times Square, 00:12. Human dreams shape reality."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/08.jpg",
+            "alt": "Crowd in Times Square with tracking boxes",
+            "caption": "Times Square, 00:24. The tracker keeps a list of IDs."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/09.jpg",
+            "alt": "Times Square with quote overlay",
+            "caption": "Times Square, 00:38. Potential awakens the soul's fire."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/10.jpg",
+            "alt": "Last Times Square pass",
+            "caption": "Times Square, 00:55. Last pass. The panel keeps logging."
+          }
+        ]
+      }
+    },
+    {
       "id": "motion",
       "title": "Motion",
       "year": "2022",

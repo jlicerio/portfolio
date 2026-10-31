@@ -6,6 +6,7 @@
 | Warp and Weft | WebGPU meadow | Existing world | Case study done | Review copy |
 | Fluid Ramp | WebGPU MLS-MPM | Wide hero | Built | Hold 30 days |
 | Caustic Volume | WebGL2 caustics | Object study | Built | Rebuild the hand |
+| Surveillance Status | Live cam and browser vision | Video case | Case study done | Review copy |
 
 ## Rules
 
