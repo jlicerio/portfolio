@@ -157,4 +157,4 @@ A jury can reject it because polished effects lack demonstrated originality, rel
 ## Follow-up
 
 Resolved 31 October 2026: the chair is a 3D scan. The credit now reads "3D scan".
-Open: the public contact address.
+Resolved 31 October 2026: the contact page publishes juanclicerio@outlook.com.

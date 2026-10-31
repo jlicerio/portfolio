@@ -412,8 +412,13 @@
     }
   ],
   "contact": {
-    "note": "",
-    "links": []
+    "note": "For commissions, collaborations, and teaching.",
+    "links": [
+      {
+        "label": "Email",
+        "href": "mailto:juanclicerio@outlook.com"
+      }
+    ]
   },
   "cv": {
     "focus": [

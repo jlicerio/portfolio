@@ -51,5 +51,5 @@ flowchart LR
 - Work index: done.
 - Viscous Orb embed: done.
 - Fluid Ramp embed: done, candidate only.
-- Contact route: blocked on the public email.
+- Contact route: done.
 - Installation case: next.
