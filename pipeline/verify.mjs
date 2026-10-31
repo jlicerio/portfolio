@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Verify one study page at fixed viewport sizes.
+// Requires a live canvas, advancing frames, no study error, and clean console.
 // Writes screenshots and a JSON report. Exits 1 when a gate fails.
 
 import { spawn } from 'node:child_process';
@@ -24,7 +25,7 @@ const sizesArg = readFlag('sizes', 'desktop:1440x900,phone:390x844');
 const fullPage = args.includes('--full');
 
 if (!slug || !url) {
-  console.error('Usage: node pipeline/verify.mjs --slug <slug> --url <url> [--sizes desktop:1440x900,phone:390x844] [--min-fps 50]');
+  console.error('Usage: node pipeline/verify.mjs --slug <slug> --url <url> [--sizes desktop:1440x900,phone:390x844] [--min-fps 50] [--full]');
   process.exit(2);
 }
 
@@ -35,8 +36,8 @@ const sizes = sizesArg.split(',').map((entry) => {
 });
 
 const chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const port = 9333;
-const profile = '/tmp/portfolio-verify-profile';
+const port = 9400 + Math.floor(Math.random() * 300);
+const profile = '/tmp/portfolio-verify-' + process.pid;
 
 const chrome = spawn(chromePath, [
   '--headless=new',
@@ -49,10 +50,10 @@ const chrome = spawn(chromePath, [
   'about:blank',
 ], { stdio: 'ignore' });
 
-const sleep = (ms) => new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
 async function waitForEndpoint() {
-  for (let attempt = 0; attempt < 60; attempt += 1) {
+  for (let attempt = 0; attempt < 80; attempt += 1) {
     try {
       const response = await fetch('http://127.0.0.1:' + port + '/json/version');
       if (response.ok) return response.json();
@@ -73,12 +74,21 @@ function connect(wsUrl) {
     if (message.id && pending.has(message.id)) {
       const item = pending.get(message.id);
       pending.delete(message.id);
+      clearTimeout(item.timer);
       if (message.error) item.reject(new Error(JSON.stringify(message.error)));
       else item.resolve(message.result);
       return;
     }
     const handler = listeners.get(message.method);
     if (handler) handler(message.params);
+  };
+
+  socket.onclose = () => {
+    for (const item of pending.values()) {
+      clearTimeout(item.timer);
+      item.reject(new Error('DevTools connection closed'));
+    }
+    pending.clear();
   };
 
   const ready = new Promise((resolveOpen, rejectOpen) => {
@@ -88,10 +98,14 @@ function connect(wsUrl) {
 
   return {
     ready,
-    send(method, params = {}) {
+    send(method, params = {}, timeout = 15000) {
       return new Promise((resolveSend, rejectSend) => {
         const id = ++nextId;
-        pending.set(id, { resolve: resolveSend, reject: rejectSend });
+        const timer = setTimeout(() => {
+          pending.delete(id);
+          rejectSend(new Error('DevTools timeout: ' + method));
+        }, timeout);
+        pending.set(id, { resolve: resolveSend, reject: rejectSend, timer });
         socket.send(JSON.stringify({ id, method, params }));
       });
     },
@@ -103,6 +117,14 @@ function connect(wsUrl) {
     },
   };
 }
+
+const readStudy = `(() => {
+  const frame = document.querySelector('iframe');
+  const inner = frame && frame.contentWindow;
+  return (window.__study || (inner && inner.__study) || null);
+})()`;
+
+const readyExpression = '(() => { const s = ' + readStudy + '; return s ? Boolean(s.ready) : null; })()';
 
 const report = {
   slug,
@@ -124,6 +146,8 @@ try {
 
   const consoleErrors = [];
   const networkErrors = [];
+  const badResponses = [];
+  let navError = null;
 
   client.on('Runtime.consoleAPICalled', (params) => {
     if (params.type !== 'error') return;
@@ -133,14 +157,19 @@ try {
     consoleErrors.push(params.exceptionDetails?.exception?.description || params.exceptionDetails?.text || 'exception');
   });
   client.on('Log.entryAdded', (params) => {
-    if (params.entry.level === 'error') {
-      if ((params.entry.url || '').endsWith('/favicon.ico')) return;
-      const source = params.entry.url ? ' ' + params.entry.url : '';
-      consoleErrors.push(params.entry.text + source);
-    }
+    if (params.entry.level !== 'error') return;
+    if ((params.entry.url || '').endsWith('/favicon.ico')) return;
+    consoleErrors.push(params.entry.text + (params.entry.url ? ' ' + params.entry.url : ''));
   });
   client.on('Network.loadingFailed', (params) => {
-    if (!params.canceled) networkErrors.push(params.errorText);
+    if (params.canceled) return;
+    networkErrors.push(params.errorText);
+  });
+  client.on('Network.responseReceived', (params) => {
+    const response = params.response;
+    if (response.status < 400) return;
+    if (response.url.endsWith('/favicon.ico')) return;
+    badResponses.push(response.status + ' ' + response.url);
   });
 
   await client.send('Page.enable');
@@ -151,6 +180,8 @@ try {
   for (const size of sizes) {
     consoleErrors.length = 0;
     networkErrors.length = 0;
+    badResponses.length = 0;
+    navError = null;
 
     await client.send('Emulation.setDeviceMetricsOverride', {
       width: size.width,
@@ -159,88 +190,123 @@ try {
       mobile: size.name === 'phone',
     });
 
-    await client.send('Page.navigate', { url });
+    const navigation = await client.send('Page.navigate', { url });
+    if (navigation.errorText) navError = navigation.errorText;
     await sleep(settleMs);
 
-    for (let attempt = 0; attempt < 40; attempt += 1) {
+    let ready = null;
+    let readyTimedOut = false;
+    for (let attempt = 0; attempt < 60; attempt += 1) {
       const state = await client.send('Runtime.evaluate', {
-        expression: 'window.__study ? Boolean(window.__study.ready) : true',
+        expression: readyExpression,
         returnByValue: true,
       });
-      if (state.result.value) break;
+      ready = state.result.value;
+      if (ready === null || ready === true) break;
       await sleep(500);
+      if (attempt === 59) readyTimedOut = true;
     }
 
     const measured = await client.send('Runtime.evaluate', {
       expression: `(async () => {
-        const study = window.__study ? { ...window.__study } : null;
-        let fps = study?.fps || 0;
-        if (!fps) {
-          fps = await new Promise((done) => {
-            let frames = 0;
-            const start = performance.now();
-            const timer = setTimeout(() => done(0), 4000);
-            const tick = (now) => {
-              frames += 1;
-              if (now - start < 1500) requestAnimationFrame(tick);
-              else {
-                clearTimeout(timer);
-                done(frames / ((now - start) / 1000));
-              }
-            };
-            requestAnimationFrame(tick);
-          });
-        }
-        const canvas = document.querySelector('canvas');
+        const frame = document.querySelector('canvas')
+          || document.querySelector('iframe')?.contentDocument?.querySelector('canvas');
+        const study = window.__study
+          || document.querySelector('iframe')?.contentWindow?.__study
+          || null;
+        const start = performance.now();
+        const first = study ? study.frames : null;
+        let raf = 0;
+        await new Promise((done) => {
+          const timer = setTimeout(done, 5000);
+          const tick = () => {
+            raf += 1;
+            if (performance.now() - start < 1500) requestAnimationFrame(tick);
+            else {
+              clearTimeout(timer);
+              done();
+            }
+          };
+          requestAnimationFrame(tick);
+        });
+        const elapsed = (performance.now() - start) / 1000;
+        const last = study ? study.frames : null;
+        const frames = first !== null && last !== null ? last - first : raf;
         return {
-          fps: Math.round(fps * 10) / 10,
-          canvas: canvas ? { width: canvas.width, height: canvas.height } : null,
+          fps: Math.round((frames / elapsed) * 10) / 10,
+          frames,
+          elapsed: Math.round(elapsed * 100) / 100,
+          canvas: frame ? { width: frame.width, height: frame.height } : null,
+          study: study ? { ...study } : null,
           bodyError: document.body.dataset.error === 'true',
-          study,
           title: document.title,
         };
       })()`,
       awaitPromise: true,
       returnByValue: true,
+      timeout: 20000,
     });
 
     let clip;
+    const probeA = await client.send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+    await sleep(600);
+    const probeB = await client.send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+    const pixelsChanged = probeA.data !== probeB.data;
+
     if (fullPage) {
       await client.send('Runtime.evaluate', { expression: 'window.scrollTo(0, document.body.scrollHeight)' });
       await sleep(1500);
       await client.send('Runtime.evaluate', { expression: 'window.scrollTo(0, 0)' });
       const metrics = await client.send('Page.getLayoutMetrics');
-      const height = Math.ceil(metrics.cssContentSize.height);
-      clip = { x: 0, y: 0, width: size.width, height, scale: 1 };
+      clip = { x: 0, y: 0, width: size.width, height: Math.ceil(metrics.cssContentSize.height), scale: 1 };
     }
     const shot = await client.send('Page.captureScreenshot', {
       format: 'png',
       fromSurface: true,
       captureBeyondViewport: fullPage,
       ...(clip ? { clip } : {}),
-    });
+    }, 30000);
+
     const shotPath = 'pipeline/reports/' + slug + '/' + size.name + '.png';
     mkdirSync(resolve(root, 'pipeline/reports/' + slug), { recursive: true });
     writeFileSync(resolve(root, shotPath), Buffer.from(shot.data, 'base64'));
 
     const value = measured.result.value;
+    const errors = [...new Set(consoleErrors)];
+    const studyError = value.study?.error || null;
     const entry = {
       ...size,
       fps: value.fps,
+      frames: value.frames,
       canvas: value.canvas,
       study: value.study,
       title: value.title,
       bodyError: value.bodyError,
-      errors: [...new Set(consoleErrors)],
+      studyError,
+      ready,
+      readyTimedOut,
+      navError,
+      pixelsChanged,
+      errors,
       networkErrors: [...new Set(networkErrors)],
+      badResponses: [...new Set(badResponses)],
       screenshot: shotPath,
     };
-    entry.pass = !entry.bodyError && entry.errors.length === 0 && entry.fps >= minFps;
+    entry.pass = !entry.bodyError
+      && !entry.studyError
+      && !entry.navError
+      && !entry.readyTimedOut
+      && entry.errors.length === 0
+      && entry.networkErrors.length === 0
+      && entry.badResponses.length === 0
+      && Boolean(entry.canvas)
+      && (entry.study ? entry.frames >= 5 : entry.pixelsChanged)
+      && entry.fps >= minFps;
     report.sizes.push(entry);
   }
 
   client.close();
-  report.pass = report.sizes.every((size) => size.pass);
+  report.pass = report.sizes.length > 0 && report.sizes.every((size) => size.pass);
 } catch (error) {
   report.error = error.message;
 } finally {
@@ -248,11 +314,11 @@ try {
 }
 
 mkdirSync(resolve(root, 'pipeline/reports'), { recursive: true });
-const reportPath = resolve(root, 'pipeline/reports/' + slug + '.json');
-writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+writeFileSync(resolve(root, 'pipeline/reports/' + slug + '.json'), JSON.stringify(report, null, 2) + '\n');
 
 for (const size of report.sizes) {
-  console.log(size.name + ' ' + size.width + 'x' + size.height + '  fps ' + size.fps + '  errors ' + size.errors.length + '  ' + (size.pass ? 'pass' : 'FAIL'));
+  const issues = size.errors.length + size.networkErrors.length + size.badResponses.length;
+  console.log(size.name + ' ' + size.width + 'x' + size.height + '  fps ' + size.fps + '  frames ' + size.frames + '  issues ' + issues + '  ' + (size.pass ? 'pass' : 'FAIL'));
 }
 if (report.error) console.error(report.error);
 console.log(report.pass ? 'PASS' : 'FAIL');

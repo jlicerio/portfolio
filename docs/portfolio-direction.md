@@ -16,15 +16,17 @@ Add one case study template. Use it for every project.
 | Signal | Benchmark | Current site |
 | :--- | :--- | :--- |
 | Work items on the index | 6 to 19 | 9 |
-| Case study length | 306 to 1123 words | 120 words |
+| Case study length | 306 to 1123 words | 309 and 325 words |
 | Images per case | 4 to 20 | 1 cover |
-| Labeled case sections | 2 to 8 | 0 |
+| Labeled case sections | 4 to 8 | 4 |
 | Top-level nav items | 3 to 4 | 3 |
-| Display type | 72 to 264 px | 160 px |
+| Display type | 72 to 264 px | 96 px |
 | Body type | 14 to 18 px | 18 px |
 | Label type | 10 to 13 px | 11 px |
 | Motion systems | one scroll, one cursor, one transition | four world loops |
 | Sound | off by default | none |
+
+The reference column records observations. It is not a target. The direction is a preference, not a measured rule.
 
 ## Case study shape
 
@@ -48,7 +50,7 @@ Use posters for every video.
 | Study | Medium | Role | Stage |
 | :--- | :--- | :--- | :--- |
 | Viscous Orb | WebGL2 fluid | Entry world | Case study written |
-| Fluid Ramp | WebGPU MLS-MPM | Wide hero | Study built |
+| Fluid Ramp | WebGPU MLS-MPM | Wide hero | Built; 56.8 fps measured 30 Oct 2026 |
 | Caustic Volume | WebGL2 caustics | Object study | Study built |
 | Warp and Weft | WebGPU meadow | Existing world | Case study missing |
 
@@ -68,6 +70,6 @@ flowchart LR
 
 ## Next three moves
 
-1. Write the Warp and Weft case study. It already has a live embed and a cover.
-2. Add Fluid Ramp as the fifth world. It fills the hero width and holds 56.8 fps.
+1. Write one installation case study. Use Forget Me Not and its venue evidence.
+2. Hold Fluid Ramp for 30 days. Prove the practice before adding a fifth world.
 3. Record a 30 second reel. Use three cuts: hook, main, long.
