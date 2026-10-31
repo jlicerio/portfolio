@@ -162,24 +162,41 @@ try {
     await client.send('Page.navigate', { url });
     await sleep(settleMs);
 
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      const state = await client.send('Runtime.evaluate', {
+        expression: 'window.__study ? Boolean(window.__study.ready) : true',
+        returnByValue: true,
+      });
+      if (state.result.value) break;
+      await sleep(500);
+    }
+
     const measured = await client.send('Runtime.evaluate', {
       expression: `(async () => {
-        const fps = await new Promise((done) => {
-          let frames = 0;
-          const start = performance.now();
-          const tick = (now) => {
-            frames += 1;
-            if (now - start < 1500) requestAnimationFrame(tick);
-            else done(frames / ((now - start) / 1000));
-          };
-          requestAnimationFrame(tick);
-        });
+        const study = window.__study ? { ...window.__study } : null;
+        let fps = study?.fps || 0;
+        if (!fps) {
+          fps = await new Promise((done) => {
+            let frames = 0;
+            const start = performance.now();
+            const timer = setTimeout(() => done(0), 4000);
+            const tick = (now) => {
+              frames += 1;
+              if (now - start < 1500) requestAnimationFrame(tick);
+              else {
+                clearTimeout(timer);
+                done(frames / ((now - start) / 1000));
+              }
+            };
+            requestAnimationFrame(tick);
+          });
+        }
         const canvas = document.querySelector('canvas');
         return {
           fps: Math.round(fps * 10) / 10,
           canvas: canvas ? { width: canvas.width, height: canvas.height } : null,
           bodyError: document.body.dataset.error === 'true',
-          study: window.__study ? { ...window.__study } : null,
+          study,
           title: document.title,
         };
       })()`,
