@@ -37,11 +37,13 @@
 <div class="wrap">
   <header>
     <h1>Series runner</h1>
-    <div class="meta"><b>Biomorphic series</b><br>one base form · 5 operators · 3 bounds</div>
+    <div class="meta"><b>Biomorphic series</b><br>2 base forms · 6 operators · bounds in JSON</div>
   </header>
 
   <div class="controls">
     <button type="button" id="reroll">Reroll · seed <b id="seed">114</b></button>
+    <button type="button" data-form="diatom" aria-pressed="true">Diatom</button>
+    <button type="button" data-form="blob" aria-pressed="false">Blob</button>
     <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
     <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
     <button type="button" id="reset">Clear kept</button>
@@ -58,6 +60,7 @@
 <script>
 window.__study = { ready: false, frames: 0, error: null, draws: 0, kept: 0 };
 
+const TAU = Math.PI * 2;
 const BAYER2 = [[0, 2], [3, 1]];
 const BAYER4 = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
 const BAYER8 = (() => {
@@ -78,22 +81,29 @@ const pick = (random, spec) => {
   return Math.round(raw / step) * step;
 };
 
-const state = { config: null, seed: 114, mode: 'dither', kept: new Set(), draws: [] };
+const state = { config: null, seed: 114, mode: 'dither', form: 'diatom', kept: new Set(), draws: [] };
 
 async function load() {
   const response = await fetch('../../data/series/biomorphic.json', { cache: 'no-store' });
   state.config = await response.json();
-  state.seed = Number(new URLSearchParams(location.search).get('seed')) || state.config.seed;
+  const params = new URLSearchParams(location.search);
+  state.seed = Number(params.get('seed')) || state.config.seed;
+  state.form = params.get('form') || state.config.defaultForm || 'blob';
+  for (const button of document.querySelectorAll('[data-form]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.form === state.form));
+  }
   build();
 }
 
 function paramsFor(index) {
   const random = rng(state.seed * 1000 + index * 7919);
   const config = state.config;
+  const form = config.forms[state.form];
+  const base = {};
+  for (const [name, spec] of Object.entries(form.params)) base[name] = pick(random, spec);
   return {
-    harmonics: pick(random, config.base.harmonics),
-    amplitude: pick(random, config.base.amplitude),
-    secondary: pick(random, config.base.secondary),
+    form: state.form,
+    base,
     turn: pick(random, config.operators.turn),
     mirror: pick(random, config.operators.mirror),
     scale: pick(random, config.operators.scale),
@@ -116,63 +126,144 @@ function canvas2d(canvas) {
   return { ctx, w: rect.width, h: rect.height };
 }
 
+function drawValve(ctx, base, localR, colour, ox, oy) {
+  ctx.save();
+  ctx.translate(ox, oy);
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = colour;
+  ctx.lineWidth = Math.max(0.8, localR * 0.014);
+  ctx.globalAlpha = 0.9;
+
+  for (let ring = 0; ring < base.rings; ring += 1) {
+    const rim = (ring + 1) / base.rings;
+    ctx.beginPath();
+    for (let s = 0; s <= 240; s += 1) {
+      const a = (s / 240) * TAU;
+      const raw = Math.sin(base.folds * a + ring * base.ringTurn + rim * base.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), base.sharpness);
+      const r = rim * (1 + base.depth * shaped) * localR;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  const last = base.rings - 1;
+  const inner = (1 / base.rings) * 0.35;
+  for (let i = 0; i < base.folds; i += 1) {
+    const a = (Math.PI / 2 + TAU * i - last * base.ringTurn) / base.folds;
+    ctx.beginPath();
+    for (let s = 0; s <= 24; s += 1) {
+      const t = inner + (s / 24) * (1 - inner);
+      const raw = Math.sin(base.folds * a + last * base.ringTurn + t * base.rings * base.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), base.sharpness);
+      const r = t * (1 + base.depth * shaped) * localR;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
 function render(canvas, params, t) {
   const { ctx, w, h } = canvas2d(canvas);
   ctx.fillStyle = '#07080a';
   ctx.fillRect(0, 0, w, h);
 
   const size = Math.min(w, h);
-  const cx = w / 2;
-  const cy = h / 2;
-  const R = size * 0.3 * params.scale;
+  const R = size * 0.42 * params.scale;
   const matrices = { 2: BAYER2, 4: BAYER4, 8: BAYER8 };
   const matrix = matrices[params.dither] || BAYER4;
   const order = matrix.length;
-  const step = Math.max(2, Math.round(size / 96));
+  const step = Math.max(2, Math.round(size / 78));
   const colours = params.palette;
 
   ctx.save();
-  ctx.translate(cx, cy);
+  ctx.translate(w / 2, h / 2);
   ctx.rotate((params.turn * Math.PI) / 180);
   if (params.mirror) ctx.scale(-1, 1);
   ctx.transform(1, 0, Math.tan((params.shear * Math.PI) / 180), 1, 0, 0);
 
-  const localR = Math.max(12, R / params.field);
+  const localR = Math.max(14, R / params.field);
+  const base = params.base;
+
   for (let fy = 0; fy < params.field; fy += 1) {
     for (let fx = 0; fx < params.field; fx += 1) {
       const ox = (fx - (params.field - 1) / 2) * localR * 2.15;
       const oy = (fy - (params.field - 1) / 2) * localR * 2.15;
+
       for (let y = -localR; y < localR; y += step) {
         for (let x = -localR; x < localR; x += step) {
-          const d = Math.hypot(x, y) / localR;
-          if (d > 1) continue;
-          const a = Math.atan2(y, x);
-          const wobble = 1 + params.amplitude * Math.sin(params.harmonics * a + params.phase + t * 0.0004)
-            + params.secondary * Math.sin((params.harmonics + 2) * a - params.phase);
-          if (d > wobble) continue;
-          const light = Math.max(0.04, 1 - d / wobble);
+          const u = x / localR;
+          const v = y / localR;
+          const d = Math.hypot(u, v);
+          const a = Math.atan2(v, u);
+          let inside = false;
+          let light = 0;
+
+          if (params.form === 'diatom') {
+            // Multi-fold valve: rings, each folded folds times, each ring
+            // turned against the one below, the fold running through both.
+            if (d < 1.02) {
+              const rings = base.rings;
+              const ringF = Math.min(d, 0.9999) * rings;
+              const ring = Math.floor(ringF);
+              const rim = (ring + 1) / rings;
+              const raw = Math.sin(base.folds * a + ring * base.ringTurn + ringF * base.ringTurn * 0.8);
+              const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), base.sharpness);
+              const radius = rim * (1 + base.depth * shaped);
+              if (d < radius) {
+                inside = true;
+                const band = 0.5 + 0.5 * shaped;
+                const edge = Math.abs(d - radius) / Math.max(1e-4, radius * 0.02);
+                light = Math.min(0.85, band * (0.25 + 0.6 * (1 - d / radius)) + (edge < 1 ? 0.3 : 0));
+                if (base.pores > 0 && band > 0.82) {
+                  const pore = Math.sin(base.folds * 2.2 * a + ring * 3.7) * Math.cos(base.folds * 1.4 * a - ringF);
+                  if (pore > 1 - base.pores * 0.3) light *= 0.2;
+                }
+              }
+            }
+          } else {
+            const wobble = 1 + base.amplitude * Math.sin(base.harmonics * a + params.phase + t * 0.0004)
+              + base.secondary * Math.sin((base.harmonics + 2) * a - params.phase);
+            if (d < wobble) {
+              inside = true;
+              light = Math.max(0.04, 1 - d / wobble);
+            }
+          }
+
+          if (!inside) continue;
+
           const px = x + ox;
           const py = y + oy;
           const gx = Math.round((px + size) / step) % order;
           const gy = Math.round((py + size) / step) % order;
-          const threshold = matrix[(gy + order) % order][(gx + order) % order];
-          if (light > threshold) {
-            const colour = colours[(gx + gy) % 2];
-            if (params.ascii > 0.01 && ((gx + gy) % 3 === 0)) {
-              ctx.fillStyle = colour;
-              ctx.font = `${Math.ceil(step * 2.1)}px 'DM Mono', ui-monospace, monospace`;
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))], px, py);
-            } else {
-              ctx.fillStyle = colour;
-              ctx.fillRect(px, py, step, step);
-            }
+          if (light <= matrix[(gy + order) % order][(gx + order) % order]) continue;
+
+          const colour = colours[(gx + gy) % 2];
+          if (params.ascii > 0.01 && ((gx + gy) % 3 === 0)) {
+            ctx.fillStyle = colour;
+            ctx.font = `${Math.ceil(step * 2.1)}px 'DM Mono', ui-monospace, monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))], px, py);
+          } else {
+            ctx.fillStyle = colour;
+            ctx.fillRect(px, py, step, step);
           }
         }
       }
+
+      if (params.form === 'diatom') {
+        drawValve(ctx, base, localR, colours[0], ox, oy);
+      }
     }
   }
+
   ctx.restore();
 }
 
@@ -190,7 +281,9 @@ function build() {
     cell.innerHTML = `<canvas></canvas>
       <span class="idx">DRAW ${String(i + 1).padStart(2, '0')}</span>
       <button class="keep" type="button">KEEP</button>
-      <span class="ops"><b>${params.harmonics}H</b> · amp ${params.amplitude.toFixed(2)} · turn ${params.turn}° · ${params.mirror ? 'mirror' : 'direct'} · field ${params.field} · ${params.dither}×${params.dither}</span>`;
+      <span class="ops">${params.form === 'diatom'
+        ? `<b>${params.base.folds}F</b> · ${params.base.rings}R · depth ${params.base.depth.toFixed(2)} · sharp ${params.base.sharpness.toFixed(1)} · pore ${params.base.pores.toFixed(2)}`
+        : `<b>${params.base.harmonics}H</b> · amp ${params.base.amplitude.toFixed(2)} · 2nd ${params.base.secondary.toFixed(2)}`} · turn ${params.turn}° · ${params.mirror ? 'mirror' : 'direct'} · field ${params.field} · ${params.dither}×${params.dither}</span>`;
     grid.appendChild(cell);
 
     const canvas = cell.querySelector('canvas');
@@ -244,6 +337,15 @@ document.getElementById('reset').addEventListener('click', () => {
   state.kept.clear();
   refresh();
 });
+for (const button of document.querySelectorAll('[data-form]')) {
+  button.addEventListener('click', () => {
+    state.form = button.dataset.form;
+    for (const other of document.querySelectorAll('[data-form]')) {
+      other.setAttribute('aria-pressed', String(other === button));
+    }
+    build();
+  });
+}
 for (const button of document.querySelectorAll('[data-mode]')) {
   button.addEventListener('click', () => {
     state.mode = button.dataset.mode;

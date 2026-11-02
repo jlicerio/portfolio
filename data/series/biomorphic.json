@@ -1,13 +1,29 @@
 {
   "id": "biomorphic-series",
   "title": "Biomorphic series",
-  "note": "One base form, five operators, bounded ranges. The seed picks inside the bounds; it never sets them.",
+  "note": "One operator list, two base forms. The seed picks inside the bounds; it never sets them.",
   "draws": 6,
-  "base": {
-    "family": "blob",
-    "harmonics": { "min": 2, "max": 6, "step": 1 },
-    "amplitude": { "min": 0.04, "max": 0.2, "step": 0.01 },
-    "secondary": { "min": 0.02, "max": 0.09, "step": 0.01 }
+  "defaultForm": "diatom",
+  "forms": {
+    "blob": {
+      "label": "Blob",
+      "params": {
+        "harmonics": { "min": 2, "max": 6, "step": 1 },
+        "amplitude": { "min": 0.04, "max": 0.2, "step": 0.01 },
+        "secondary": { "min": 0.02, "max": 0.09, "step": 0.01 }
+      }
+    },
+    "diatom": {
+      "label": "Diatom",
+      "params": {
+        "folds": { "min": 10, "max": 30, "step": 2 },
+        "rings": { "min": 2, "max": 5, "step": 1 },
+        "depth": { "min": 0.05, "max": 0.18, "step": 0.01 },
+        "sharpness": { "min": 0.7, "max": 2.6, "step": 0.1 },
+        "ringTurn": { "min": 0, "max": 2, "step": 0.25 },
+        "pores": { "min": 0, "max": 1, "step": 0.25 }
+      }
+    }
   },
   "operators": {
     "turn": { "values": [0, 90, 180, 270] },
