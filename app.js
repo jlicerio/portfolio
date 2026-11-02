@@ -35,7 +35,7 @@ function visibleProjects(site) {
 }
 
 function workRow(project, index) {
-  const discipline = String(project.tools || '').split(',')[0].trim() || '—';
+  const discipline = String(project.discipline || String(project.tools || '').split(',')[0].trim() || '—');
   const number = String(index + 1).padStart(2, '0');
   return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
     <span class="work-index-number">${number}</span>
@@ -52,7 +52,7 @@ function renderHome(site) {
   const projects = document.querySelector('[data-home-projects]');
   if (name) name.textContent = site.name;
   if (bio) bio.textContent = site.bio;
-  if (projects) projects.innerHTML = visibleProjects(site).map(projectRow).join('');
+  if (projects) projects.innerHTML = visibleProjects(site).slice(0, 6).map(projectRow).join('');
 }
 
 function renderWork(site) {
@@ -76,14 +76,14 @@ function renderProject(site) {
   document.querySelector('[data-project-summary]').textContent = project.summary;
   document.querySelector('[data-project-description]').textContent = project.description || 'Project details are being prepared.';
   const tools = document.querySelector('[data-project-tools]');
-  if (project.tools) tools.textContent = `TOOLS / ${project.tools}`;
-  else tools.remove();
+  if (project.tools && tools) tools.textContent = `TOOLS / ${project.tools}`;
+  else tools?.remove();
   const cover = document.querySelector('[data-project-cover]');
   if (project.image) cover.innerHTML = `<img src="${localUrl(project.image)}" alt="${escapeHtml(project.title)} project cover">`;
-  else cover.remove();
+  else cover?.remove();
 
   const mediaSection = document.querySelector('[data-project-media-section]');
-  if (project.videos?.length) {
+  if (mediaSection && project.videos?.length) {
     mediaSection.hidden = false;
     document.querySelector('[data-project-media]').innerHTML = project.videos.map((media, index) => {
       const href = externalUrl(media.url || media.embedUrl);
@@ -93,7 +93,7 @@ function renderProject(site) {
   }
 
   const gallerySection = document.querySelector('[data-project-gallery-section]');
-  if (project.gallery?.length) {
+  if (gallerySection && project.gallery?.length) {
     gallerySection.hidden = false;
     document.querySelector('[data-project-gallery]').innerHTML = project.gallery.map((image, index) => `<figure><img src="${localUrl(image)}" alt="${escapeHtml(project.title)} documentation image ${index + 1}" loading="lazy"></figure>`).join('');
   }

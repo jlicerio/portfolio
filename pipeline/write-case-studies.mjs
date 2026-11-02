@@ -1,0 +1,288 @@
+#!/usr/bin/env node
+// One pass: write the case-study block for the seven queued studies.
+// Every claim below traces to data/site.json, the project assets, or a source opened at build time.
+
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = resolve(here, '..');
+const file = resolve(root, 'data/site.json');
+const site = JSON.parse(readFileSync(file, 'utf8'));
+
+const img = (path) => path;
+const studies = {
+  'forget-me-not': {
+    year: '2025',
+    summary: 'Projection mapping and technical integration for Victoria\'s solo exhibition, across a bed, a wall, a sink, and a window blind.',
+    image: 'assets/images/projects/forget-me-not/hero.jpg',
+    cover: 'img',
+    caseStudy: {
+      brief: "Victoria's solo exhibition Forget Me Not: Layers of Identity, Memory, & Intention puts projected video on furniture instead of screens. My part was projection mapping and technical integration. The room had to read as one continuous atmosphere, with the bed, a wall, the sink, and a window blind each holding its own loop. The work also had to sit in a dark gallery and hold for the length of the opening.",
+      process: [
+        "Victoria supplied the video content. The first pass matched each loop to the surface it would land on: the bed, the wall, the sink, and the blind.",
+        "Surfaces were mapped in MadMapper. The bed and the sink are not flat, so each mask was drawn on site against the real object rather than from a plan.",
+        "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could be restarted without disturbing the rest of the room.",
+        "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
+        "The blind carries an orange figure at full height. The vertical strips in that image come from the blind itself, not from the video, which sets the scale.",
+        "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
+        "A playback check ran before opening: every clip, its in point, and its surface."
+      ],
+      result: [
+        "Four surfaces carry projection: bed, wall, sink, and window blind.",
+        "Five installation stills survive in the project file. Four are used here at 206 KB in total.",
+        "The page is 2.7 KB of HTML and renders the case from one data entry.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Artist', name: 'Victoria' },
+        { role: 'Projection mapping and technical integration', name: 'Juan Licerio' },
+        { role: 'Software', name: 'Resolume Arena, MadMapper' },
+        { role: 'Press cover', name: 'Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
+        { role: 'Installation stills', name: 'Photographer unconfirmed' },
+        { role: 'Venue and dates', name: 'Unconfirmed' }
+      ],
+      images: [
+        { src: img('assets/images/projects/forget-me-not/hero.jpg'), alt: 'A bed with a blue flora loop projected onto the sheet', caption: 'Bed with a blue flora loop. The sheet is the surface.' },
+        { src: img('assets/images/projects/forget-me-not/process.jpg'), alt: 'A sink with projection spilling onto the wall and floor', caption: 'Sink scene: wall, floor, and basin in one map.' },
+        { src: img('assets/images/projects/forget-me-not/detail.jpg'), alt: 'A window blind carrying an orange figure at full height', caption: 'Window blind with an orange figure at full height.' },
+        { src: img('assets/images/projects/forget-me-not/press.jpg'), alt: 'Trucha press cover for the Forget Me Not exhibition', caption: 'Trucha press cover for the show.' }
+      ]
+    }
+  },
+
+  triqueta: {
+    year: '2023',
+    summary: 'AR overlays on Michael Flanagan\'s paintings and a VR scene built from his video works, developed for the McAllen Creative Incubator.',
+    image: 'assets/images/projects/triqueta/hero.jpg',
+    caseStudy: {
+      brief: "Triqueta pairs two media in one room. Michael Flanagan's paintings get augmented reality overlays, and his video works become a virtual reality scene. The project ran at the McAllen Creative Incubator in 2023. My part was development rather than authorship: build the technical layer that lets a painter's work be entered by a headset and by a phone, without the two reading as separate shows.",
+      process: [
+        "The work started from Flanagan's existing paintings and video, not from a new image.",
+        "Each painting carried an AR overlay. The overlays include AI-generated elements, which sit over the painted surface rather than replacing it.",
+        "The VR scene was built in Unreal and holds Flanagan's video works. A visitor in the headset sees the footage as the room, not as a screen on a wall.",
+        "The two builds share one visual vocabulary, so a visitor who sees only the phone overlays still recognises the same project.",
+        "Development covered tracking, placement, playback, and the headset build.",
+        "The room had to hold the paintings, a tracking position per work, and a headset station at the same time."
+      ],
+      result: [
+        "Two modes in one exhibition: AR on paintings and a VR headset scene.",
+        "One collaborator and one venue: the McAllen Creative Incubator, 2023.",
+        "One still survives in the project file. The painting count, the marker count, and the run dates are unconfirmed.",
+        "The page is 2.6 KB of HTML, and the three case images are 399 KB in total.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Artist', name: 'Michael Flanagan' },
+        { role: 'AR and VR development', name: 'Juan Licerio' },
+        { role: 'Engine', name: 'Unreal Engine for the VR build' },
+        { role: 'Venue', name: 'McAllen Creative Incubator' },
+        { role: 'Year', name: '2023. Run dates unconfirmed' },
+        { role: 'Additional stills', name: 'None in the project file' }
+      ],
+      images: [
+        { src: img('assets/images/projects/triqueta/hero.jpg'), alt: 'Abstract project cover still with a grain sun and a translucent looping form', caption: 'Cover still from the project file.' },
+        { src: img('assets/images/projects/triqueta/process.jpg'), alt: 'Detail crop of the cover still: the sun and upper loop', caption: 'Detail crop: grain, sun, and the top of the loop.' },
+        { src: img('assets/images/projects/triqueta/detail.jpg'), alt: 'Detail crop of the cover still: the lower loop', caption: 'Detail crop: the lower loop and its highlight.' }
+      ]
+    }
+  },
+
+  'river-pierce': {
+    year: '2025',
+    summary: 'A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.',
+    image: 'assets/images/projects/river-pierce/hero.jpg',
+    caseStudy: {
+      brief: "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
+      process: [
+        "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
+        "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
+        "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
+        "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
+        "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
+        "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
+      ],
+      result: [
+        "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
+        "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
+        "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
+        "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Commission', name: 'The River Pierce Foundation' },
+        { role: 'AR artist', name: 'Juan Carlos Licerio' },
+        { role: 'Program', name: 'The Teaching of the Hands, 10 May 2025, 1 to 4 pm, free and open to the public' },
+        { role: 'Film', name: 'Carolina Caycedo and David de Rozas' },
+        { role: 'Panel', name: 'Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa' },
+        { role: 'Support', name: 'Mellon Foundation Humanities in Place Grant; Laredo Film Society' },
+        { role: 'Culinary concept', name: 'Malaquite' },
+        { role: 'Technical stack, AR markers, attendance', name: 'Unconfirmed' }
+      ],
+      images: [
+        { src: img('assets/images/projects/river-pierce/hero.jpg'), alt: 'Event poster for The Teaching of the Hands with the AR slot at 3 pm', caption: 'Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm.' },
+        { src: img('assets/images/river-pierce-ar-map.svg'), alt: 'Cover graphic for the River Pierce AR project: a river line and site markers', caption: 'Cover graphic used for the AR project. No in-app screenshot survives.' },
+        { src: img('assets/images/projects/river-pierce/detail.jpg'), alt: 'Poster detail: venue line and foundation support', caption: 'Poster detail: venue and support line.' }
+      ]
+    }
+  },
+
+  motion: {
+    year: '2022',
+    summary: 'Self-set motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and type built from repeating marks.',
+    image: 'assets/images/projects/motion/hero.jpg',
+    caseStudy: {
+      brief: "Motion is a file of self-set studies, not a commission. Each study takes one visual idea and pushes it until the motion breaks: abstract form, procedural movement, and type drawn from repeating marks. The tools were After Effects, Photoshop, and Blender. There was no client brief and no delivery date. The point was to test a technique at speed and keep the result, so the file grew as a set of experiments rather than a body of finished work.",
+      process: [
+        "Each study opens with one form or one rule, not with a finished frame.",
+        "Type and shape were built in After Effects or Blender, then finished in Photoshop for grain and print texture.",
+        "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
+        "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
+        "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
+        "The export is a still and a loop. The still is what survives in the project file today."
+      ],
+      result: [
+        "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+        "The case uses the still plus two detail crops, 348 KB in total.",
+        "The page is 2.5 KB of HTML and needs no script to read.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Work', name: 'Juan Licerio' },
+        { role: 'Tools', name: 'After Effects, Photoshop, Blender' },
+        { role: 'Year', name: '2022' },
+        { role: 'Study count and run dates', name: 'Unconfirmed' }
+      ],
+      images: [
+        { src: img('assets/images/projects/motion/hero.jpg'), alt: 'Dithered white wave and letterform on a black field', caption: 'Wave and letterform, exported still.' },
+        { src: img('assets/images/projects/motion/process.jpg'), alt: 'Detail crop: the wave line above the filled letterform', caption: 'Detail: the wave line and the top of the striped fill.' },
+        { src: img('assets/images/projects/motion/detail.jpg'), alt: 'Detail crop: the dot grid at the base of the letterform', caption: 'Detail: the dot grid at the base.' }
+      ]
+    }
+  },
+
+  '9ine5ive6eis': {
+    year: '2023',
+    summary: 'Visual identity for a limited apparel release: one cloud plate, a three-line lockup, a tee and a tote layout, and a brand motion loop.',
+    image: 'assets/images/projects/9ine5ive6eis/hero.jpg',
+    caseStudy: {
+      brief: "9ine5ive6eis releases apparel in series, and each drop takes its own identity. This assignment covered one release: a cloud graphic, custom typography, a layout for a tee and a tote, and a motion loop for the brand. The run was limited. Other artists shot the product photography, so the identity had to survive their framing rather than a studio setup of our own.",
+      process: [
+        "The image is one sky photograph, cropped as a square plate. The plate is the whole graphic, with no second element and no frame.",
+        "The type is a three-line stack: 9INE, 5IVE, 6EIS, set wide and set small so it reads as a caption rather than a headline.",
+        "On the tee the plate sits at chest height and the type stays out. On the tote the plate runs the full width and the type sits inside the cloud at the lower right.",
+        "Both products are white, so the plate had to hold without a border to separate it from the garment.",
+        "A motion loop carried the same mark for the brand and ran beside the drop.",
+        "Product photography by other artists placed the pieces in daylight, on a skateboard and on a rooftop, which tested the plate against direct sun and moving cloth."
+      ],
+      result: [
+        "Two products in the run: a white tee and a white tote.",
+        "One three-line lockup, used at two scales.",
+        "Six product stills survive in the project file. Four are used here at 251 KB in total.",
+        "One motion loop and one Instagram reel for the release.",
+        "The page is 2.6 KB of HTML and the case renders from one data entry.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Identity, graphic, and motion', name: 'Juan Licerio' },
+        { role: 'Product photography', name: 'Other artists on the release (names unconfirmed)' },
+        { role: 'Client', name: '9ine5ive6eis' },
+        { role: 'Year', name: '2023' }
+      ],
+      images: [
+        { src: img('assets/images/projects/9ine5ive6eis/hero.jpg'), alt: 'A person sitting on a skateboard wearing the cloud tee', caption: 'Tee in daylight, shot by another artist on the release.' },
+        { src: img('assets/images/projects/9ine5ive6eis/process.jpg'), alt: 'Flat lay of the white cloud tee', caption: 'Flat lay: the plate at chest height, type left out.' },
+        { src: img('assets/images/projects/9ine5ive6eis/detail.jpg'), alt: 'Detail of the tote with the three-line lockup inside the cloud', caption: 'Tote detail: the lockup inside the cloud.' },
+        { src: img('assets/images/projects/9ine5ive6eis/extra.jpg'), alt: 'Three-image product collage from the release', caption: 'Product collage placed by the photography team.' }
+      ]
+    }
+  },
+
+  'tigers-blood': {
+    year: '2023',
+    summary: 'A commissioned 3D animation of a static 2D logo, finished with a frosted metal material, analog video artefacts, and a print still for the 2023 show syllabus.',
+    image: 'assets/images/projects/tigers-blood/hero.jpg',
+    caseStudy: {
+      brief: "Tigers Blood had a flat 2D logo and a 2023 season to promote. The commission was a moving version of that mark: convert the artwork to 3D, give it a material that reads as metal under a bad signal, and keyframe a move that holds attention in a feed and on a poster. The finished animation ran with the show syllabus for the Rio Grande Valley dates, and the same geometry was shot as a print.",
+      process: [
+        "The 2D lettering was rebuilt as 3D geometry, keeping the hand-drawn spacing of the original rather than setting it in a typeface.",
+        "The glyphs sit on a ring instead of a baseline, so the mark can rotate without losing the word.",
+        "The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.",
+        "The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.",
+        "A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.",
+        "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape."
+      ],
+      result: [
+        "One animated mark and one printed still, built from the same geometry.",
+        "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
+        "Two source images survive in the project file. The case uses three crops at 270 KB in total.",
+        "The page is 2.6 KB of HTML and the case renders from one data entry.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: '3D, material, and animation', name: 'Juan Licerio' },
+        { role: 'Client', name: 'Tigers Blood' },
+        { role: 'Year', name: '2023' },
+        { role: 'Venue list', name: 'From the 2023 show syllabus in the project file' }
+      ],
+      images: [
+        { src: img('assets/images/projects/tigers-blood/hero.jpg'), alt: 'The 3D Tigers Blood mark over the 2023 show syllabus', caption: 'The animated mark on the 2023 syllabus frame.' },
+        { src: img('assets/images/projects/tigers-blood/process.jpg'), alt: 'The same mark printed in black on burnt paper on a wooden table', caption: 'The same geometry as a print, burned at the edges.' },
+        { src: img('assets/images/projects/tigers-blood/detail.jpg'), alt: 'Detail of the burnt print showing the mark and dates', caption: 'Detail: the mark and the date list on burnt paper.' }
+      ]
+    }
+  },
+
+  archived: {
+    year: '2022–2026',
+    summary: 'One index for every study on the site, 2022 to 2026, with a link to each live page.',
+    description: 'Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.',
+    image: 'assets/images/projects/archived/hero.jpg',
+    caseStudy: {
+      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub exists because the work index only carries the current rotation, so older pieces would otherwise have no route in. Nothing here is a new piece. The value is the map: ten studies, four years, one link per study, and no dead ends.",
+      process: [
+        "Every entry is a project already on the site. No image on this page is new.",
+        "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
+        "Each row carries a number, a title, a one-line summary, the discipline, the year, and a thumbnail.",
+        "The list is static HTML, so it reads without JavaScript and without the site data file.",
+        "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
+        "A study is added by one record in the site data file and one page built from the shared shell, so the index cannot drift from the work page.",
+        "The cover photograph is a gallery wall of framed works from the archive. The venue is unconfirmed.",
+        "The page follows the same heading, description, and case-block layout as every other study page."
+      ],
+      result: [
+        "Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.",
+        "Year range 2022 to 2026, read from the project records.",
+        "The page is 9.9 KB of static HTML, and the three case images total 230 KB.",
+        "The index and the Work page read from the same records, so a study cannot appear in one and not in the other.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Work', name: 'Juan Licerio' },
+        { role: 'Cover photograph', name: 'Gallery wall from the archive. Venue unconfirmed' },
+        { role: 'Years', name: '2022 to 2026, from the project records' }
+      ],
+      images: [
+        { src: img('assets/images/projects/archived/hero.jpg'), alt: 'Three framed works on a painted brick gallery wall', caption: 'Gallery wall from the archive.' },
+        { src: img('assets/images/projects/archived/process.jpg'), alt: 'Two framed prints on the brick wall, detail crop', caption: 'Detail: the left and centre prints in the wall hang.' },
+        { src: img('assets/images/projects/archived/detail.jpg'), alt: 'Pink objects on a green table under the painted brick wall', caption: 'Detail: the objects on the table below the hang.' }
+      ]
+    }
+  }
+};
+
+let changed = 0;
+for (const project of site.projects) {
+  const update = studies[project.id];
+  if (!update) continue;
+  if (update.year) project.year = update.year;
+  if (update.summary) project.summary = update.summary;
+  if (update.description) project.description = update.description;
+  if (update.image) project.image = update.image;
+  project.caseStudy = update.caseStudy;
+  changed += 1;
+}
+
+writeFileSync(file, JSON.stringify(site, null, 2) + '\n');
+console.log('updated ' + changed + ' projects');
