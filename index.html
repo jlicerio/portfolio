@@ -72,7 +72,7 @@
 
   function mount(position) {
     const frame = frames[position];
-    if (!frame.src) frame.src = worlds[position].page;
+    if (!frame.getAttribute('src')) frame.setAttribute('src', worlds[position].page);
     frame.style.display = 'block';
   }
 
@@ -87,7 +87,10 @@
     if (previous !== active && frames[previous]) {
       const outgoing = frames[previous];
       setTimeout(() => {
-        if (frames[active] !== outgoing) outgoing.style.display = 'none';
+        if (frames[active] !== outgoing) {
+          outgoing.style.display = 'none';
+          outgoing.removeAttribute('src');
+        }
       }, 950);
     }
     indexEl.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(worlds.length).padStart(2, '0');

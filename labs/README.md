@@ -1,7 +1,7 @@
 # Labs
 
 Live studies that run in the browser. Three use WebGPU; Viscous Orb uses WebGL2 for its fluid
-feedback solver. Each study is one page beside a shared engine.
+feedback solver. System Sheet is a print-first page with its own SVG and Canvas 2D renderer.
 
 ## Layout
 
@@ -17,6 +17,7 @@ feedback solver. Each study is one page beside a shared engine.
 | isolines.html | Study 02. |
 | strata.html | Study 03. |
 | viscous-orb.html | Study 04. WebGL2 fluid and dither veil. |
+| system-sheet.html | Study 05. SVG and Canvas 2D system sheet. |
 
 ## Add a study
 

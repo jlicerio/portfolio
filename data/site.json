@@ -161,6 +161,62 @@
       }
     },
     {
+      "id": "quarter-turn",
+      "title": "Quarter Turn",
+      "year": "2026",
+      "summary": "One quarter disc, six operators, four outputs. A system sheet that renders a mark, a pattern, a poster, and a motion loop from one JSON file.",
+      "description": "A flexible visual system built from a single quarter disc at radius 0.55. Six operators act on it: turn, mirror, scale, shift, shear, and field. The same values render the operator sheet and all four outputs. The page is SVG and Canvas 2D with no build step, so the whole system is readable in one file.",
+      "tools": "SVG, Canvas 2D, JSON",
+      "href": "projects/quarter-turn.html",
+      "image": "assets/images/quarter-turn.svg",
+      "archived": false,
+      "links": [],
+      "caseStudy": {
+        "brief": "Build one system that produces a mark, a pattern, a poster, and a motion loop. Use the Flexible Visual Systems method. Use no stock images. The system had to stay readable as a set, not as four unrelated pieces, and the renderer had to survive a change of base form without an edit.",
+        "process": [
+          "The base form is a quarter disc at radius 0.55 of the cell. One JSON file holds it, the six operators, the grid, the palette, and the seed.",
+          "Six operators act on the form: turn at 4 × 90°, mirror on the vertical, scale at 6 steps of 0.13 with a 0.11 offset, shift at 6 steps of 0.11, shear at ±20°, and a 4 × 4 field. Each cell shows one operator and its rule.",
+          "The mark is the turn operator alone. Four quarter discs meet and leave a four-pointed hole, so the base form stays visible in the result.",
+          "The pattern repeats the field operator on a 6 × 6 grid. The poster switches to the light palette, runs a 12 × 12 band, and carries the system name.",
+          "The motion frame draws a 5 × 5 field on a canvas and advances the phase each frame. Under reduced motion it holds one still frame.",
+          "The renderer reads the JSON and draws every output. A new base form or palette goes into the file, and the page stays the same."
+        ],
+        "result": [
+          "60.3 fps at 1440 × 900 and 60.5 fps at 390 × 844 in headless Chrome.",
+          "Zero console errors at both widths.",
+          "The page is 11,504 bytes and the system file is 1,344 bytes.",
+          "The phone layout reflows to 2 × 3 operator cells and 2 × 2 outputs with no clipping.",
+          "The sheet is a proof, not a final identity. It shows the range before it shows the use."
+        ],
+        "credits": [
+          {
+            "role": "Method",
+            "name": "Dr. Martin Lorenz, Flexible Visual Systems (Slanted, 2021)"
+          },
+          {
+            "role": "Form, code, and writing",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Source material",
+            "name": "No Atlas images and no paid course text used"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/quarter-turn/sheet-desktop.svg",
+            "alt": "Quarter Turn system sheet at 1440 by 900",
+            "caption": "Sheet at 1440 × 900: six operator cells, then mark, pattern, poster, motion."
+          },
+          {
+            "src": "assets/images/projects/quarter-turn/sheet-phone.svg",
+            "alt": "Quarter Turn system sheet at 390 by 844",
+            "caption": "Sheet at 390 × 844: 2 × 3 operators and 2 × 2 outputs, no clipping."
+          }
+        ]
+      }
+    },
+    {
       "id": "surveillance-status",
       "title": "Surveillance Status",
       "year": "2025",

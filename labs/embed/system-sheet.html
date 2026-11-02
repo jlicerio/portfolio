@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../../assets/images/favicon.svg" type="image/svg+xml">
+<title>Quarter Turn — System Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#07080a; --ink:#f2f0ec; --muted:#a8a4ad; --line:rgba(242,240,236,.18); }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); }
+  body { font-family:'Space Grotesk', system-ui, sans-serif; overflow:hidden; }
+  svg path { fill:var(--ink); }
+  svg { shape-rendering:geometricPrecision; }
+  .sheet { height:100svh; display:flex; flex-direction:column; gap:10px; padding:14px 16px 12px; }
+  .bar { flex:0 0 auto; display:flex; justify-content:space-between; gap:12px; color:var(--muted); font:10px 'DM Mono',monospace; letter-spacing:.08em; text-transform:uppercase; }
+  .ops { flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:8px; }
+  .cell { margin:0; min-height:0; border:1px solid var(--line); background:rgba(242,240,236,.02); padding:6px; display:flex; flex-direction:column; gap:4px; }
+  .cell .art { position:relative; flex:1 1 auto; min-height:0; display:flex; }
+  .cell svg { position:relative; width:100%; height:100%; display:block; }
+  .cap { flex:0 0 auto; display:flex; justify-content:space-between; gap:8px; color:var(--muted); font:9px 'DM Mono',monospace; letter-spacing:.06em; text-transform:uppercase; }
+  .cap b { color:var(--ink); font-weight:400; }
+  .outs { flex:0 0 32%; min-height:0; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .out { margin:0; min-height:0; border:1px solid var(--line); display:flex; flex-direction:column; }
+  .out .art { position:relative; flex:1 1 auto; min-height:0; overflow:hidden; }
+  .out svg, .out canvas { display:block; width:100%; height:100%; }
+  .out .poster-frame { position:absolute; inset:0; container-type:size; }
+  .out .poster { position:absolute; inset:0; padding:6cqw 6cqw 0; display:flex; flex-direction:column; overflow:hidden; background:var(--pbg); color:var(--pink); }
+  .out .poster .top { flex:0 0 auto; display:flex; justify-content:space-between; gap:4cqw; color:var(--pmuted); font:clamp(6px,2.2cqw,9px) 'DM Mono',monospace; letter-spacing:.08em; text-transform:uppercase; }
+  .out .poster .head { flex:0 0 auto; display:flex; align-items:flex-start; justify-content:space-between; gap:4cqw; margin-top:7cqw; }
+  .out .poster h3 { width:100%; margin:0; font-size:clamp(12px,11cqw,34px); line-height:.82; letter-spacing:-.07em; font-weight:500; }
+  .out .poster p { margin:2cqw 0 auto; max-width:88%; color:var(--pmuted); font-size:clamp(6px,2.8cqw,10px); line-height:1.4; }
+  .out .poster .band { position:relative; flex:0 0 28%; min-height:0; margin:0 -6cqw; background:var(--pink); }
+  .out .poster .band svg { position:absolute; inset:0; width:100%; height:100%; }
+  .out .poster svg path { fill:var(--pink); }
+  .out .poster .band svg path { fill:var(--pbg); }
+  .out figcaption { flex:0 0 auto; display:flex; justify-content:space-between; gap:6px; padding:4px 6px 5px; color:var(--muted); font:9px 'DM Mono',monospace; letter-spacing:.06em; text-transform:uppercase; }
+  .out figcaption b { color:var(--ink); font-weight:400; }
+  .error { margin:auto; padding:24px; color:var(--muted); font:12px 'DM Mono',monospace; }
+  @media (max-width:700px) {
+    .sheet { padding:10px 12px; gap:8px; }
+    .bar { font-size:9px; }
+    .ops { grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(3,1fr); }
+    .outs { flex-basis:38%; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<main class="sheet" id="sheet">
+  <header class="bar"><span id="sys-title">SYSTEM 01 / QUARTER TURN</span><span>6 OPERATORS · 4 OUTPUTS</span></header>
+  <section class="ops" id="ops" aria-label="Operator sheet"></section>
+  <section class="outs" id="outs" aria-label="Outputs"></section>
+  <footer class="bar"><span>BASE: QUARTER DISC</span><span id="sys-rule">GRID 6 × 6 / PHASE 90°</span><span>INK #F2F0EC</span></footer>
+</main>
+<script type="module">
+  const stats = { ready: false, error: null, frames: 0, fps: 0, operators: 0, outputs: 0, system: null };
+  window.__study = stats;
+
+  let radius = 62;
+  const opsEl = document.querySelector('#ops');
+  const outsEl = document.querySelector('#outs');
+  let canvas = null;
+  let ctx = null;
+  let ink = '#f2f0ec';
+
+  function svg(label, body, fit) {
+    return '<svg viewBox="0 0 100 100" role="img" aria-label="' + label + '" preserveAspectRatio="xMidYMid ' + (fit || 'meet') + '">' + body + '</svg>';
+  }
+
+  function piece(transform) {
+    const d = 'M0 0 L' + radius + ' 0 A' + radius + ' ' + radius + ' 0 0 1 0 ' + radius + ' Z';
+    return '<path d="' + d + '"' + (transform ? ' transform="' + transform + '"' : '') + '/>';
+  }
+
+  function turn(op) {
+    let out = '';
+    for (let i = 0; i < op.copies; i++) out += piece('rotate(' + (i * op.step) + ' 50 50)');
+    return out;
+  }
+
+  function mirror(op) {
+    return piece('') + piece('translate(100 0) scale(-1 1)');
+  }
+
+  function scale(op) {
+    let out = '';
+    for (let i = 0; i < op.copies; i++) {
+      const s = (op.from + i * op.step).toFixed(3);
+      out += piece('translate(' + (i * op.offset) + ' ' + (i * op.offset) + ') scale(' + s + ')');
+    }
+    return out;
+  }
+
+  function shift(op) {
+    let out = '';
+    for (let i = 0; i < op.copies; i++) out += piece('translate(' + (i * op.step) + ' ' + (i * op.step) + ')');
+    return out;
+  }
+
+  function shear(op) {
+    const a = Math.tan(op.angle * Math.PI / 180).toFixed(3);
+    return '<g transform="matrix(1 0 ' + a + ' 1 0 0)">' + piece('') + '</g>'
+      + '<g transform="translate(0 100) scale(1 -1) matrix(1 0 ' + a + ' 1 0 0)">' + piece('') + '</g>';
+  }
+
+  function field(op) {
+    const cols = op.columns;
+    const rows = op.rows;
+    const w = 100 / cols;
+    const h = 100 / rows;
+    const s = Math.min(w, h) / 100;
+    let out = '';
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        out += piece('translate(' + (i * w).toFixed(2) + ' ' + (j * h).toFixed(2) + ') scale(' + s.toFixed(3) + ') rotate(' + (((i + j) % 4) * 90) + ')');
+      }
+    }
+    return out;
+  }
+
+  const DRAW = { turn: turn, mirror: mirror, scale: scale, shift: shift, shear: shear, field: field };
+
+  function build(data) {
+    stats.system = data.id;
+    stats.operators = data.operators.length;
+    stats.outputs = 4;
+    ink = data.palette.ink;
+    radius = Math.round((data.base.radius || 0.62) * 100);
+    const theme = document.documentElement.style;
+    theme.setProperty('--bg', data.palette.bg);
+    theme.setProperty('--ink', data.palette.ink);
+    theme.setProperty('--muted', data.palette.muted);
+    theme.setProperty('--line', data.palette.line);
+    document.querySelector('#sys-title').textContent = 'SYSTEM 01 / ' + data.title;
+
+    opsEl.innerHTML = data.operators.map(function (op, index) {
+      const body = DRAW[op.id](op);
+      return '<figure class="cell"><div class="art">' + svg(op.label, body) + '</div>'
+        + '<figcaption class="cap"><b>' + String(index + 1).padStart(2, '0') + ' ' + op.label + '</b><span>' + op.rule + '</span></figcaption></figure>';
+    }).join('');
+
+    const turnOp = data.operators.find(function (op) { return op.id === 'turn'; });
+    const markBody = '<g transform="translate(50 50) rotate(45) scale(0.8) translate(-50 -50)">' + turn(turnOp) + '</g>';
+    const pattern = field(data.pattern);
+    const band = field(data.band || data.pattern);
+
+    outsEl.innerHTML =
+      '<figure class="out"><div class="art">' + svg('Mark', markBody) + '</div><figcaption><b>01</b><span>MARK</span></figcaption></figure>'
+      + '<figure class="out"><div class="art">' + svg('Pattern', pattern, 'slice') + '</div><figcaption><b>02</b><span>PATTERN</span></figcaption></figure>'
+      + '<figure class="out"><div class="art"><div class="poster-frame"><div class="poster" style="--pbg:' + data.poster.bg + ';--pink:' + data.poster.ink + ';--pmuted:' + data.poster.muted + '"><div class="top"><span>' + data.poster.title + '</span><span>' + data.year + '</span></div><div class="head"><h3>' + data.poster.line + '</h3></div><p>' + data.poster.note + '</p><div class="band">' + svg('Poster pattern', band, 'slice') + '</div></div></div></div><figcaption><b>03</b><span>POSTER</span></figcaption></figure>'
+      + '<figure class="out"><div class="art"><canvas id="motion"></canvas></div><figcaption><b>04</b><span>MOTION</span></figcaption></figure>';
+
+    canvas = document.querySelector('#motion');
+    ctx = canvas.getContext('2d');
+  }
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let previous = performance.now();
+  let windowStart = previous;
+  let windowFrames = 0;
+  let clock = 0;
+  let stillDrawn = false;
+
+  function drawMotion() {
+    if (!ctx || !canvas) return;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (!w || !h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.round(w * dpr);
+    const height = Math.round(h * dpr);
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = ink;
+    const cols = 5;
+    const rows = 5;
+    const cell = Math.max(w / 4.2, h / 4.2);
+    const time = reduce ? 0 : clock;
+    const ox = (w - cols * cell) / 2;
+    const oy = (h - rows * cell) / 2;
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        const phase = time * 0.55 + (i + j) * 0.42;
+        const angle = Math.sin(phase) * 0.6 + ((i + j) % 4) * (Math.PI / 2);
+        ctx.save();
+        ctx.translate(ox + i * cell, oy + j * cell);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(cell, 0);
+        ctx.arc(0, 0, cell, 0, Math.PI / 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+  }
+
+  function frame(now) {
+    const delta = Math.min(Math.max((now - previous) / 1000, 0), 0.05);
+    previous = now;
+    clock += delta;
+    if (!reduce) drawMotion();
+    else if (!stillDrawn) { drawMotion(); stillDrawn = true; }
+    stats.frames += 1;
+    windowFrames += 1;
+    if (now - windowStart > 500) {
+      stats.fps = Math.round((windowFrames * 1000) / (now - windowStart));
+      windowFrames = 0;
+      windowStart = now;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  async function boot() {
+    const response = await fetch('../../data/systems/quarter-turn.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('system file ' + response.status);
+    const data = await response.json();
+    build(data);
+    stats.ready = true;
+    requestAnimationFrame(frame);
+  }
+
+  boot().catch(function (error) {
+    stats.error = String((error && error.message) || error);
+    document.body.dataset.error = 'true';
+    document.querySelector('#sheet').innerHTML = '<p class="error">System file failed to load.</p>';
+  });
+</script>
+</body>
+</html>
