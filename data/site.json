@@ -678,8 +678,8 @@
       "year": "2025",
       "slug": "river-pierce",
       "href": "projects/river-pierce.html",
-      "image": "assets/images/river-pierce-teaching-hands.png",
-      "summary": "Commissioned augmented reality project for River Pierce Foundation's 2025 event program.",
+      "image": "assets/images/projects/river-pierce/hero.jpg",
+      "summary": "A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -703,7 +703,77 @@
           "label": "The Teaching of the Hands event page",
           "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
+        "process": [
+          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
+          "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
+          "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
+          "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
+          "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
+          "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
+        ],
+        "result": [
+          "Runs at 60.8 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
+          "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
+          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
+          "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
+          "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Commission",
+            "name": "The River Pierce Foundation"
+          },
+          {
+            "role": "AR artist",
+            "name": "Juan Carlos Licerio"
+          },
+          {
+            "role": "Program",
+            "name": "The Teaching of the Hands, 10 May 2025, 1 to 4 pm, free and open to the public"
+          },
+          {
+            "role": "Film",
+            "name": "Carolina Caycedo and David de Rozas"
+          },
+          {
+            "role": "Panel",
+            "name": "Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa"
+          },
+          {
+            "role": "Support",
+            "name": "Mellon Foundation Humanities in Place Grant; Laredo Film Society"
+          },
+          {
+            "role": "Culinary concept",
+            "name": "Malaquite"
+          },
+          {
+            "role": "Technical stack, AR markers, attendance",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/river-pierce/hero.jpg",
+            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
+            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
+          },
+          {
+            "src": "assets/images/river-pierce-ar-map.svg",
+            "alt": "Cover graphic for the River Pierce AR project: a river line and site markers",
+            "caption": "Cover graphic used for the AR project. No in-app screenshot survives."
+          },
+          {
+            "src": "assets/images/projects/river-pierce/detail.jpg",
+            "alt": "Poster detail: venue line and foundation support",
+            "caption": "Poster detail: venue and support line."
+          }
+        ]
+      }
     }
   ],
   "contact": {
