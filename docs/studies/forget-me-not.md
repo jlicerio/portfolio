@@ -1,6 +1,6 @@
 # Forget-me-not — Case Study
 
-**Brief.** Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Trucha in McAllen, Texas. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.
+**Brief.** Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Ponte Creative Studio & Gallery, the Trucha RGV space at 1305 N Main St in McAllen, where it ran from 15 August to 16 October 2025. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.
 
 **Process.**
 
@@ -16,21 +16,22 @@
 **Result.**
 
 - Case media: 4 stills at 132 KB.
-- Two runs: St. Edward's University in February 2025, then Trucha in McAllen, Texas. The McAllen dates are unconfirmed.
-- Five works in the show. The McAllen room maps a bed, a wall, a sink, a basin, and a window blind.
+- Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.
+- Six works in the McAllen show, and the room maps a bed, a wall, a sink, a basin, and a window blind.
 - The Trucha press cover credits Laura Martinez and sits in the credits list.
 - The page is 2.7 KB of HTML and renders the case from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
 
-- Artist: Victoria (myonlinebedroom.com, @onlinebedroom)
+- Artist: Victoria Cantu, they/them (myonlinebedroom.com, @onlinebedroom)
 - Technical setup and projection mapping, McAllen staging: Juan Licerio
 - Works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts
 - First run: St. Edward's University, February 2025. Photographs by Brian Fitzsimmons
-- Second run: Trucha, McAllen, Texas. Dates unconfirmed
+- Second run: Ponte Creative Studio & Gallery (Trucha RGV), 1305 N Main St, McAllen. 15 August to 16 October 2025
 - Press: Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre
 - Support, first run: The City of Austin Economic Development Department
+- Press: MyRGV, 18 August 2025. Francisco E. Jimenez, photographs Joel Martinez. Gallery run by Trucha RGV
 - McAllen stills: Photographer unconfirmed. Image rights stay with the artist and the photographer
 
 Page: `projects/forget-me-not.html`. Verified report: `pipeline/reports/forget-me-not.json`.

@@ -29,6 +29,12 @@ const pages = [
     cover: 'assets/images/projects/river-pierce/hero.jpg',
   },
   {
+    id: 'collapsed-timelines',
+    title: 'Collapsed Timelines In Felicitous Space',
+    description: 'Technical setup for C. Díaz\'s 2022 exhibition at the McAllen Creative Incubator: four-channel video on monitors, a projected film, and a bilingual wall text.',
+    cover: 'assets/images/projects/collapsed-timelines/hero.jpg',
+  },
+  {
     id: 'motion',
     title: 'Motion',
     description: 'Personal motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and dithered type.',

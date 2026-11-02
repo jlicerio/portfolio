@@ -22,6 +22,7 @@ const discipline = {
   triqueta: 'AR / VR',
   'tigers-blood': '3D / MOTION',
   motion: 'MOTION GRAPHICS',
+  'collapsed-timelines': 'FOUR-CHANNEL VIDEO',
   archived: 'INDEX',
 };
 
@@ -29,7 +30,7 @@ const order = [
   'warp-and-weft', 'viscous-orb', 'quarter-turn',
   'forget-me-not', 'surveillance-status', 'river-pierce',
   '9ine5ive6eis', 'triqueta', 'tigers-blood',
-  'motion', 'archived',
+  'motion', 'collapsed-timelines', 'archived',
 ];
 
 for (const project of site.projects) {

@@ -16,10 +16,10 @@ const studies = {
   'forget-me-not': {
     title: 'Forget-me-not',
     year: '2025',
-    summary: 'Projection mapping and technical setup for the McAllen staging of Victoria\'s first solo exhibition, across a bed, a sink, a basin, and a window blind.',
+    summary: 'Projection mapping and technical setup for the McAllen staging of Victoria Cantu\'s first solo exhibition at Ponte Creative Studio & Gallery.',
     image: 'assets/images/projects/forget-me-not/hero.jpg',
     caseStudy: {
-      brief: "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Trucha in McAllen, Texas. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
+      brief: "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Ponte Creative Studio & Gallery, the Trucha RGV space at 1305 N Main St in McAllen, where it ran from 15 August to 16 October 2025. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
       process: [
         "Victoria's video is the content. Each loop was matched to one surface before anything was mapped.",
         "Surfaces were mapped in MadMapper. The bed, the sink, and the basin are not flat, so each mask was drawn on site against the real object rather than from a plan.",
@@ -31,20 +31,21 @@ const studies = {
         "A playback check ran before opening: every clip, its in point, and its surface."
       ],
       result: [
-        "Two runs: St. Edward's University in February 2025, then Trucha in McAllen, Texas. The McAllen dates are unconfirmed.",
-        "Five works in the show. The McAllen room maps a bed, a wall, a sink, a basin, and a window blind.",
+        "Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.",
+        "Six works in the McAllen show, and the room maps a bed, a wall, a sink, a basin, and a window blind.",
         "The Trucha press cover credits Laura Martinez and sits in the credits list.",
         "The page is 2.7 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
-        { role: 'Artist', name: 'Victoria (myonlinebedroom.com, @onlinebedroom)' },
+        { role: 'Artist', name: 'Victoria Cantu, they/them (myonlinebedroom.com, @onlinebedroom)' },
         { role: 'Technical setup and projection mapping, McAllen staging', name: 'Juan Licerio' },
         { role: 'Works', name: "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts" },
         { role: 'First run', name: "St. Edward's University, February 2025. Photographs by Brian Fitzsimmons" },
-        { role: 'Second run', name: 'Trucha, McAllen, Texas. Dates unconfirmed' },
+        { role: 'Second run', name: 'Ponte Creative Studio & Gallery (Trucha RGV), 1305 N Main St, McAllen. 15 August to 16 October 2025' },
         { role: 'Press', name: 'Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
         { role: 'Support, first run', name: 'The City of Austin Economic Development Department' },
+        { role: 'Press', name: 'MyRGV, 18 August 2025. Francisco E. Jimenez, photographs Joel Martinez. Gallery run by Trucha RGV' },
         { role: 'McAllen stills', name: 'Photographer unconfirmed. Image rights stay with the artist and the photographer' }
       ],
       images: [
@@ -97,7 +98,7 @@ const studies = {
 
   'river-pierce': {
     year: '2025',
-    summary: 'A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription, debuted at the Treviño–Uribe Rancho.',
+    summary: 'A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription.',
     image: 'assets/images/projects/river-pierce/hero.jpg',
     caseStudy: {
       brief: "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The content is specific to the place. Each object in the piece carries a panel that names its role in Carrizo Comecrudo practice, and a second reel sets the piece in San Ygnacio with a stone inscription dated 3 December 1871.",
@@ -245,28 +246,69 @@ const studies = {
     }
   },
 
+  'collapsed-timelines': {
+    title: 'Collapsed Timelines In Felicitous Space',
+    year: '2022',
+    summary: 'Technical setup for C. Díaz\'s 2022 exhibition at the McAllen Creative Incubator: four-channel video, a projected film, and a bilingual wall text.',
+    description: 'Technical setup for the exhibition at the McAllen Creative Incubator. The show paired a projected film with a four-channel video installation on monitors and a bilingual wall text, all inside a brick gallery with a low ceiling.',
+    image: 'assets/images/projects/collapsed-timelines/hero.jpg',
+    tools: 'Four-channel video playback, monitors on plinths, projection alignment',
+    caseStudy: {
+      brief: "Collapsed Timelines In Felicitous Space ran from 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen. C. Díaz built the show around California landscapes and geographical memory: the film Sacred Landscapes: The Arroyo Seco, the four-channel video installation Compressed Time, and the painting Body Landscapes No. 1. My part was the technical setup: four channels of playback on monitors, the projection, and the wall text that frames the room.",
+      process: [
+        "The show carried two video paths at once. One film played on the hanging screen, and Compressed Time ran across four monitors as a set rather than a mirror of one source.",
+        "Four channels need four sources and four start points, so the monitors were set up as separate players with a sync check before opening.",
+        "The monitors sit on white cylindrical plinths along the brick wall, with the cable runs on the floor behind them. That keeps the screens at seated eye height and leaves the floor clear.",
+        "The wall carries a bilingual projection of the film notes in Spanish and English. It is the first text a visitor reads on entering.",
+        "The projection was aligned to the screen and to the wall, then checked again with the house lights at event level.",
+        "The show closed on 26 March with a dialogue with sound artist Jon Almaraz and a deep listening session in the same room, so the space had to work as a screening room and as a listening room."
+      ],
+      result: [
+        "Four channels of Compressed Time on four monitors, one projected film, and one bilingual wall text in a single room.",
+        "Run: 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen, TX 78501.",
+        "Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1.",
+        "The page is 2.7 KB of HTML and renders the case from one data entry.",
+        "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+      ],
+      credits: [
+        { role: 'Artist', name: 'C. Díaz' },
+        { role: 'Technical setup', name: 'Juan Licerio' },
+        { role: 'Works', name: 'Sacred Landscapes: The Arroyo Seco (film), Compressed Time (four-channel video, diary entries 2014 to 2020), Body Landscapes No. 1 (painting)' },
+        { role: 'Venue and dates', name: 'McAllen Creative Incubator, 4 to 26 March 2022' },
+        { role: 'Closing event', name: 'Jon Almaraz, dialogue and deep listening session, 26 March 2022' },
+        { role: 'Photographs', name: 'Trucha, Spid (@spidspill), and stills from Compressed Time, credited by the artist. Rights unconfirmed' },
+        { role: 'Show notes', name: 'English and Spanish PDFs on cdiaz.cargo.site' }
+      ],
+      images: [
+        { src: img('assets/images/projects/collapsed-timelines/hero.jpg'), alt: 'Four monitors on white cylindrical plinths along a brick wall, with a bilingual projection beyond', caption: 'Four channels on plinths, with the wall text beyond.' },
+        { src: img('assets/images/projects/collapsed-timelines/process.jpg'), alt: 'A visitor seated in silhouette in front of the projected film Sacred Landscapes', caption: 'The single-channel film on the hanging screen.' },
+        { src: img('assets/images/projects/collapsed-timelines/detail.jpg'), alt: 'The opening: a seated audience in front of the projected film, monitors visible at right', caption: 'Opening, 4 March 2022. Monitors sit at right.' }
+      ]
+    }
+  },
+
   archived: {
     year: '2022–2026',
     summary: 'One index for every study on the site, 2022 to 2026, with a link to each live page.',
     description: 'Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.',
     image: 'assets/images/projects/archived/hero.jpg',
     caseStudy: {
-      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub exists because the work index only carries the current rotation, so older pieces would otherwise have no route in. Nothing here is a new piece. The value is the map: ten studies, four years, one link per study, and no dead ends.",
+      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub exists because the work index only carries the current rotation, so older pieces would otherwise have no route in. Nothing here is a new piece. The value is the map: eleven studies, four years, one link per study, and no dead ends.",
       process: [
         "Every entry is a project already on the site. No image on this page is new.",
         "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
         "Each row carries a number, a title, a one-line summary, the discipline, the year, and a thumbnail.",
         "The list is static HTML, so it reads without JavaScript and without the site data file.",
         "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
-        "A study is added by one record in the site data file and one page built from the shared shell, so the index cannot drift from the work page.",
+        "A study is added with a record in the site data file, a page from the shared shell, and a row in this list, so the three stay in step by review rather than by build.",
         "The cover photograph is a gallery wall of framed works from the archive. The venue is unconfirmed.",
         "The page follows the same heading, description, and case-block layout as every other study page."
       ],
       result: [
-        "Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.",
+        "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
         "Year range 2022 to 2026, read from the project records.",
-        "The page is 9.9 KB of static HTML, and the index reads without JavaScript.",
-        "The index and the Work page read from the same records, so a study cannot appear in one and not in the other.",
+        "The index is static HTML and reads without JavaScript or a data fetch.",
+        "Titles and summaries are kept identical in the site data file and in this page.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
