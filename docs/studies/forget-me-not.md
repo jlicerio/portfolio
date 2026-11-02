@@ -15,10 +15,10 @@
 
 **Result.**
 
-- Runs at 61.2 fps at 1440 x 900 and 61.2 fps at 390 x 844 in headless Chrome 156.
+- Case media: 4 stills at 132 KB.
 - Two runs: St. Edward's University in February 2025, then Trucha in McAllen, Texas. The McAllen dates are unconfirmed.
 - Five works in the show. The McAllen room maps a bed, a wall, a sink, a basin, and a window blind.
-- Four case images from the McAllen staging, 132 KB in total. The Trucha press cover credits Laura Martinez and sits in the credits list.
+- The Trucha press cover credits Laura Martinez and sits in the credits list.
 - The page is 2.7 KB of HTML and renders the case from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 

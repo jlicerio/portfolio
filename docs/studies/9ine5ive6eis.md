@@ -13,10 +13,10 @@
 
 **Result.**
 
-- Runs at 60.8 fps at 1440 x 900 and 60.6 fps at 390 x 844 in headless Chrome 156.
+- Case media: 4 stills at 251 KB.
 - Two products in the run: a white tee and a white tote.
 - One three-line lockup, used at two scales.
-- Six product stills survive in the project file. Four are used here at 251 KB in total.
+- Six product stills survive in the project file. Four are used here.
 - One motion loop and one Instagram reel for the release.
 - The page is 2.6 KB of HTML and the case renders from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.

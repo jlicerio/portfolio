@@ -15,10 +15,10 @@
 
 **Result.**
 
-- Runs at 60.8 fps at 1440 x 900 and 60.7 fps at 390 x 844 in headless Chrome 156.
+- Case media: 3 stills at 229 KB.
 - Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.
 - Year range 2022 to 2026, read from the project records.
-- The page is 9.9 KB of static HTML, and the three case images total 230 KB.
+- The page is 9.9 KB of static HTML, and the index reads without JavaScript.
 - The index and the Work page read from the same records, so a study cannot appear in one and not in the other.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 

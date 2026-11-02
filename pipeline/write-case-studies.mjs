@@ -33,7 +33,7 @@ const studies = {
       result: [
         "Two runs: St. Edward's University in February 2025, then Trucha in McAllen, Texas. The McAllen dates are unconfirmed.",
         "Five works in the show. The McAllen room maps a bed, a wall, a sink, a basin, and a window blind.",
-        "Four case images from the McAllen staging, 132 KB in total. The Trucha press cover credits Laura Martinez and sits in the credits list.",
+        "The Trucha press cover credits Laura Martinez and sits in the credits list.",
         "The page is 2.7 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
@@ -74,7 +74,7 @@ const studies = {
       result: [
         "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
         "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
-        "Four stills taken from the 90-second exhibition reel. The reel is 720 x 1280, and the four case images are 200 KB in total.",
+        "Stills are cut from the exhibition reel: 90 seconds at 720 x 1280.",
         "The page is 2.6 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
@@ -116,7 +116,7 @@ const studies = {
         "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.",
         "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
         "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-        "Four case images at 278 KB, and the page is 2.7 KB of HTML.",
+        "The page is 2.7 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -155,7 +155,7 @@ const studies = {
       ],
       result: [
         "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
-        "The case uses the still plus two detail crops, 348 KB in total.",
+        "The case uses the still plus two detail crops.",
         "The page is 2.5 KB of HTML and needs no script to read.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
@@ -190,7 +190,7 @@ const studies = {
       result: [
         "Two products in the run: a white tee and a white tote.",
         "One three-line lockup, used at two scales.",
-        "Six product stills survive in the project file. Four are used here at 251 KB in total.",
+        "Six product stills survive in the project file. Four are used here.",
         "One motion loop and one Instagram reel for the release.",
         "The page is 2.6 KB of HTML and the case renders from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
@@ -227,7 +227,7 @@ const studies = {
       result: [
         "One animated mark and one printed still, built from the same geometry.",
         "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
-        "Two source images survive in the project file. The case uses three crops at 270 KB in total.",
+        "Two source images survive in the project file. The case uses three crops.",
         "The page is 2.6 KB of HTML and the case renders from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
@@ -265,7 +265,7 @@ const studies = {
       result: [
         "Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.",
         "Year range 2022 to 2026, read from the project records.",
-        "The page is 9.9 KB of static HTML, and the three case images total 230 KB.",
+        "The page is 9.9 KB of static HTML, and the index reads without JavaScript.",
         "The index and the Work page read from the same records, so a study cannot appear in one and not in the other.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],

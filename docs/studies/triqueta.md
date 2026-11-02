@@ -14,10 +14,10 @@
 
 **Result.**
 
-- Runs at 60.7 fps at 1440 x 900 and 60.9 fps at 390 x 844 in headless Chrome 156.
+- Case media: 4 stills at 200 KB.
 - Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.
 - Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.
-- Four stills taken from the 90-second exhibition reel. The reel is 720 x 1280, and the four case images are 200 KB in total.
+- Stills are cut from the exhibition reel: 90 seconds at 720 x 1280.
 - The page is 2.6 KB of HTML and renders the case from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 

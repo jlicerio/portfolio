@@ -4,14 +4,14 @@
 
 | Study | Stage | FPS | Errors | Case study | Words | Checked | Note |
 | :--- | :--- | ---: | ---: | :---: | ---: | :--- | :--- |
-| Warp and Weft | case study | 60.2 | 0 | yes | 303 | 2026-11-02 | - |
-| Viscous Orb | case study | 59.5 | 0 | yes | 325 | 2026-11-02 | - |
-| Quarter Turn | case study | 59.4 | 0 | yes | 305 | 2026-11-02 | - |
-| Forget-me-not | case study | 61.2 | 0 | yes | 389 | 2026-11-02 | - |
-| Surveillance Status | case study | 60.8 | 0 | yes | 301 | 2026-11-02 | - |
-| River Pierce Foundation AR Showcase | case study | 61 | 0 | yes | 431 | 2026-11-02 | - |
-| 9ine5ive6eis | case study | 60.8 | 0 | yes | 299 | 2026-11-02 | - |
-| Triqueta AR/VR Exhibition | case study | 60.7 | 0 | yes | 347 | 2026-11-02 | - |
-| Tigers Blood | case study | 60.6 | 0 | yes | 292 | 2026-11-02 | - |
-| Motion | case study | 61 | 0 | yes | 281 | 2026-11-02 | - |
-| Archived Works | case study | 60.8 | 0 | yes | 312 | 2026-11-02 | - |
+| Warp and Weft | case study | 60.2 | 0 | yes | 308 | 2026-11-02 | - |
+| Viscous Orb | case study | 59.5 | 0 | yes | 327 | 2026-11-02 | - |
+| Quarter Turn | case study | - | 0 | yes | 301 | 2026-11-02 | no canvas, no fps claim |
+| Forget-me-not | case study | - | 0 | yes | 366 | 2026-11-02 | no canvas, no fps claim |
+| Surveillance Status | case study | - | 0 | yes | 308 | 2026-11-02 | no canvas, no fps claim |
+| River Pierce Foundation AR Showcase | case study | - | 0 | yes | 420 | 2026-11-02 | no canvas, no fps claim |
+| 9ine5ive6eis | case study | - | 0 | yes | 282 | 2026-11-02 | no canvas, no fps claim |
+| Triqueta AR/VR Exhibition | case study | - | 0 | yes | 324 | 2026-11-02 | no canvas, no fps claim |
+| Tigers Blood | case study | - | 0 | yes | 275 | 2026-11-02 | no canvas, no fps claim |
+| Motion | case study | - | 0 | yes | 265 | 2026-11-02 | no canvas, no fps claim |
+| Archived Works | case study | - | 0 | yes | 298 | 2026-11-02 | no canvas, no fps claim |

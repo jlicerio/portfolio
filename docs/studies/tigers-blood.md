@@ -13,10 +13,10 @@
 
 **Result.**
 
-- Runs at 60.6 fps at 1440 x 900 and 60.4 fps at 390 x 844 in headless Chrome 156.
+- Case media: 3 stills at 270 KB.
 - One animated mark and one printed still, built from the same geometry.
 - The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.
-- Two source images survive in the project file. The case uses three crops at 270 KB in total.
+- Two source images survive in the project file. The case uses three crops.
 - The page is 2.6 KB of HTML and the case renders from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 

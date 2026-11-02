@@ -65,12 +65,14 @@ const rows = site.projects.map((project) => {
   if (!built) note = 'missing page';
 
   const desktop = report?.sizes?.find((size) => size.name === 'desktop');
+  const runsCanvas = Boolean(desktop?.canvas) && Boolean(desktop.pixelsChanged);
+  if (valid && !runsCanvas && !note) note = 'no canvas, no fps claim';
   return {
     id: project.id,
     title: project.title,
     archived: Boolean(project.archived),
     stage,
-    fps: desktop ? desktop.fps : null,
+    fps: desktop && runsCanvas ? desktop.fps : null,
     errors: desktop ? desktop.errors.length : null,
     checked: report?.checkedAt ? report.checkedAt.slice(0, 10) : null,
     caseStudy: study.valid,

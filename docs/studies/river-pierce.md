@@ -15,12 +15,12 @@
 
 **Result.**
 
-- Runs at 61 fps at 1440 x 900 and 61 fps at 390 x 844 in headless Chrome 156.
+- Case media: 4 stills at 278 KB.
 - Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.
 - Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.
 - One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.
 - Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.
-- Four case images at 278 KB, and the page is 2.7 KB of HTML.
+- The page is 2.7 KB of HTML and renders the case from one data entry.
 - Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
