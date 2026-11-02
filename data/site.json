@@ -332,8 +332,8 @@
       "year": "2022",
       "slug": "motion",
       "href": "projects/motion.html",
-      "image": "assets/images/motion.png",
-      "summary": "Personal experiments in motion graphics, abstract form, and procedural animation.",
+      "image": "assets/images/projects/motion/hero.jpg",
+      "summary": "Self-set motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and type built from repeating marks.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -376,7 +376,60 @@
       ],
       "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
       "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
-      "links": []
+      "links": [],
+      "caseStudy": {
+        "brief": "Motion is a file of self-set studies, not a commission. Each study takes one visual idea and pushes it until the motion breaks: abstract form, procedural movement, and type drawn from repeating marks. The tools were After Effects, Photoshop, and Blender. There was no client brief and no delivery date. The point was to test a technique at speed and keep the result, so the file grew as a set of experiments rather than a body of finished work.",
+        "process": [
+          "Each study opens with one form or one rule, not with a finished frame.",
+          "Type and shape were built in After Effects or Blender, then finished in Photoshop for grain and print texture.",
+          "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
+          "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
+          "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
+          "The export is a still and a loop. The still is what survives in the project file today."
+        ],
+        "result": [
+          "Runs at 61 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
+          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+          "The case uses the still plus two detail crops, 348 KB in total.",
+          "The page is 2.5 KB of HTML and needs no script to read.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Work",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Tools",
+            "name": "After Effects, Photoshop, Blender"
+          },
+          {
+            "role": "Year",
+            "name": "2022"
+          },
+          {
+            "role": "Study count and run dates",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/motion/hero.jpg",
+            "alt": "Dithered white wave and letterform on a black field",
+            "caption": "Wave and letterform, exported still."
+          },
+          {
+            "src": "assets/images/projects/motion/process.jpg",
+            "alt": "Detail crop: the wave line above the filled letterform",
+            "caption": "Detail: the wave line and the top of the striped fill."
+          },
+          {
+            "src": "assets/images/projects/motion/detail.jpg",
+            "alt": "Detail crop: the dot grid at the base of the letterform",
+            "caption": "Detail: the dot grid at the base."
+          }
+        ]
+      }
     },
     {
       "id": "forget-me-not",
