@@ -477,17 +477,25 @@ const audio = {
   noise: null,
 };
 
-function noiseBuffer(context, seconds = 2) {
-  const buffer = context.createBuffer(1, context.sampleRate * seconds, context.sampleRate);
-  const data = buffer.getChannelData(0);
-  let last = 0;
-  for (let i = 0; i < data.length; i += 1) {
-    const white = Math.random() * 2 - 1;
-    last = (last + 0.02 * white) / 1.02;     // pink-ish, softer than white
-    data[i] = last * 3.5;
+// A generated impulse response: exponential tail with a soft top end.
+function impulseResponse(context, seconds = 3.4) {
+  const length = Math.floor(context.sampleRate * seconds);
+  const buffer = context.createBuffer(2, length, context.sampleRate);
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = buffer.getChannelData(channel);
+    let last = 0;
+    for (let i = 0; i < length; i += 1) {
+      const t = i / length;
+      const white = Math.random() * 2 - 1;
+      last = last * 0.86 + white * 0.14;      // dull the tail
+      data[i] = last * Math.pow(1 - t, 2.6) * (1 - t * 0.2);
+    }
   }
   return buffer;
 }
+
+// A thin harmonic set in C, so grains never land out of key.
+const GRAIN_SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0, 1046.5];
 
 function startAudio() {
   if (audio.ctx) return;
@@ -501,88 +509,87 @@ function startAudio() {
   master.connect(ctx.destination);
   audio.master = master;
 
-  // bed: C, G, C an octave up — a fifth drone with slow beating
-  const bed = ctx.createGain();
-  bed.gain.value = 0.16;
+  // space: one reverb, everything sends into it
+  const reverb = ctx.createConvolver();
+  reverb.buffer = impulseResponse(ctx, 3.4);
+  const wet = ctx.createGain();
+  wet.gain.value = 0.55;
+  reverb.connect(wet).connect(master);
+  audio.reverb = reverb;
+
+  const dry = ctx.createGain();
+  dry.gain.value = 0.7;
+  dry.connect(master);
+
+  // bed: C, G, C, G, detuned pairs, no noise
   const filter = ctx.createBiquadFilter();
   filter.type = 'lowpass';
-  filter.frequency.value = 420;
-  filter.Q.value = 0.6;
-  bed.connect(filter).connect(master);
+  filter.frequency.value = 380;
+  filter.Q.value = 0.7;
+  filter.connect(dry);
+  filter.connect(reverb);
 
   const voices = [
-    { freq: 65.41, type: 'sine', detune: -4 },
-    { freq: 98.0, type: 'sine', detune: 3 },
-    { freq: 130.81, type: 'triangle', detune: -2 },
-    { freq: 196.0, type: 'sine', detune: 5 },
+    { freq: 65.41, detune: -5, gain: 0.2 },
+    { freq: 65.41, detune: 6, gain: 0.2 },
+    { freq: 98.0, detune: 3, gain: 0.14 },
+    { freq: 130.81, detune: -3, gain: 0.1 },
+    { freq: 196.0, detune: 7, gain: 0.05 },
   ];
   for (const voice of voices) {
     const osc = ctx.createOscillator();
-    osc.type = voice.type;
+    osc.type = 'sine';
     osc.frequency.value = voice.freq;
     osc.detune.value = voice.detune;
     const gain = ctx.createGain();
-    gain.gain.value = 0.22;
-    osc.connect(gain).connect(bed);
+    gain.gain.value = voice.gain;
+    osc.connect(gain).connect(filter);
     osc.start();
   }
 
-  // slow filter drift, so the drone never sits still
   const lfo = ctx.createOscillator();
-  lfo.frequency.value = 0.045;
+  lfo.frequency.value = 0.035;
   const lfoGain = ctx.createGain();
-  lfoGain.gain.value = 160;
+  lfoGain.gain.value = 120;
   lfo.connect(lfoGain).connect(filter.frequency);
   lfo.start();
 
-  // air: filtered noise, gently breathing
-  const air = ctx.createBufferSource();
-  air.buffer = noiseBuffer(ctx, 3);
-  air.loop = true;
-  const airFilter = ctx.createBiquadFilter();
-  airFilter.type = 'bandpass';
-  airFilter.frequency.value = 900;
-  airFilter.Q.value = 0.5;
-  const airGain = ctx.createGain();
-  airGain.gain.value = 0.05;
-  air.connect(airFilter).connect(airGain).connect(master);
-  air.start();
-
-  const airLfo = ctx.createOscillator();
-  airLfo.frequency.value = 0.08;
-  const airLfoGain = ctx.createGain();
-  airLfoGain.gain.value = 0.03;
-  airLfo.connect(airLfoGain).connect(airGain.gain);
-  airLfo.start();
-
-  audio.bed = bed;
-  audio.noise = noiseBuffer(ctx, 0.4);
-  scheduleTexture();
+  audio.noise = null;
+  scheduleGrains();
 }
 
-// microbes: short filtered bursts, irregular, never on a beat
-function scheduleTexture() {
+// grain cloud: short sine shards, random pitch from the scale, random pan,
+// long reverb tail. This is the ether, and it carries no hiss.
+function scheduleGrains() {
   if (!audio.ctx || !audio.on) return;
   const ctx = audio.ctx;
-  const delay = 1400 + Math.random() * 5200;
+  const delay = 90 + Math.random() * 340;
   setTimeout(() => {
     if (!audio.on) return;
-    const source = ctx.createBufferSource();
-    source.buffer = audio.noise;
-    const band = ctx.createBiquadFilter();
-    band.type = 'bandpass';
-    band.frequency.value = 900 + Math.random() * 2600;
-    band.Q.value = 6 + Math.random() * 8;
-    const gain = ctx.createGain();
     const now = ctx.currentTime;
-    const peak = 0.012 + Math.random() * 0.02;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(peak, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25 + Math.random() * 0.4);
-    source.connect(band).connect(gain).connect(audio.master);
-    source.start(now);
-    source.stop(now + 0.7);
-    scheduleTexture();
+    const count = Math.random() < 0.25 ? 2 : 1;
+    for (let i = 0; i < count; i += 1) {
+      const osc = ctx.createOscillator();
+      osc.type = Math.random() < 0.2 ? 'triangle' : 'sine';
+      const base = GRAIN_SCALE[Math.floor(Math.random() * GRAIN_SCALE.length)];
+      const octave = Math.random() < 0.35 ? 2 : 1;
+      osc.frequency.value = base * octave * (1 + (Math.random() - 0.5) * 0.004);
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (pan) pan.pan.value = Math.random() * 1.6 - 0.8;
+      const gain = ctx.createGain();
+      const peak = 0.006 + Math.random() * 0.012;
+      const attack = 0.008 + Math.random() * 0.02;
+      const decay = 0.22 + Math.random() * 0.55;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(peak, now + attack);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
+      osc.connect(gain);
+      if (pan) gain.connect(pan).connect(audio.reverb);
+      else gain.connect(audio.reverb);
+      osc.start(now);
+      osc.stop(now + attack + decay + 0.05);
+    }
+    scheduleGrains();
   }, delay);
 }
 
@@ -598,7 +605,8 @@ function tone(from, to, duration, level = 0.08, type = 'sine') {
   gain.gain.setValueAtTime(0, now);
   gain.gain.linearRampToValueAtTime(level, now + 0.02);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-  osc.connect(gain).connect(audio.master);
+  gain.connect(audio.master);
+  if (audio.reverb) gain.connect(audio.reverb);
   osc.start(now);
   osc.stop(now + duration + 0.05);
 }
