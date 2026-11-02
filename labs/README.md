@@ -23,6 +23,7 @@ feedback solver. System Sheet is a print-first page with its own SVG and Canvas 
 | embed/forms-3d.html | The same rule set in three.js: 132 line modules in 3D, laid out by hue, tone, and density. |
 | embed/component-board.html | Bento board of 9 components: biomorphic dither, resonance, connectivity, surface division, ASCII, colour sets. |
 | embed/series-runner.html | Bounded operator set plus a seed: six draws per seed, keep or reject, seeds listed for export. |
+| embed/volumetric-diatom.html | The valve in 3D: dither particles, ASCII glyph particles, and iso-contour lines over a dome depth field. |
 
 ## Add a study
 
