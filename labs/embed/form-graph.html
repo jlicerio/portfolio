@@ -18,6 +18,9 @@
   .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
   .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
   @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
+  .detailbar{position:absolute;left:24px;right:24px;bottom:64px;display:flex;justify-content:space-between;align-items:center;gap:16px;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .detailbar button{appearance:none;border:1px solid var(--line);background:rgba(5,6,10,.8);color:var(--ink);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;padding:8px 12px;cursor:pointer}
+  .detailbar button:hover{border-color:var(--ink)}
 </style>
 <script type="importmap">
 {
@@ -35,6 +38,10 @@
 <div class="bar top">
   <div class="label"><b>Form space</b><br><span id="count">building</span></div>
   <div class="label" style="text-align:right">centre: one component<br>outward: more complexity</div>
+</div>
+<div id="detailbar" class="detailbar" hidden>
+  <button type="button" id="closeDetail">Close ✕</button>
+  <span id="detailcaption"></span>
 </div>
 <div class="bar bottom">
   <div class="label" id="readout">drag to orbit · scroll to zoom</div>
@@ -61,6 +68,11 @@ const PALETTES = [
   ['#f2f0ec', '#8ea6ff', '#3a63b8'],
   ['#ffd166', '#54d6a0', '#7fd8ff'],
   ['#ff8fd0', '#b18cff', '#8ea6ff'],
+  ['#f6f2a8', '#ff5a3c', '#7a2f2a'],
+  ['#c6ff4a', '#1f4a3a', '#0a0b0e'],
+  ['#7fd8ff', '#2a3a6a', '#f2f0ec'],
+  ['#ff5a3c', '#f2f0ec', '#8ea6ff'],
+  ['#b18cff', '#54d6a0', '#ffd166'],
 ];
 
 function rng(seed) {
@@ -158,16 +170,16 @@ specimens.push({
 
 for (let i = 1; i < COUNT; i += 1) {
   const t = i / (COUNT - 1);
-  const folds = Math.round(8 + t * 22 + (random() - 0.5) * 4);
-  const rings = Math.round(2 + t * 3 + (random() - 0.5) * 1);
-  const depth = 0.05 + random() * 0.13;
-  const sharpness = 0.7 + random() * 1.9;
-  const warpAmount = t * 0.26 * (0.4 + random() * 0.6);
+  const folds = Math.round(6 + t * 42 + (random() - 0.5) * 6);
+  const rings = Math.round(1 + t * 5 + (random() - 0.5) * 1.4);
+  const depth = 0.04 + random() * 0.2;
+  const sharpness = 0.4 + random() * 2.6;
+  const warpAmount = t * 0.34 * (0.3 + random() * 0.7);
   const complexity = (folds - 8) / 22 * 0.5 + (Math.max(2, rings) - 2) / 3 * 0.25 + warpAmount / 0.26 * 0.25;
   specimens.push({
     id: i,
-    folds: Math.max(8, Math.min(30, folds)),
-    rings: Math.max(2, Math.min(5, rings)),
+    folds: Math.max(6, Math.min(48, folds)),
+    rings: Math.max(1, Math.min(6, rings)),
     depth, sharpness,
     ringTurn: random() * 2,
     pores: random() * 0.6,
@@ -179,6 +191,18 @@ for (let i = 1; i < COUNT; i += 1) {
     palette: PALETTES[Math.floor(random() * PALETTES.length)],
     complexity: Math.max(0, Math.min(1, complexity)),
   });
+}
+
+// configuration name, read from the parameters rather than stored
+for (const spec of specimens) {
+  spec.ringTurn = spec.ringTurn ?? 0;
+  spec.config = spec.id === 0
+    ? 'valve'
+    : spec.folds >= 34 ? 'burst'
+    : spec.ringTurn >= 2.6 ? 'spiral'
+    : spec.depth >= 0.17 ? 'lobed'
+    : spec.rings >= 5 ? 'stack'
+    : 'valve';
 }
 
 // ---- layout: one centre, then rings that thicken with complexity ----
@@ -234,13 +258,15 @@ const group = new THREE.Group();
 scene.add(group);
 
 // ring guides: the complexity bands drawn as circles, with a count per ring
+const guidesGroup = new THREE.Group();
+scene.add(guidesGroup);
 const guideMaterial = new THREE.LineBasicNodeMaterial({ color: 0x2a2c33, transparent: true, opacity: 0.8 });
 for (let band = 1; band < 6; band += 1) {
   const radius = 2.7 * band;
   const points = [];
   for (let a = 0; a <= TAU + 0.01; a += 0.05) points.push(new THREE.Vector3(Math.cos(a) * radius, band * 0.55, Math.sin(a) * radius));
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  scene.add(new THREE.Line(geometry, guideMaterial));
+  guidesGroup.add(new THREE.Line(geometry, guideMaterial));
 }
 
 function bandLabel(text) {
@@ -263,7 +289,7 @@ const counts = ['1', '7', '12', '16', '18', '18'];
 for (let band = 0; band < 6; band += 1) {
   const label = bandLabel(counts[band]);
   label.position.set(0, band * 0.55 + 1.4, -2.7 * band - 0.4);
-  scene.add(label);
+  guidesGroup.add(label);
 }
 
 
@@ -311,15 +337,173 @@ scene.add(edgeMesh);
 buildCards('dither');
 countEl.textContent = `${specimens.length} specimens · 1 centre · ${edges.length} links`;
 
+// ---- volumetric detail: one specimen, particles plus contours ----
+const detailGroup = new THREE.Group();
+detailGroup.visible = false;
+scene.add(detailGroup);
+
+function buildDetail(spec) {
+  while (detailGroup.children.length) {
+    const child = detailGroup.children.pop();
+    child.geometry?.dispose();
+    child.material?.dispose();
+  }
+
+  const samples = [];
+  const step = 0.013;
+  const stops = spec.palette;
+  let index = 0;
+
+  for (let y = -1; y <= 1; y += step) {
+    for (let x = -1; x <= 1; x += step) {
+      const d = Math.hypot(x, y);
+      if (d > 1) { index += 1; continue; }
+      const a = Math.atan2(y, x);
+      const ringF = Math.min(d, 0.9999) * spec.rings;
+      const ring = Math.floor(ringF);
+      const rim = (ring + 1) / spec.rings;
+      const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+      const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+      const radius = rim * (1 + spec.depth * shaped) * warp;
+      if (d > radius) { index += 1; continue; }
+      const depthN = 1 - d / radius;
+      const light = Math.max(0.05, Math.min(1, 0.06 + 0.94 * depthN * (0.9 + 0.1 * shaped)));
+      const threshold = (BAYER[index % 4][Math.floor(index / 4) % 4] + 0.5) / 16;
+      if (light <= threshold) { index += 1; continue; }
+
+      const dome = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 0.45;
+      for (const side of [1, -1]) {
+        const z = side * (dome + spec.depth * shaped * 0.7);
+        const c = rampAt(stops, light);
+        const shade = side > 0 ? 1 : 0.68;
+        samples.push({
+          position: new THREE.Vector3(x * 2.4, z * 2.4, y * 2.4),
+          colour: new THREE.Color(c[0] / 255 * shade, c[1] / 255 * shade, c[2] / 255 * shade),
+          size: 0.02 + depthN * 0.016,
+        });
+      }
+      index += 1;
+    }
+  }
+
+  const geometry = new THREE.SphereGeometry(1, 8, 6);
+  const material = new THREE.MeshBasicNodeMaterial({ transparent: true, opacity: 0.95 });
+  const mesh = new THREE.InstancedMesh(geometry, material, samples.length);
+  const localMatrix = new THREE.Matrix4();
+  samples.forEach((sample, i) => {
+    localMatrix.makeScale(sample.size, sample.size, sample.size);
+    localMatrix.setPosition(sample.position);
+    mesh.setMatrixAt(i, localMatrix);
+    mesh.setColorAt(i, sample.colour);
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  detailGroup.add(mesh);
+
+  // iso lines of the same depth field
+  const lineMaterial = new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.55 });
+  for (let ring = 0; ring < spec.rings; ring += 1) {
+    for (const level of [0.25, 0.5, 0.75]) {
+      const positions = [];
+      const colours = [];
+      let previous = null;
+      for (let a = 0; a <= TAU + 0.001; a += 0.01) {
+        const ringF = ring + 1 - level;
+        const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+        const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+        const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+        const rim = (ring + 1) / spec.rings;
+        const radius = rim * (1 + spec.depth * shaped) * warp;
+        const d = radius * (1 - level);
+        if (d > 1) { previous = null; continue; }
+        const height = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 0.45 + spec.depth * shaped * 0.7;
+        const point = new THREE.Vector3(Math.cos(a) * d * 2.4, height * 2.4, Math.sin(a) * d * 2.4);
+        if (previous) {
+          positions.push(previous.x, previous.y, previous.z, point.x, point.y, point.z);
+          const c = rampAt(stops, level);
+          colours.push(c[0] / 255, c[1] / 255, c[2] / 255, c[0] / 255, c[1] / 255, c[2] / 255);
+        }
+        previous = point;
+      }
+      if (!positions.length) continue;
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colours, 3));
+      detailGroup.add(new THREE.LineSegments(lineGeometry, lineMaterial));
+    }
+  }
+
+  window.__study.detailPoints = samples.length;
+  document.getElementById('detailcaption').textContent =
+    `${spec.config} · ${spec.folds} folds · ${spec.rings} rings · warp ${spec.warpAmount.toFixed(2)} · ${samples.length.toLocaleString()} particles`;
+  document.getElementById('detailbar').hidden = false;
+}
+
+let detailOpen = false;
+function openDetail(spec) {
+  buildDetail(spec);
+  detailOpen = true;
+  window.__study.mode = 'detail';
+  group.visible = false;
+  guidesGroup.visible = false;
+  detailGroup.visible = true;
+  edgeMesh.visible = false;
+  orbit.radius = 8.4;
+  orbit.elevation = 0.55;
+}
+function closeDetail() {
+  detailOpen = false;
+  window.__study.mode = window.__study.cardMode || 'dither';
+  detailGroup.visible = false;
+  group.visible = true;
+  guidesGroup.visible = true;
+  document.getElementById('detailbar').hidden = true;
+  orbit.radius = 28;
+  orbit.elevation = 1.02;
+}
+document.getElementById('closeDetail').addEventListener('click', closeDetail);
+addEventListener('keydown', (event) => { if (event.key === 'Escape' && detailOpen) closeDetail(); });
+
 // ---- camera ----
 const orbit = { azimuth: 0.5, elevation: 1.02, radius: 28 };
 let dragging = false;
 let lastX = 0;
 let lastY = 0;
-canvasEl.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvasEl.setPointerCapture(e.pointerId); });
-canvasEl.addEventListener('pointerup', (e) => { dragging = false; canvasEl.releasePointerCapture(e.pointerId); });
+let downX = 0;
+let downY = 0;
+let moved = false;
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function pick(clientX, clientY) {
+  const rect = canvasEl.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(cards, false);
+  if (!hits.length) return;
+  const spec = hits[0].object.userData?.spec;
+  if (spec) openDetail(spec);
+}
+
+canvasEl.addEventListener('pointerdown', (e) => {
+  dragging = true;
+  moved = false;
+  downX = e.clientX;
+  downY = e.clientY;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  canvasEl.setPointerCapture(e.pointerId);
+});
+canvasEl.addEventListener('pointerup', (e) => {
+  dragging = false;
+  canvasEl.releasePointerCapture(e.pointerId);
+  if (!moved && !detailOpen) pick(e.clientX, e.clientY);
+});
 canvasEl.addEventListener('pointermove', (e) => {
   if (!dragging) return;
+  if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 6) moved = true;
   orbit.azimuth -= (e.clientX - lastX) * 0.004;
   orbit.elevation = Math.max(-1.1, Math.min(1.1, orbit.elevation + (e.clientY - lastY) * 0.003));
   lastX = e.clientX;
@@ -329,6 +513,7 @@ canvasEl.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = M
 
 function setMode(mode) {
   window.__study.mode = mode;
+  if (mode !== 'edges') window.__study.cardMode = mode;
   if (mode === 'edges') {
     edgeMesh.visible = !edgeMesh.visible;
     return;
@@ -343,8 +528,11 @@ for (const button of document.querySelectorAll('[data-mode]')) {
     for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
   });
 }
-const requested = new URLSearchParams(location.search).get('mode');
+const params = new URLSearchParams(location.search);
+const requested = params.get('mode');
 if (requested === 'ascii') setMode('ascii');
+const openIndex = Number(params.get('open'));
+if (Number.isFinite(openIndex) && specimens[openIndex]) openDetail(specimens[openIndex]);
 
 let clock = 0;
 renderer.setAnimationLoop(() => {
