@@ -14,7 +14,7 @@
 
 **Result.**
 
-- Runs at 61 fps at 1440 x 900 and 60.8 fps at 390 x 844 in headless Chrome 156.
+- Runs at 60.7 fps at 1440 x 900 and 60.9 fps at 390 x 844 in headless Chrome 156.
 - Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.
 - Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.
 - Four stills taken from the 90-second exhibition reel. The reel is 720 x 1280, and the four case images are 200 KB in total.
