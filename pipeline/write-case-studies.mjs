@@ -16,42 +16,42 @@ const studies = {
   'forget-me-not': {
     title: 'Forget-me-not',
     year: '2025',
-    summary: 'Projection mapping and technical integration for Victoria\'s first solo exhibition at St. Edward\'s University, across a bed, a sink, a basin, a window blind, and a slide.',
+    summary: 'Projection mapping and technical setup for the McAllen staging of Victoria\'s first solo exhibition, across a bed, a sink, a basin, and a window blind.',
     image: 'assets/images/projects/forget-me-not/hero.jpg',
     caseStudy: {
-      brief: "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. The show ran at St. Edward's University in February 2025 with five installations: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts. My part was projection mapping and technical integration: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
+      brief: "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Trucha in McAllen, Texas. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
       process: [
         "Victoria's video is the content. Each loop was matched to one surface before anything was mapped.",
         "Surfaces were mapped in MadMapper. The bed, the sink, and the basin are not flat, so each mask was drawn on site against the real object rather than from a plan.",
         "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could restart without touching the rest of the room.",
         "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
         "The blind carries an orange figure at full height. The vertical strips in that image come from the blind, not from the video, which sets the scale.",
-        "One work carries projection off the furniture: a cloth kite hangs above the slide, and the slide itself takes colour from the room rather than from a projector.",
+        "Each work is its own clip on its own surface, so the room reads as a set of objects rather than as one image across the space.",
         "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
         "A playback check ran before opening: every clip, its in point, and its surface."
       ],
       result: [
-        "Five installations in the show, with the room mapping a bed, a wall, a sink, a basin, a window blind, and the floor in front of the sink.",
-        "Venue and date: St. Edward's University, February 2025.",
-        "Four case images from the exhibition photographs by Brian Fitzsimmons, 234 KB in total.",
+        "Two runs: St. Edward's University in February 2025, then Trucha in McAllen, Texas. The McAllen dates are unconfirmed.",
+        "Five works in the show. The McAllen room maps a bed, a wall, a sink, a basin, and a window blind.",
+        "Four case images from the McAllen staging, 132 KB in total. The Trucha press cover credits Laura Martinez and sits in the credits list.",
         "The page is 2.7 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
         { role: 'Artist', name: 'Victoria (myonlinebedroom.com, @onlinebedroom)' },
-        { role: 'Projection mapping and technical integration', name: 'Juan Licerio' },
-        { role: 'Photographs', name: 'Brian Fitzsimmons' },
-        { role: 'Venue and dates', name: "St. Edward's University, February 2025" },
-        { role: 'Installations', name: "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts" },
-        { role: 'Support', name: 'The City of Austin Economic Development Department' },
+        { role: 'Technical setup and projection mapping, McAllen staging', name: 'Juan Licerio' },
+        { role: 'Works', name: "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts" },
+        { role: 'First run', name: "St. Edward's University, February 2025. Photographs by Brian Fitzsimmons" },
+        { role: 'Second run', name: 'Trucha, McAllen, Texas. Dates unconfirmed' },
         { role: 'Press', name: 'Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
-        { role: 'Image rights', name: 'Documentation only. Rights stay with the artist and the photographer' }
+        { role: 'Support, first run', name: 'The City of Austin Economic Development Department' },
+        { role: 'McAllen stills', name: 'Photographer unconfirmed. Image rights stay with the artist and the photographer' }
       ],
       images: [
         { src: img('assets/images/projects/forget-me-not/hero.jpg'), alt: 'A bed with a blue flora loop projected onto the sheet', caption: 'Bed with a blue flora loop. The sheet is the surface.' },
-        { src: img('assets/images/projects/forget-me-not/process.jpg'), alt: 'A purple plastic slide in a dark gallery with a cloth kite above it and a lit basin at left', caption: 'The slide, the kite above it, and the basin at left.' },
+        { src: img('assets/images/projects/forget-me-not/process.jpg'), alt: 'A window blind carrying an orange figure at full height', caption: 'Window blind with an orange figure at full height.' },
         { src: img('assets/images/projects/forget-me-not/detail.jpg'), alt: 'A sink with projection spilling onto the wall and floor', caption: 'Sink scene: wall, floor, and basin in one map.' },
-        { src: img('assets/images/projects/forget-me-not/extra.jpg'), alt: 'Close view of projected video on a bedsheet', caption: 'Detail: projected video on the sheet.' }
+        { src: img('assets/images/projects/forget-me-not/extra.jpg'), alt: 'A basin lit by a circular projection on the wall behind it', caption: 'Basin and wall disc, one map across two surfaces.' }
       ]
     }
   },

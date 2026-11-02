@@ -31,7 +31,7 @@
 2. River Pierce: technical stack, AR marker count, attendance, and the reel filmmaker.
 3. 9ine5ive6eis: names of the product photographers.
 4. Motion: how many studies are in the set.
-5. Forget-me-not: whether the five works in the room are all that the room held.
+5. Forget-me-not: the dates of the Trucha run in McAllen, and who photographed the McAllen stills.
 
 ## Next three
 

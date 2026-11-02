@@ -126,7 +126,7 @@ function renderCaseStudy(project) {
       <div class="case-block"><h2>Result</h2><ul>${list(study.result)}</ul></div>
       <div class="case-block"><h2>Credits</h2><dl>${credits(study.credits)}</dl></div>
     </div>
-    ${study.images?.length ? `<div class="case-gallery">${figures(study.images)}</div>` : ''}`;
+    ${study.images?.length ? `<div class="case-gallery" data-count="${study.images.length}">${figures(study.images)}</div>` : ''}`;
   anchor.after(section);
 }
 

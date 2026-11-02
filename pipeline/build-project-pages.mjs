@@ -89,7 +89,7 @@ const template = ({ id, title, description, cover }) => `<!doctype html>
   </section>
 </main>
 <footer><span>JUAN LICERIO</span><span>MEDIA ART / SYSTEMS / RGV</span></footer>
-<script type="module" src="../app.js?v=5"></script>
+<script type="module" src="../app.js?v=6"></script>
 </body>
 </html>
 `;
