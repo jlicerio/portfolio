@@ -50,6 +50,12 @@ function workRow(project, index) {
 function renderHome(site) {
   const name = document.querySelector('[data-name]');
   const bio = document.querySelector('[data-bio]');
+  const bioDetail = document.querySelector('[data-bio-detail]');
+  if (bioDetail) {
+    const parts = Array.isArray(site.bioDetails) ? site.bioDetails.filter(Boolean) : [];
+    if (parts.length) bioDetail.innerHTML = parts.map((part) => `<p>${escapeHtml(part)}</p>`).join('');
+    else bioDetail.remove();
+  }
   const projects = document.querySelector('[data-home-projects]');
   if (name) name.textContent = site.name;
   if (bio) bio.textContent = site.bio;

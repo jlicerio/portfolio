@@ -1175,6 +1175,7 @@
   "cv": {
     "focus": [
       "Emerging Media and Digital Art",
+      "Architectural Design Technology",
       "Software Engineering",
       "3D Art and Animation",
       "Projection Mapping",
@@ -1186,10 +1187,14 @@
       "9ine5ive6eis (2023)",
       "Triqueta AR/VR Exhibition (2023)",
       "Tigers Blood (2023)",
-      "River Pierce Foundation AR Showcase (2025)"
+      "River Pierce Foundation AR Showcase (2025)",
+      "Collapsed Timelines In Felicitous Space — Technical Setup (2022)"
     ]
   },
-  "bioDetails": [],
+  "bioDetails": [
+    "My passion lies in Emerging Media and Digital Art, where I continually develop and experiment with new technologies. My approach to art is informed by my studies in Architectural Design Technology and Software Engineering, which provide a structural and problem-solving framework.",
+    "My self-taught expertise includes a wide range of media: 3D art and animation such as detailed 3D artworks, logo renderings, and dynamic motion design, and immersive media, developing experiential works through projection mapping and actively exploring extended reality, including augmented reality and virtual reality. I focus on technically integrating these mediums to create high-quality, compelling visual experiences."
+  ],
   "sections": [
     {
       "id": "real-time",

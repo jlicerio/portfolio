@@ -124,3 +124,11 @@ body[data-theme="light"] .clip-play{background:rgba(242,240,236,.82);color:var(-
 .clip figcaption{position:absolute;inset:0 0 auto 0;display:flex;justify-content:space-between;gap:12px;padding:12px 14px;color:var(--ink);font:10px 'DM Mono',monospace;letter-spacing:.08em;text-shadow:0 1px 8px rgba(0,0,0,.7)}
 .clip.is-playing figcaption,.clip.is-playing .clip-play{display:none}
 .clip figcaption a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+/* Home: second bio block */
+.cover-bio-detail{max-width:62ch;margin:0 0 26px}
+.cover-bio-detail p{margin:0 0 12px;color:var(--muted);font-size:15px;line-height:1.55}
+@media(max-width:700px){.cover-bio-detail p{font-size:14px}}
+
+/* Section rules carry weight */
+.work-section-head{border-top-color:var(--ink);border-top-width:1px}
