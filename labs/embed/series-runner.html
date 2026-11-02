@@ -37,13 +37,11 @@
 <div class="wrap">
   <header>
     <h1>Series runner</h1>
-    <div class="meta"><b>Biomorphic series</b><br>2 base forms · 6 operators · bounds in JSON</div>
+    <div class="meta"><b>Biomorphic series</b><br>base form: diatom valve · 6 operators<br>bounds in JSON · seed picks inside them</div>
   </header>
 
   <div class="controls">
     <button type="button" id="reroll">Reroll · seed <b id="seed">114</b></button>
-    <button type="button" data-form="diatom" aria-pressed="true">Diatom</button>
-    <button type="button" data-form="blob" aria-pressed="false">Blob</button>
     <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
     <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
     <button type="button" id="reset">Clear kept</button>
@@ -111,10 +109,7 @@ async function load() {
   state.config = await response.json();
   const params = new URLSearchParams(location.search);
   state.seed = Number(params.get('seed')) || state.config.seed;
-  state.form = params.get('form') || state.config.defaultForm || 'blob';
-  for (const button of document.querySelectorAll('[data-form]')) {
-    button.setAttribute('aria-pressed', String(button.dataset.form === state.form));
-  }
+  state.form = params.get('form') || state.config.defaultForm || 'diatom';
   build();
 }
 
