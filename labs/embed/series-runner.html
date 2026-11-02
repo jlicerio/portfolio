@@ -70,6 +70,29 @@ const BAYER8 = (() => {
 })();
 const GLYPHS = ' .:-=+*#%@';
 
+function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function mixRgb(a, b, t) {
+  return [Math.round(a[0] + (b[0] - a[0]) * t), Math.round(a[1] + (b[1] - a[1]) * t), Math.round(a[2] + (b[2] - a[2]) * t)];
+}
+
+// Build a short cached ramp so the pixel loop stays cheap.
+function buildRamp(stops, steps = 14) {
+  const rgb = stops.map(hexToRgb);
+  const out = [];
+  for (let i = 0; i < steps; i += 1) {
+    const t = i / (steps - 1) * (rgb.length - 1);
+    const low = Math.min(rgb.length - 1, Math.floor(t));
+    const high = Math.min(rgb.length - 1, low + 1);
+    const c = mixRgb(rgb[low], rgb[high], t - low);
+    out.push(`rgb(${c[0]},${c[1]},${c[2]})`);
+  }
+  return out;
+}
+
 function rng(seed) {
   let s = seed >>> 0 || 1;
   return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
@@ -111,7 +134,7 @@ function paramsFor(index) {
     field: pick(random, config.operators.field),
     dither: pick(random, config.operators.dither),
     ascii: pick(random, config.operators.ascii),
-    palette: [config.palette[Math.floor(random() * config.palette.length)], config.palette[Math.floor(random() * config.palette.length)]],
+    palette: (() => { const pool = [...config.palette]; const out = []; for (let k = 0; k < 3; k += 1) out.push(pool.splice(Math.floor(random() * pool.length), 1)[0]); return out; })(),
     phase: random() * Math.PI * 2,
   };
 }
@@ -181,6 +204,8 @@ function render(canvas, params, t) {
   const order = matrix.length;
   const step = Math.max(2, Math.round(size / 78));
   const colours = params.palette;
+  const stops = [colours[0], colours[1] || colours[0], colours[2] || colours[0]];
+  const ramp = buildRamp(stops);
 
   ctx.save();
   ctx.translate(w / 2, h / 2);
@@ -215,7 +240,10 @@ function render(canvas, params, t) {
               const rim = (ring + 1) / rings;
               const raw = Math.sin(base.folds * a + ring * base.ringTurn + ringF * base.ringTurn * 0.8);
               const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), base.sharpness);
-              const radius = rim * (1 + base.depth * shaped);
+              const warp = 1 + (base.warpAmount || 0) * Math.sin(
+                (base.warpHarmonics || 2) * a + ring * (base.warpTurn || 0) + ringF * (base.warpTurn || 0) * 0.6 + params.phase,
+              );
+              const radius = rim * (1 + base.depth * shaped) * warp;
               if (d < radius) {
                 inside = true;
                 const band = 0.5 + 0.5 * shaped;
@@ -244,7 +272,8 @@ function render(canvas, params, t) {
           const gy = Math.round((py + size) / step) % order;
           if (light <= matrix[(gy + order) % order][(gx + order) % order]) continue;
 
-          const colour = colours[(gx + gy) % 2];
+          const rampIndex = Math.min(ramp.length - 1, Math.max(0, Math.round((1 - light) * (ramp.length - 1))));
+          const colour = ramp[rampIndex];
           if (params.ascii > 0.01 && ((gx + gy) % 3 === 0)) {
             ctx.fillStyle = colour;
             ctx.font = `${Math.ceil(step * 2.1)}px 'DM Mono', ui-monospace, monospace`;
@@ -259,7 +288,7 @@ function render(canvas, params, t) {
       }
 
       if (params.form === 'diatom') {
-        drawValve(ctx, base, localR, colours[0], ox, oy);
+        drawValve(ctx, base, localR, ramp[ramp.length - 1], ox, oy);
       }
     }
   }
@@ -282,7 +311,7 @@ function build() {
       <span class="idx">DRAW ${String(i + 1).padStart(2, '0')}</span>
       <button class="keep" type="button">KEEP</button>
       <span class="ops">${params.form === 'diatom'
-        ? `<b>${params.base.folds}F</b> · ${params.base.rings}R · depth ${params.base.depth.toFixed(2)} · sharp ${params.base.sharpness.toFixed(1)} · pore ${params.base.pores.toFixed(2)}`
+        ? `<b>${params.base.folds}F</b> · ${params.base.rings}R · depth ${params.base.depth.toFixed(2)} · sharp ${params.base.sharpness.toFixed(1)} · warp ${params.base.warpHarmonics}×${params.base.warpAmount.toFixed(2)}`
         : `<b>${params.base.harmonics}H</b> · amp ${params.base.amplitude.toFixed(2)} · 2nd ${params.base.secondary.toFixed(2)}`} · turn ${params.turn}° · ${params.mirror ? 'mirror' : 'direct'} · field ${params.field} · ${params.dither}×${params.dither}</span>`;
     grid.appendChild(cell);
 
