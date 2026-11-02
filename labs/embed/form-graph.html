@@ -493,6 +493,22 @@ const audio = {
 const RING_FREQS = [65.41, 98.0, 130.81, 196.0, 261.63];   // C2 G2 C3 G3 C4
 const RING_LEVELS = [0.16, 0.14, 0.12, 0.1, 0.08];
 
+function impulseResponse(context, seconds = 3.6) {
+  const length = Math.floor(context.sampleRate * seconds);
+  const buffer = context.createBuffer(2, length, context.sampleRate);
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = buffer.getChannelData(channel);
+    let last = 0;
+    for (let i = 0; i < length; i += 1) {
+      const t = i / length;
+      const white = Math.random() * 2 - 1;
+      last = last * 0.9 + white * 0.1;
+      data[i] = last * Math.pow(1 - t, 2.4);
+    }
+  }
+  return buffer;
+}
+
 function startAudio() {
   if (audio.ctx) return;
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -515,6 +531,17 @@ function startAudio() {
   master.connect(lowShelf).connect(highShelf).connect(ctx.destination);
   audio.master = master;
 
+  // one room, generated: the arp needs a tail, the bed needs almost none
+  const convolver = ctx.createConvolver();
+  convolver.buffer = impulseResponse(ctx, 3.6);
+  const wet = ctx.createGain();
+  wet.gain.value = 0.5;
+  convolver.connect(wet).connect(master);
+  audio.reverb = convolver;
+  audio.reverbIn = ctx.createGain();
+  audio.reverbIn.gain.value = 0.8;
+  audio.reverbIn.connect(convolver);
+
   // the bed: five rings, each a detuned pair, each with its own pan
   audio.rings = [];
   RING_FREQS.forEach((freq, index) => {
@@ -535,14 +562,9 @@ function startAudio() {
     audio.rings.push({ freq, gain, pan, level: RING_LEVELS[index], index });
   });
 
-  // air: one high C, very quiet, so the room has light in it
-  const airOsc = ctx.createOscillator();
-  airOsc.type = 'sine';
-  airOsc.frequency.value = 1046.5;
-  const airGain = ctx.createGain();
-  airGain.gain.value = 0.012;
-  airOsc.connect(airGain).connect(master);
-  airOsc.start();
+  // air: a slow arpeggio in C, sent mostly to the room
+  audio.arpNotes = [1046.5, 1318.5, 1568.0, 2093.0];   // C6 E6 G6 C7
+  scheduleArp();
 
   // the outermost ring carries the dust: sparse shards, no tail effects
   audio.grains = true;
@@ -568,6 +590,42 @@ function duckBed(factor, time = 0.8) {
     ring.gain.gain.cancelScheduledValues(now);
     ring.gain.gain.setTargetAtTime(ring.level * factor, now, time);
   });
+}
+
+// arp: one note every 1.1 to 1.9 seconds, sometimes a rest.
+// Mostly wet, so it reads as light in a room rather than a melody.
+function scheduleArp() {
+  if (!audio.ctx || !audio.on) return;
+  const ctx = audio.ctx;
+  const rest = Math.random() < 0.22;
+  const delay = 1100 + Math.random() * 800;
+  setTimeout(() => {
+    if (!audio.on) return;
+    if (!rest && audio.arpNotes) {
+      const now = ctx.currentTime;
+      const note = audio.arpNotes[Math.floor(Math.random() * audio.arpNotes.length)];
+      const osc = ctx.createOscillator();
+      osc.type = Math.random() < 0.15 ? 'triangle' : 'sine';
+      osc.frequency.value = note * (1 + (Math.random() - 0.5) * 0.002);
+      const gain = ctx.createGain();
+      const peak = 0.02 + Math.random() * 0.014;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(peak, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6 + Math.random() * 1.2);
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      osc.connect(gain);
+      if (audio.reverbIn) gain.connect(audio.reverbIn);
+      if (pan) {
+        pan.pan.value = Math.random() * 1.2 - 0.6;
+        gain.connect(pan).connect(audio.master);
+      } else {
+        gain.connect(audio.master);
+      }
+      osc.start(now);
+      osc.stop(now + 3.2);
+    }
+    scheduleArp();
+  }, delay);
 }
 
 // dust: short sine shards tuned to the outer ring, no reverb, no delay
@@ -620,6 +678,11 @@ function holdEntryTone(spec) {
   const gain = ctx.createGain();
   gain.gain.value = 0;
   gain.connect(audio.master);
+  if (audio.reverbIn) {
+    const send = ctx.createGain();
+    send.gain.value = 0.35;
+    gain.connect(send).connect(audio.reverbIn);
+  }
   const voice = { oscs: [], gain };
 
   for (const multiplier of [1, 2, 3]) {
