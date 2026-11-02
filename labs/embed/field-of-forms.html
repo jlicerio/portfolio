@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field of Forms</title>
+<style>
+  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif}
+  #stage{position:relative;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:22px}
+  .bottom{bottom:22px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
+  .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+  .readout{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);pointer-events:none;white-space:nowrap}
+  .readout b{color:var(--ink);font-weight:400}
+  @media(max-width:700px){
+    .bar{left:14px;right:14px}.top{top:14px}.bottom{bottom:14px;flex-direction:column;gap:10px}
+    .readout{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="field" aria-label="Generative forms inspired by diatoms, spores, leaves, coral, and cells, laid out by their own properties"></canvas>
+  <div class="bar top">
+    <div class="label"><b>Field of Forms</b><br><span id="count">building</span></div>
+    <div class="label" style="text-align:right">generative<br>no two alike</div>
+  </div>
+  <div class="bar bottom">
+    <div class="label" id="axislabel">x: hue · y: structure</div>
+    <div class="keys">
+      <button type="button" data-mode="colour" aria-pressed="true">COLOUR FIELD</button>
+      <button type="button" data-mode="structure" aria-pressed="false">STRUCTURE FIELD</button>
+    </div>
+  </div>
+  <div class="readout" id="readout"></div>
+</div>
+<script>
+const canvas = document.getElementById('field');
+const ctx = canvas.getContext('2d', { alpha: false });
+const countEl = document.getElementById('count');
+const readout = document.getElementById('readout');
+const axisEl = document.getElementById('axislabel');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+window.__study = { ready: false, frames: 0, error: null, forms: 0 };
+
+const FAMILIES = ['diatom', 'spore', 'leaf', 'coral', 'cell'];
+const HUES = [186, 42, 96, 268, 205];
+const N = 132;
+
+// Deterministic pseudo-random so the field is the same on every load.
+function rng(seed) {
+  let s = seed >>> 0;
+  return () => {
+    s ^= s << 13; s >>>= 0;
+    s ^= s >> 17;
+    s ^= s << 5; s >>>= 0;
+    return s / 4294967296;
+  };
+}
+
+const forms = [];
+for (let i = 0; i < N; i += 1) {
+  const random = rng(i * 2654435761 + 7);
+  const family = i % FAMILIES.length;
+  forms.push({
+    id: i,
+    family: FAMILIES[family],
+    hue: HUES[family] + (random() - 0.5) * 26,
+    tone: 0.45 + random() * 0.5,
+    density: random(),
+    lobes: 3 + Math.floor(random() * 9),
+    arms: 4 + Math.floor(random() * 9),
+    size: 16 + random() * 34,
+    phase: random() * Math.PI * 2,
+    spin: (random() - 0.5) * 0.25,
+    seed: Math.floor(random() * 1e6),
+  });
+}
+window.__study.forms = forms.length;
+
+let mode = 'colour';
+let width = 0, height = 0, dpr = 1;
+let hovered = -1;
+const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+
+function size() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  width = canvas.clientWidth;
+  height = canvas.clientHeight;
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  place();
+}
+
+// Position comes from the form's own properties, not from a grid.
+function place() {
+  const padX = Math.max(40, width * 0.07);
+  const padY = Math.max(70, height * 0.13);
+
+  // Rank order on one property gives even spacing, so the field reads as a field
+  // and not as one clump per family. The other property sets height.
+  const key = (form) => (mode === 'colour' ? form.hue : form.lobes);
+  const ordered = [...forms].sort((a, b) => key(a) - key(b));
+
+  ordered.forEach((form, rank) => {
+    const u = (rank + 0.5) / ordered.length;
+    const v = mode === 'colour' ? (form.tone - 0.45) / 0.5 : form.density;
+    const wobble = ((form.seed % 997) / 997 - 0.5) * 0.22;
+    form.x = padX + u * (width - padX * 2) + wobble * 26;
+    form.y = padY + (0.5 + (v - 0.5) * 1.15 + wobble * 0.5) * (height - padY * 2);
+  });
+
+  axisEl.textContent = mode === 'colour'
+    ? 'x: hue · y: tone'
+    : 'x: lobes · y: density';
+}
+
+function diatom(form, t, scale) {
+  ctx.beginPath();
+  ctx.arc(0, 0, scale, 0, Math.PI * 2);
+  ctx.stroke();
+  for (let i = 0; i < form.lobes * 2; i += 1) {
+    const a = (i / (form.lobes * 2)) * Math.PI * 2 + t * form.spin;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(a) * scale * 0.22, Math.sin(a) * scale * 0.22);
+    ctx.lineTo(Math.cos(a) * scale * 0.96, Math.sin(a) * scale * 0.96);
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.arc(0, 0, scale * 0.22, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function spore(form, t, scale) {
+  for (let ring = 0; ring < 4; ring += 1) {
+    const r = scale * (0.28 + ring * 0.22) * (1 + Math.sin(t * 0.6 + form.phase + ring) * 0.04);
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  for (let i = 0; i < form.arms; i += 1) {
+    const a = (i / form.arms) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(Math.cos(a) * scale * 0.5, Math.sin(a) * scale * 0.5, scale * 0.07, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+function leaf(form, t, scale) {
+  ctx.beginPath();
+  for (let i = 0; i <= 64; i += 1) {
+    const a = (i / 64) * Math.PI * 2;
+    const lobe = Math.sin(a * form.lobes + t * 0.2 + form.phase);
+    const r = scale * (0.62 + lobe * 0.17);
+    const x = Math.cos(a) * r;
+    const y = Math.sin(a) * r * 1.35;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, -scale * 1.1);
+  ctx.lineTo(0, scale * 1.1);
+  ctx.stroke();
+}
+
+function coral(form, t, scale) {
+  const branch = (x, y, angle, length, depth) => {
+    if (depth === 0 || length < 2) return;
+    const nx = x + Math.cos(angle) * length;
+    const ny = y + Math.sin(angle) * length;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(nx, ny);
+    ctx.stroke();
+    const sway = Math.sin(t * 0.5 + form.phase + depth) * 0.12;
+    branch(nx, ny, angle - 0.45 + sway, length * 0.72, depth - 1);
+    branch(nx, ny, angle + 0.45 + sway, length * 0.72, depth - 1);
+  };
+  branch(0, scale * 0.9, -Math.PI / 2, scale * 0.6, 5);
+}
+
+function cell(form, t, scale) {
+  ctx.beginPath();
+  for (let i = 0; i <= 70; i += 1) {
+    const a = (i / 70) * Math.PI * 2;
+    const wobble = 1 + Math.sin(a * form.lobes + t * 0.5 + form.phase) * 0.12;
+    const x = Math.cos(a) * scale * wobble;
+    const y = Math.sin(a) * scale * wobble * 0.92;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.stroke();
+  for (let i = 0; i < 3; i += 1) {
+    const a = form.phase + i * 2.1 + t * 0.2;
+    ctx.beginPath();
+    ctx.arc(Math.cos(a) * scale * 0.3, Math.sin(a) * scale * 0.3, scale * 0.12, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+const DRAW = { diatom, spore, leaf, coral, cell };
+
+function draw(t) {
+  const time = t / 1000;
+
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, width, height);
+
+  // Pointer parallax stays subtle.
+  pointer.x += (pointer.tx - pointer.x) * 0.06;
+  pointer.y += (pointer.ty - pointer.y) * 0.06;
+
+  ctx.strokeStyle = 'rgba(242,240,236,0.045)';
+  ctx.lineWidth = 1;
+  for (let g = 0; g < 4; g += 1) {
+    const x = (width / 4) * (g + 0.5);
+    const y = (height / 4) * (g + 0.5);
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+  }
+
+  for (const form of forms) {
+    const px = form.x + pointer.x * 18 * (0.4 + form.tone);
+    const py = form.y + pointer.y * 18 * (0.4 + form.density);
+    const breathe = reduced ? 1 : 1 + Math.sin(time * 0.7 + form.phase) * 0.06;
+    const scale = form.size * breathe;
+
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.rotate(reduced ? 0 : time * form.spin * 0.2);
+    ctx.lineWidth = form.id === hovered ? 1.4 : 0.8;
+    ctx.strokeStyle = `hsla(${form.hue}, 34%, ${Math.round(52 + form.tone * 22)}%, ${0.24 + form.tone * 0.42})`;
+    DRAW[form.family](form, time, scale);
+    ctx.restore();
+  }
+
+  if (hovered >= 0) {
+    const form = forms[hovered];
+    ctx.strokeStyle = 'rgba(242,240,236,0.7)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(form.x, form.y, form.size + 12, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  window.__study.frames += 1;
+  requestAnimationFrame(draw);
+}
+
+function hit(x, y) {
+  let best = -1;
+  let bestDistance = Infinity;
+  for (const form of forms) {
+    const distance = (form.x - x) ** 2 + (form.y - y) ** 2;
+    const reach = (form.size + 10) ** 2;
+    if (distance < reach && distance < bestDistance) { bestDistance = distance; best = form.id; }
+  }
+  return best;
+}
+
+canvas.addEventListener('pointermove', (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  pointer.tx = (x / width - 0.5) * 2;
+  pointer.ty = (y / height - 0.5) * 2;
+  hovered = hit(x, y);
+  if (hovered >= 0) {
+    const form = forms[hovered];
+    readout.innerHTML = `<b>${form.family}</b> · lobes ${form.lobes} · density ${form.density.toFixed(2)} · tone ${form.tone.toFixed(2)} · hue ${Math.round(form.hue)}`;
+  } else {
+    readout.innerHTML = '';
+  }
+});
+canvas.addEventListener('pointerleave', () => { pointer.tx = 0; pointer.ty = 0; hovered = -1; readout.innerHTML = ''; });
+window.addEventListener('resize', size);
+
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => {
+    mode = button.dataset.mode;
+    for (const other of document.querySelectorAll('[data-mode]')) {
+      other.setAttribute('aria-pressed', String(other === button));
+    }
+    place();
+  });
+}
+
+countEl.textContent = `${forms.length} forms · 5 families`;
+size();
+window.__study.ready = true;
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
