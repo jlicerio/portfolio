@@ -54,37 +54,39 @@ const studies = {
 
   triqueta: {
     year: '2023',
-    summary: 'AR overlays on Michael Flanagan\'s paintings and a VR scene built from his video works, developed for the McAllen Creative Incubator.',
+    summary: 'AR poster designs, a VR scene built from Michael Flanagan\'s video works, and an immersive installation at the McAllen Creative Incubator.',
     image: 'assets/images/projects/triqueta/hero.jpg',
     caseStudy: {
-      brief: "Triqueta pairs two media in one room. Michael Flanagan's paintings get augmented reality overlays, and his video works become a virtual reality scene. The project ran at the McAllen Creative Incubator in 2023. My part was development rather than authorship: build the technical layer that lets a painter's work be entered by a headset and by a phone, without the two reading as separate shows.",
+      brief: "Triqueta ran at the McAllen Creative Incubator in McAllen, Texas. The showcase carried AR poster designs, a VR experience, audio-visual installation, and generative digital art by regional artist and designer _selfsimilar_. Michael Flanagan's paintings and films were the collaborating body of work: his paintings took the AR overlays and his video became the VR scene. My part was development rather than authorship: build the technical layer that lets painted work be entered by a headset and by a phone, without the two reading as separate shows.",
       process: [
         "The work started from Flanagan's existing paintings and video, not from a new image.",
         "Each painting carried an AR overlay. The overlays include AI-generated elements, which sit over the painted surface rather than replacing it.",
         "The VR scene was built in Unreal and holds Flanagan's video works. A visitor in the headset sees the footage as the room, not as a screen on a wall.",
-        "The two builds share one visual vocabulary, so a visitor who sees only the phone overlays still recognises the same project.",
-        "Development covered tracking, placement, playback, and the headset build.",
-        "The room had to hold the paintings, a tracking position per work, and a headset station at the same time."
+        "Tracking used printed markers fixed to the wall beside each work. The reel shows a marker next to the poster it registers.",
+        "The overlays read as objects in the room, not as flat images. A dome sits in front of its poster and casts a shadow; slabs float off a wall.",
+        "The phone build and the headset build share one visual vocabulary, so a visitor who only uses the phone still reads the same project.",
+        "The room held three kinds of work at once: the AR posters, the headset station, and the generative and audio-visual installation."
       ],
       result: [
-        "Two modes in one exhibition: AR on paintings and a VR headset scene.",
-        "One collaborator and one venue: the McAllen Creative Incubator, 2023.",
-        "One still survives in the project file. The painting count, the marker count, and the run dates are unconfirmed.",
-        "The page is 2.6 KB of HTML, and the three case images are 399 KB in total.",
+        "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
+        "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
+        "Four stills taken from the 90-second exhibition reel. The reel is 720 x 1280, and the four case images are 200 KB in total.",
+        "The page is 2.6 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
-        { role: 'Artist', name: 'Michael Flanagan' },
-        { role: 'AR and VR development', name: 'Juan Licerio' },
+        { role: 'Paintings and films', name: 'Michael Flanagan' },
+        { role: 'AR, VR, and show design', name: 'Juan Licerio (_selfsimilar)' },
         { role: 'Engine', name: 'Unreal Engine for the VR build' },
-        { role: 'Venue', name: 'McAllen Creative Incubator' },
-        { role: 'Year', name: '2023. Run dates unconfirmed' },
-        { role: 'Additional stills', name: 'None in the project file' }
+        { role: 'Venue', name: 'McAllen Creative Incubator, McAllen, Texas' },
+        { role: 'Reel', name: '90 seconds, 720 x 1280, hosted on the Behance CCV player. Filmmaker unconfirmed' },
+        { role: 'Year and run dates', name: '2023. Run dates and painting count unconfirmed' }
       ],
       images: [
-        { src: img('assets/images/projects/triqueta/hero.jpg'), alt: 'Abstract project cover still with a grain sun and a translucent looping form', caption: 'Cover still from the project file.' },
-        { src: img('assets/images/projects/triqueta/process.jpg'), alt: 'Detail crop of the cover still: the sun and upper loop', caption: 'Detail crop: grain, sun, and the top of the loop.' },
-        { src: img('assets/images/projects/triqueta/detail.jpg'), alt: 'Detail crop of the cover still: the lower loop', caption: 'Detail crop: the lower loop and its highlight.' }
+        { src: img('assets/images/projects/triqueta/hero.jpg'), alt: 'A visitor standing in the gallery wearing a VR headset and holding controllers', caption: 'Visitor in the VR scene, in the gallery.' },
+        { src: img('assets/images/projects/triqueta/process.jpg'), alt: 'A visitor holding a phone that shows the AR poster view', caption: 'Phone build in use on the show floor.' },
+        { src: img('assets/images/projects/triqueta/detail.jpg'), alt: 'Yellow slabs and a red plane floating in front of a brick wall with shadows', caption: 'AR slab field over the brick wall.' },
+        { src: img('assets/images/projects/triqueta/extra.jpg'), alt: 'A poster with a violet circle and a dark dome overlay sitting in front of it, a printed marker on the wall beside it', caption: 'AR dome anchored to a poster, marker on the wall.' }
       ]
     }
   },

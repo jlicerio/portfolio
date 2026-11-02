@@ -8,7 +8,7 @@
 | Surveillance Status | Live cam and browser vision | Video case | Case study done | Review copy |
 | Forget Me Not | Projection mapping | Installation case | Case study done | Confirm venue and dates |
 | River Pierce | AR, public program | Commission case | Case study done | Add an AR screenshot if one exists |
-| Triqueta | AR and VR | Exhibition case | Case study done, thin stills | One more exhibition photo |
+| Triqueta | AR and VR | Exhibition case | Case study done | Name the reel's filmmaker |
 | 9ine5ive6eis | Apparel identity | Identity case | Case study done | Name the product photographers |
 | Tigers Blood | 3D mark | Commission case | Case study done | Review copy |
 | Motion | Motion graphics | Self-set studies | Case study done, one still | Add a loop or a second still |
@@ -29,7 +29,7 @@
 
 1. Forget Me Not: venue and run dates. The Ponte record does not link to this show.
 2. Forget Me Not: photographer for stills 02 to 05. The Trucha cover names Laura Martinez.
-3. Triqueta: painting count, AR marker count, run dates.
+3. Triqueta: painting count, run dates, and the filmmaker who shot the reel.
 4. River Pierce: technical stack, AR marker count, attendance, and one in-app screenshot.
 5. 9ine5ive6eis: names of the product photographers.
 6. Motion: how many studies are in the set.
