@@ -14,40 +14,44 @@ const site = JSON.parse(readFileSync(file, 'utf8'));
 const img = (path) => path;
 const studies = {
   'forget-me-not': {
+    title: 'Forget-me-not',
     year: '2025',
-    summary: 'Projection mapping and technical integration for Victoria\'s solo exhibition, across a bed, a wall, a sink, and a window blind.',
+    summary: 'Projection mapping and technical integration for Victoria\'s first solo exhibition at St. Edward\'s University, across a bed, a sink, a basin, a window blind, and a slide.',
     image: 'assets/images/projects/forget-me-not/hero.jpg',
-    cover: 'img',
     caseStudy: {
-      brief: "Victoria's solo exhibition Forget Me Not: Layers of Identity, Memory, & Intention puts projected video on furniture instead of screens. My part was projection mapping and technical integration. The room had to read as one continuous atmosphere, with the bed, a wall, the sink, and a window blind each holding its own loop. The work also had to sit in a dark gallery and hold for the length of the opening.",
+      brief: "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. The show ran at St. Edward's University in February 2025 with five installations: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts. My part was projection mapping and technical integration: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
       process: [
-        "Victoria supplied the video content. The first pass matched each loop to the surface it would land on: the bed, the wall, the sink, and the blind.",
-        "Surfaces were mapped in MadMapper. The bed and the sink are not flat, so each mask was drawn on site against the real object rather than from a plan.",
-        "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could be restarted without disturbing the rest of the room.",
+        "Victoria's video is the content. Each loop was matched to one surface before anything was mapped.",
+        "Surfaces were mapped in MadMapper. The bed, the sink, and the basin are not flat, so each mask was drawn on site against the real object rather than from a plan.",
+        "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could restart without touching the rest of the room.",
         "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
-        "The blind carries an orange figure at full height. The vertical strips in that image come from the blind itself, not from the video, which sets the scale.",
+        "The blind carries an orange figure at full height. The vertical strips in that image come from the blind, not from the video, which sets the scale.",
+        "One work carries projection off the furniture: a cloth kite hangs above the slide, and the slide itself takes colour from the room rather than from a projector.",
         "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
         "A playback check ran before opening: every clip, its in point, and its surface."
       ],
       result: [
-        "Four surfaces carry projection: bed, wall, sink, and window blind.",
-        "Five installation stills survive in the project file. Four are used here at 206 KB in total.",
+        "Five installations in the show, with the room mapping a bed, a wall, a sink, a basin, a window blind, and the floor in front of the sink.",
+        "Venue and date: St. Edward's University, February 2025.",
+        "Four case images from the exhibition photographs by Brian Fitzsimmons, 234 KB in total.",
         "The page is 2.7 KB of HTML and renders the case from one data entry.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
-        { role: 'Artist', name: 'Victoria' },
+        { role: 'Artist', name: 'Victoria (myonlinebedroom.com, @onlinebedroom)' },
         { role: 'Projection mapping and technical integration', name: 'Juan Licerio' },
-        { role: 'Software', name: 'Resolume Arena, MadMapper' },
+        { role: 'Photographs', name: 'Brian Fitzsimmons' },
+        { role: 'Venue and dates', name: "St. Edward's University, February 2025" },
+        { role: 'Installations', name: "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts" },
+        { role: 'Support', name: 'The City of Austin Economic Development Department' },
         { role: 'Press cover', name: 'Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
-        { role: 'Installation stills', name: 'Photographer unconfirmed' },
-        { role: 'Venue and dates', name: 'Unconfirmed' }
+        { role: 'Image rights', name: 'Documentation only. Rights stay with the artist and the photographer' }
       ],
       images: [
         { src: img('assets/images/projects/forget-me-not/hero.jpg'), alt: 'A bed with a blue flora loop projected onto the sheet', caption: 'Bed with a blue flora loop. The sheet is the surface.' },
-        { src: img('assets/images/projects/forget-me-not/process.jpg'), alt: 'A sink with projection spilling onto the wall and floor', caption: 'Sink scene: wall, floor, and basin in one map.' },
-        { src: img('assets/images/projects/forget-me-not/detail.jpg'), alt: 'A window blind carrying an orange figure at full height', caption: 'Window blind with an orange figure at full height.' },
-        { src: img('assets/images/projects/forget-me-not/press.jpg'), alt: 'Trucha press cover for the Forget Me Not exhibition', caption: 'Trucha press cover for the show.' }
+        { src: img('assets/images/projects/forget-me-not/process.jpg'), alt: 'A purple plastic slide in a dark gallery with a cloth kite above it and a lit basin at left', caption: 'The slide, the kite above it, and the basin at left.' },
+        { src: img('assets/images/projects/forget-me-not/detail.jpg'), alt: 'A sink with projection spilling onto the wall and floor', caption: 'Sink scene: wall, floor, and basin in one map.' },
+        { src: img('assets/images/projects/forget-me-not/extra.jpg'), alt: 'Close view of projected video on a bedsheet', caption: 'Detail: projected video on the sheet.' }
       ]
     }
   },
@@ -93,23 +97,26 @@ const studies = {
 
   'river-pierce': {
     year: '2025',
-    summary: 'A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.',
+    summary: 'A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription, debuted at the Treviño–Uribe Rancho.',
     image: 'assets/images/projects/river-pierce/hero.jpg',
     caseStudy: {
-      brief: "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
+      brief: "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The content is specific to the place. Each object in the piece carries a panel that names its role in Carrizo Comecrudo practice, and a second reel sets the piece in San Ygnacio with a stone inscription dated 3 December 1871.",
       process: [
-        "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
+        "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation under a Mellon Foundation Humanities in Place grant.",
+        "The content is interpretive rather than decorative. The bison skull is described as a symbol of life, sustenance, and respect, and the panel says the animal was not as central to Carrizo daily survival as it was for Plains cultures.",
+        "The bear carries its own panel: animals are treated as relatives and sources of strength, and bear skins are worn in a Carrizo Comecrudo ceremony called the Bear Dance.",
+        "The poles are named Xie Kua'k Kua̲m. The panel ties them to the four directions and to ceremonial use by the Carrizo.",
+        "A peyote cactus sits with a panel that quotes a peyote ceremony account and names Esto'k Gna culture.",
+        "The second reel sets five purple glyph discs above a bilingual inscription: La paz de Cristo sea con nosotros, 3 December 1871, S. Ygnacio ruega por nosotros.",
         "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
-        "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
-        "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
-        "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
-        "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
+        "The event was free and open to the public, so a visitor with no appointment had to be able to take part."
       ],
       result: [
+        "Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.",
+        "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.",
         "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
         "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-        "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
-        "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
+        "Four case images at 278 KB, and the page is 2.7 KB of HTML.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -120,12 +127,14 @@ const studies = {
         { role: 'Panel', name: 'Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa' },
         { role: 'Support', name: 'Mellon Foundation Humanities in Place Grant; Laredo Film Society' },
         { role: 'Culinary concept', name: 'Malaquite' },
-        { role: 'Technical stack, AR markers, attendance', name: 'Unconfirmed' }
+        { role: 'Source text', name: 'The interpretation panels inside the reels' },
+        { role: 'Reel filmmaker, marker count, attendance', name: 'Unconfirmed' }
       ],
       images: [
-        { src: img('assets/images/projects/river-pierce/hero.jpg'), alt: 'Event poster for The Teaching of the Hands with the AR slot at 3 pm', caption: 'Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm.' },
-        { src: img('assets/images/river-pierce-ar-map.svg'), alt: 'Cover graphic for the River Pierce AR project: a river line and site markers', caption: 'Cover graphic used for the AR project. No in-app screenshot survives.' },
-        { src: img('assets/images/projects/river-pierce/detail.jpg'), alt: 'Poster detail: venue line and foundation support', caption: 'Poster detail: venue and support line.' }
+        { src: img('assets/images/projects/river-pierce/hero.jpg'), alt: 'A bison skull between two grey interpretation panels on a white floor', caption: 'Bison skull between its two panels.' },
+        { src: img('assets/images/projects/river-pierce/process.jpg'), alt: 'Prayer poles, a panel, and a flowering peyote cactus', caption: "Xie Kua'k Kua̲m prayer poles and a peyote cactus." },
+        { src: img('assets/images/projects/river-pierce/detail.jpg'), alt: 'Five purple glyph discs above a bilingual inscription panel', caption: 'Five glyph discs above the 1871 San Ygnacio inscription.' },
+        { src: img('assets/images/projects/river-pierce/poster.jpg'), alt: 'Event poster for The Teaching of the Hands with the AR slot at 3 pm', caption: 'Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm.' }
       ]
     }
   },
@@ -278,6 +287,7 @@ let changed = 0;
 for (const project of site.projects) {
   const update = studies[project.id];
   if (!update) continue;
+  if (update.title) project.title = update.title;
   if (update.year) project.year = update.year;
   if (update.summary) project.summary = update.summary;
   if (update.description) project.description = update.description;

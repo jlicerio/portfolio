@@ -15,7 +15,7 @@
 
 **Result.**
 
-- Runs at 60.9 fps at 1440 x 900 and 60.2 fps at 390 x 844 in headless Chrome 156.
+- Runs at 61.2 fps at 1440 x 900 and 60.8 fps at 390 x 844 in headless Chrome 156.
 - Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.
 - Year range 2022 to 2026, read from the project records.
 - The page is 9.9 KB of static HTML, and the three case images total 230 KB.

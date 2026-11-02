@@ -12,7 +12,7 @@ const root = resolve(here, '..');
 const pages = [
   {
     id: 'forget-me-not',
-    title: 'Forget Me Not',
+    title: 'Forget-me-not',
     description: 'Projection mapping and technical integration for Victoria\'s solo exhibition Forget Me Not at a 2025 installation. Bed, wall, sink, and window blind as projection surfaces.',
     cover: 'assets/images/projects/forget-me-not/hero.jpg',
   },

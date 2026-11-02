@@ -221,7 +221,7 @@
     },
     {
       "id": "forget-me-not",
-      "title": "Forget Me Not Exhibition",
+      "title": "Forget-me-not",
       "year": "2025",
       "slug": "forget-me-not",
       "href": "projects/forget-me-not.html",
@@ -436,7 +436,7 @@
       "slug": "river-pierce",
       "href": "projects/river-pierce.html",
       "image": "assets/images/projects/river-pierce/hero.jpg",
-      "summary": "A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.",
+      "summary": "A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription, debuted at the Treviño–Uribe Rancho.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -462,21 +462,24 @@
         }
       ],
       "caseStudy": {
-        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
+        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The content is specific to the place. Each object in the piece carries a panel that names its role in Carrizo Comecrudo practice, and a second reel sets the piece in San Ygnacio with a stone inscription dated 3 December 1871.",
         "process": [
-          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
+          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation under a Mellon Foundation Humanities in Place grant.",
+          "The content is interpretive rather than decorative. The bison skull is described as a symbol of life, sustenance, and respect, and the panel says the animal was not as central to Carrizo daily survival as it was for Plains cultures.",
+          "The bear carries its own panel: animals are treated as relatives and sources of strength, and bear skins are worn in a Carrizo Comecrudo ceremony called the Bear Dance.",
+          "The poles are named Xie Kua'k Kua̲m. The panel ties them to the four directions and to ceremonial use by the Carrizo.",
+          "A peyote cactus sits with a panel that quotes a peyote ceremony account and names Esto'k Gna culture.",
+          "The second reel sets five purple glyph discs above a bilingual inscription: La paz de Cristo sea con nosotros, 3 December 1871, S. Ygnacio ruega por nosotros.",
           "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
-          "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
-          "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
-          "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
-          "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
+          "The event was free and open to the public, so a visitor with no appointment had to be able to take part."
         ],
         "result": [
-          "Runs at 60.8 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
+          "Runs at 61 fps at 1440 x 900 and 61 fps at 390 x 844 in headless Chrome 156.",
+          "Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.",
+          "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.",
           "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
           "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-          "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
-          "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
+          "Four case images at 278 KB, and the page is 2.7 KB of HTML.",
           "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
         ],
         "credits": [
@@ -509,25 +512,34 @@
             "name": "Malaquite"
           },
           {
-            "role": "Technical stack, AR markers, attendance",
+            "role": "Source text",
+            "name": "The interpretation panels inside the reels"
+          },
+          {
+            "role": "Reel filmmaker, marker count, attendance",
             "name": "Unconfirmed"
           }
         ],
         "images": [
           {
             "src": "assets/images/projects/river-pierce/hero.jpg",
-            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
-            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
+            "alt": "A bison skull between two grey interpretation panels on a white floor",
+            "caption": "Bison skull between its two panels."
           },
           {
-            "src": "assets/images/river-pierce-ar-map.svg",
-            "alt": "Cover graphic for the River Pierce AR project: a river line and site markers",
-            "caption": "Cover graphic used for the AR project. No in-app screenshot survives."
+            "src": "assets/images/projects/river-pierce/process.jpg",
+            "alt": "Prayer poles, a panel, and a flowering peyote cactus",
+            "caption": "Xie Kua'k Kua̲m prayer poles and a peyote cactus."
           },
           {
             "src": "assets/images/projects/river-pierce/detail.jpg",
-            "alt": "Poster detail: venue line and foundation support",
-            "caption": "Poster detail: venue and support line."
+            "alt": "Five purple glyph discs above a bilingual inscription panel",
+            "caption": "Five glyph discs above the 1871 San Ygnacio inscription."
+          },
+          {
+            "src": "assets/images/projects/river-pierce/poster.jpg",
+            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
+            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
           }
         ]
       },
@@ -672,7 +684,7 @@
           "The room held three kinds of work at once: the AR posters, the headset station, and the generative and audio-visual installation."
         ],
         "result": [
-          "Runs at 61 fps at 1440 x 900 and 60.8 fps at 390 x 844 in headless Chrome 156.",
+          "Runs at 60.7 fps at 1440 x 900 and 60.9 fps at 390 x 844 in headless Chrome 156.",
           "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
           "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
           "Four stills taken from the 90-second exhibition reel. The reel is 720 x 1280, and the four case images are 200 KB in total.",
@@ -980,7 +992,7 @@
           "The page follows the same heading, description, and case-block layout as every other study page."
         ],
         "result": [
-          "Runs at 60.9 fps at 1440 x 900 and 60.2 fps at 390 x 844 in headless Chrome 156.",
+          "Runs at 61.2 fps at 1440 x 900 and 60.8 fps at 390 x 844 in headless Chrome 156.",
           "Ten studies indexed: three from 2026, three from 2025, three from 2023, and one from 2022.",
           "Year range 2022 to 2026, read from the project records.",
           "The page is 9.9 KB of static HTML, and the three case images total 230 KB.",
