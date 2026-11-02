@@ -89,7 +89,8 @@
           }
         ]
       },
-      "discipline": "WEBGPU / WGSL"
+      "discipline": "WEBGPU / WGSL",
+      "role": "Artwork and code"
     },
     {
       "id": "viscous-orb",
@@ -160,7 +161,8 @@
           }
         ]
       },
-      "discipline": "WEBGL2 / FLUID"
+      "discipline": "WEBGL2 / FLUID",
+      "role": "Artwork and code"
     },
     {
       "id": "quarter-turn",
@@ -217,7 +219,8 @@
           }
         ]
       },
-      "discipline": "SVG / CANVAS"
+      "discipline": "SVG / CANVAS",
+      "role": "System and code"
     },
     {
       "id": "forget-me-not",
@@ -240,7 +243,7 @@
       "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
       "links": [],
       "caseStudy": {
-        "brief": "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts, then moved to Ponte Creative Studio & Gallery, the Trucha RGV space at 1305 N Main St in McAllen, where it ran from 15 August to 16 October 2025. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
+        "brief": "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works listed by the artist: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts. It then moved to Ponte Creative Studio & Gallery, the Trucha RGV space at 1305 N Main St in McAllen, where it ran from 15 August to 16 October 2025. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
         "process": [
           "Victoria's video is the content. Each loop was matched to one surface before anything was mapped.",
           "Surfaces were mapped in MadMapper. The bed, the sink, and the basin are not flat, so each mask was drawn on site against the real object rather than from a plan.",
@@ -254,7 +257,7 @@
         "result": [
           "Case media: 4 stills at 132 KB.",
           "Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.",
-          "Six works in the McAllen show, and the room maps a bed, a wall, a sink, a basin, and a window blind.",
+          "Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind.",
           "The Trucha press cover credits Laura Martinez and sits in the credits list.",
           "The page is 2.7 KB of HTML and renders the case from one data entry.",
           "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
@@ -289,7 +292,7 @@
             "name": "The City of Austin Economic Development Department"
           },
           {
-            "role": "Press",
+            "role": "Press, McAllen",
             "name": "MyRGV, 18 August 2025. Francisco E. Jimenez, photographs Joel Martinez. Gallery run by Trucha RGV"
           },
           {
@@ -320,7 +323,8 @@
           }
         ]
       },
-      "discipline": "PROJECTION MAPPING"
+      "discipline": "PROJECTION MAPPING",
+      "role": "Technical setup"
     },
     {
       "id": "surveillance-status",
@@ -432,7 +436,8 @@
           }
         ]
       },
-      "discipline": "LIVE VIDEO"
+      "discipline": "LIVE VIDEO",
+      "role": "Artwork and code"
     },
     {
       "id": "river-pierce",
@@ -548,7 +553,8 @@
           }
         ]
       },
-      "discipline": "AUGMENTED REALITY"
+      "discipline": "AUGMENTED REALITY",
+      "role": "AR project"
     },
     {
       "id": "9ine5ive6eis",
@@ -654,7 +660,8 @@
           }
         ]
       },
-      "discipline": "IDENTITY / TYPE"
+      "discipline": "IDENTITY / TYPE",
+      "role": "Identity and motion"
     },
     {
       "id": "triqueta",
@@ -745,7 +752,8 @@
           }
         ]
       },
-      "discipline": "AR / VR"
+      "discipline": "AR / VR",
+      "role": "AR and VR development"
     },
     {
       "id": "tigers-blood",
@@ -825,7 +833,8 @@
           }
         ]
       },
-      "discipline": "3D / MOTION"
+      "discipline": "3D / MOTION",
+      "role": "3D and animation"
     },
     {
       "id": "motion",
@@ -931,7 +940,8 @@
           }
         ]
       },
-      "discipline": "MOTION GRAPHICS"
+      "discipline": "MOTION GRAPHICS",
+      "role": "Artwork"
     },
     {
       "id": "collapsed-timelines",
@@ -1015,7 +1025,8 @@
           }
         ]
       },
-      "discipline": "FOUR-CHANNEL VIDEO"
+      "discipline": "FOUR-CHANNEL VIDEO",
+      "role": "Technical setup"
     },
     {
       "id": "archived",

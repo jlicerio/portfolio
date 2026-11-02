@@ -71,7 +71,7 @@ const template = ({ id, title, description, cover }) => `<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=6">
+<link rel="stylesheet" href="../style.css?v=7">
 </head>
 <body data-page="project" data-project="${id}" data-root="../">
 <header class="site-header site-header--page"><a class="wordmark" href="../index.html">JUAN LICERIO</a><nav class="site-nav" aria-label="Primary"><a href="../work.html" aria-current="page">WORK</a><a href="../cv.html">CV</a><a href="../contact.html">CONTACT</a><button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><span class="theme-dot"></span><span class="theme-label">LIGHT</span></button></nav></header>
@@ -79,7 +79,7 @@ const template = ({ id, title, description, cover }) => `<!doctype html>
   <a class="back-link" href="../work.html">← BACK TO WORK</a>
   <section class="project-heading">
     <div class="project-heading-copy">
-      <span class="section-label">PROJECT / <span data-project-year></span></span>
+      <span class="section-label"><span>PROJECT / <span data-project-year></span></span><span class="role-tag" data-project-role></span></span>
       <h1 data-project-title></h1>
       <p class="project-summary" data-project-summary></p>
     </div>
@@ -95,7 +95,7 @@ const template = ({ id, title, description, cover }) => `<!doctype html>
   </section>
 </main>
 <footer><span>JUAN LICERIO</span><span>MEDIA ART / SYSTEMS / RGV</span></footer>
-<script type="module" src="../app.js?v=6"></script>
+<script type="module" src="../app.js?v=7"></script>
 </body>
 </html>
 `;

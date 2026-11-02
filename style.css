@@ -87,3 +87,9 @@ body[data-page="work"] .site-header a:focus-visible,body[data-page="work"] .them
   .archive-year{margin-top:26px;padding:0 10px 8px}
   .archive-index .work-index-row{min-height:0}
 }
+
+/* Role tags: a bracketed credit next to each title */
+.role-tag{display:inline-block;margin-left:10px;font:10px 'DM Mono',monospace;letter-spacing:.08em;color:var(--muted);vertical-align:middle;white-space:nowrap}
+.work-index-title .role-tag{display:block;font-size:9px;margin:8px 0 0}
+.project-heading .role-tag{font-size:10px;letter-spacing:.1em}
+@media(max-width:700px){.role-tag{margin-left:6px;font-size:9px}.work-index-title .role-tag{display:block;margin:6px 0 0}}

@@ -3,7 +3,8 @@ const page = document.body.dataset.page || 'home';
 
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[character]));
 const localUrl = value => `${root}${String(value || '').replace(/^\.\//, '')}`;
-const externalUrl = value => /^https:\/\//i.test(value || '') ? value : '#';
+const externalUrl = value => /^https?:\/\//i.test(value || '') ? value : '#';
+const roleTag = (project) => project.role ? `<span class="role-tag">[${escapeHtml(project.role)}]</span>` : '';
 
 function applyTheme(theme) {
   const selected = theme === 'light' ? 'light' : 'dark';
@@ -27,7 +28,7 @@ function setupTheme() {
 }
 
 function projectRow(project) {
-  return `<a class="work-row" href="${localUrl(project.href)}"><span class="work-thumb"><img src="${localUrl(project.image)}" alt=""></span><span class="work-row-copy"><span class="work-row-title">${escapeHtml(project.title)}</span><span class="work-row-summary">${escapeHtml(project.summary)}</span></span><span class="work-row-year">${escapeHtml(project.year)} <b>↗</b></span></a>`;
+  return `<a class="work-row" href="${localUrl(project.href)}"><span class="work-thumb"><img src="${localUrl(project.image)}" alt=""></span><span class="work-row-copy"><span class="work-row-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-row-summary">${escapeHtml(project.summary)}</span></span><span class="work-row-year">${escapeHtml(project.year)} <b>↗</b></span></a>`;
 }
 
 function visibleProjects(site) {
@@ -39,7 +40,7 @@ function workRow(project, index) {
   const number = String(index + 1).padStart(2, '0');
   return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
     <span class="work-index-number">${number}</span>
-    <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
+    <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
     <span class="work-index-discipline">${escapeHtml(discipline)}</span>
     <span class="work-index-year">${escapeHtml(project.year)}</span>
     <span class="work-index-preview" aria-hidden="true"><img src="${escapeHtml(localUrl(project.image))}" alt="" loading="lazy" decoding="async"></span>
@@ -73,6 +74,8 @@ function renderProject(site) {
   document.title = `${project.title} — Juan Licerio`;
   document.querySelectorAll('[data-project-title]').forEach(node => node.textContent = project.title);
   document.querySelector('[data-project-year]').textContent = project.year;
+  const roleNode = document.querySelector('[data-project-role]');
+  if (roleNode) { if (project.role) roleNode.textContent = '[' + project.role.toUpperCase() + ']'; else roleNode.remove(); }
   document.querySelector('[data-project-summary]').textContent = project.summary;
   document.querySelector('[data-project-description]').textContent = project.description || 'Project details are being prepared.';
   const tools = document.querySelector('[data-project-tools]');
