@@ -1,9 +1,28 @@
-# Quarter Turn — System Sheet
+# Quarter Turn — Case Study
 
-**Brief.** Build one system that produces a mark, a pattern, a poster, and a motion loop. Use the Flexible Visual Systems method. Use no stock images.
+**Brief.** Build one system that produces a mark, a pattern, a poster, and a motion loop. Use the Flexible Visual Systems method. Use no stock images. The system had to stay readable as a set, not as four unrelated pieces, and the renderer had to survive a change of base form without an edit.
 
-**Process.** The base form is a quarter disc at radius 0.55 of the cell. Six operators act on it: turn (4 × 90°), mirror (vertical), scale (6 × 0.13 with a 0.11 offset), shift (6 × 0.11), shear (±20°), and field (4 × 4). One JSON file holds those values. The page renders the operator sheet and four outputs from the same file. The poster switches to the light palette and uses a 12 × 12 band. The motion frame draws a 5 × 5 field on a canvas and advances the phase on each frame. The base form, the operators, and the palette are our own. The method is credited.
+**Process.**
 
-**Result.** The sheet runs at 60.2 fps at 1440 × 900 and 60.0 fps at 390 × 844. The verify pass reports zero console errors at both sizes. The page is 11.5 KB and the system file is 1.3 KB. The mark is a diamond with a four-pointed hole. The pattern is a 6 × 6 field. The motion frame holds one still frame under reduced motion. The poster shows the same system in the site's light palette. The sheet is a proof, not a final identity. A new base form or palette goes into the JSON, and the renderer stays the same. The operator sheet shows the range before the outputs show the use.
+1. The base form is a quarter disc at radius 0.55 of the cell. One JSON file holds it, the six operators, the grid, the palette, and the seed.
+2. Six operators act on the form: turn at 4 × 90°, mirror on the vertical, scale at 6 steps of 0.13 with a 0.11 offset, shift at 6 steps of 0.11, shear at ±20°, and a 4 × 4 field. Each cell shows one operator and its rule.
+3. The mark is the turn operator alone. Four quarter discs meet and leave a four-pointed hole, so the base form stays visible in the result.
+4. The pattern repeats the field operator on a 6 × 6 grid. The poster switches to the light palette, runs a 12 × 12 band, and carries the system name.
+5. The motion frame draws a 5 × 5 field on a canvas and advances the phase each frame. Under reduced motion it holds one still frame.
+6. The renderer reads the JSON and draws every output. A new base form or palette goes into the file, and the page stays the same.
 
-**Credits.** Method: Dr. Martin Lorenz, *Flexible Visual Systems*. Form, code, and writing: Juan Licerio. No Atlas images or course text used.
+**Result.**
+
+- Case media: 2 stills at 107 KB.
+- Six operators and four outputs render from one 1,344-byte system file, in a page of 11,504 bytes.
+- Zero console errors at both widths.
+- The phone layout reflows to 2 × 3 operator cells and 2 × 2 outputs with no clipping.
+- The sheet is a proof, not a final identity. It shows the range before it shows the use.
+
+**Credits.**
+
+- Method: Dr. Martin Lorenz, Flexible Visual Systems (Slanted, 2021)
+- Form, code, and writing: Juan Licerio
+- Source material: No Atlas images and no paid course text used
+
+Page: `projects/quarter-turn.html`. Verified report: `pipeline/reports/quarter-turn.json`.

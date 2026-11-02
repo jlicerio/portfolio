@@ -9,7 +9,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const site = JSON.parse(readFileSync(resolve(root, 'data/site.json'), 'utf8'));
 
-const ids = ['forget-me-not', 'triqueta', 'river-pierce', 'motion', '9ine5ive6eis', 'tigers-blood', 'archived'];
+const ids = site.projects.filter((project) => project.caseStudy?.brief).map((project) => project.id);
 
 for (const id of ids) {
   const project = site.projects.find((item) => item.id === id);
