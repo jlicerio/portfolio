@@ -74,7 +74,7 @@ flowchart LR
 
 The division of labour is the whole point:
 
-- **FVS without generation** produces only as many outputs as you draw by hand. The series is limited by hours.
+- **FVS without generation** produces only the outputs a person can produce one at a time. Nothing here is drawn by hand, so the real limit is how many variants the system is asked for, not hours.
 - **Generation without FVS** produces range without identity. Every output is a new accident.
 - **Together** the designer writes the operator set and the bounds once, the seed draws a valid output every time, and the designer curates. Identity stays, range multiplies.
 
@@ -86,6 +86,25 @@ Four rules follow, and they belong in the board gate:
 4. **One operator list, many subjects.** Change the base form, keep the operators. That is how one system covers a poster, a loop, a print, and an AR placement.
 
 Worked example already in the repo: Quarter Turn holds the operator list (turn, mirror, scale, shift, shear, field) with explicit ranges in a 1,344-byte JSON. Add a seed and a noise field and the same file draws an unlimited series.
+
+## Two modes of work
+
+Every component in this practice is computational: a three.js module, a Blender node graph, or a parametric vector file. Nothing is drawn by hand. That changes what FVS is doing in each mode.
+
+| Mode | What is fixed | What the system produces | FVS role |
+| :--- | :--- | :--- | :--- |
+| **Procedural practice** | The operator list and the bounds | A series of outputs from one base form | The order that keeps generation from becoming chaos |
+| **Identity and branding** | The mark, the reproduction limits, the clear space, the one-colour version | A family that stays legible around that fixed mark | The constraint set: it decides what may vary and what may not |
+
+The rule for both: **the constraints are written down before the first output.** In procedural work the constraints are the operator ranges and the seed. In identity work they are also external: client limits, minimum sizes, single-colour reproduction, motion limits, and the mark itself.
+
+A constraint ledger belongs in every identity board:
+
+- Elements that cannot change: the mark, the wordmark, the spacing.
+- Elements that may change: rotation, field, texture, palette, motion.
+- Hard limits: minimum size in mm, single-colour reproduction, contrast floor, file formats.
+
+When the constraints are absent, the board is a mood. When they are written down, the board is a system.
 
 ## Commands
 

@@ -20,6 +20,13 @@ A board is a page of components with their rules written down. It is not mood im
 | 05 | | | | |
 | 06 | | | | |
 
+## Constraints
+
+- Elements that cannot change:
+- Elements that may change:
+- Hard limits (minimum size, single colour, contrast, formats):
+- Every component is generated in three.js, Blender, or a parametric vector file. No hand-drawn assets.
+
 ## Outputs the board can produce
 
 - Still:
