@@ -54,6 +54,39 @@ Three things FVS demands that a board alone does not:
 
 Worked pattern already in the repo: Quarter Turn. Base form is a quarter disc at radius 0.55; six operators; four outputs from one JSON file. The component board supplies the modules for the next one; FVS supplies the operator list.
 
+## When generation joins FVS
+
+Three layers, each with one job:
+
+```mermaid
+flowchart LR
+  B[Board<br/>parts and rules] --> F[FVS<br/>base form, operators, ranges]
+  F --> G[Generation<br/>seed, noise, phase]
+  G --> S[Series<br/>N outputs, curated]
+  S --> C[Case study<br/>measured, reproducible]
+```
+
+| Layer | Owns | Does not own |
+| :--- | :--- | :--- |
+| Board | Which components exist | How they vary |
+| FVS | The base form, the operator list, the bounds | Which value a given output takes |
+| Generation | The value, from a seed | The bounds, or the operator list |
+
+The division of labour is the whole point:
+
+- **FVS without generation** produces only as many outputs as you draw by hand. The series is limited by hours.
+- **Generation without FVS** produces range without identity. Every output is a new accident.
+- **Together** the designer writes the operator set and the bounds once, the seed draws a valid output every time, and the designer curates. Identity stays, range multiplies.
+
+Four rules follow, and they belong in the board gate:
+
+1. **Generation never sets a bound.** It only picks a value inside a bound that FVS wrote down.
+2. **Every output is reproducible.** Seed in, same output out. The seed is printed on the piece.
+3. **The series is curated, not exhausted.** Ship three to six chosen outputs from the draws, not all of them.
+4. **One operator list, many subjects.** Change the base form, keep the operators. That is how one system covers a poster, a loop, a print, and an AR placement.
+
+Worked example already in the repo: Quarter Turn holds the operator list (turn, mirror, scale, shift, shear, field) with explicit ranges in a 1,344-byte JSON. Add a seed and a noise field and the same file draws an unlimited series.
+
 ## Commands
 
 ```bash
