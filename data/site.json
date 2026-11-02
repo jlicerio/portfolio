@@ -88,7 +88,8 @@
             "caption": "Portrait frame at 1350 x 1800."
           }
         ]
-      }
+      },
+      "discipline": "WEBGPU / WGSL"
     },
     {
       "id": "viscous-orb",
@@ -158,7 +159,8 @@
             "caption": "Bloom and soft focus at rest. The rim stays analytic."
           }
         ]
-      }
+      },
+      "discipline": "WEBGL2 / FLUID"
     },
     {
       "id": "quarter-turn",
@@ -214,7 +216,97 @@
             "caption": "Sheet at 390 × 844: 2 × 3 operators and 2 × 2 outputs, no clipping."
           }
         ]
-      }
+      },
+      "discipline": "SVG / CANVAS"
+    },
+    {
+      "id": "forget-me-not",
+      "title": "Forget Me Not Exhibition",
+      "year": "2025",
+      "slug": "forget-me-not",
+      "href": "projects/forget-me-not.html",
+      "image": "assets/images/projects/forget-me-not/hero.jpg",
+      "summary": "Projection mapping and technical integration for Victoria's solo exhibition, across a bed, a wall, a sink, and a window blind.",
+      "tags": [],
+      "gallery": [
+        "assets/images/projects/forget-me-not/01.jpg",
+        "assets/images/projects/forget-me-not/02.png",
+        "assets/images/projects/forget-me-not/03.png",
+        "assets/images/projects/forget-me-not/04.png",
+        "assets/images/projects/forget-me-not/05.png"
+      ],
+      "videos": [],
+      "description": "Provided technical setup and specialized support for this immersive light and video installation by Victoria. My role was projection mapping and technical integration. I was responsible for fitting the artist's video content onto the complex surfaces of the exhibition space, including the bed, walls, and sink.",
+      "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
+      "links": [],
+      "caseStudy": {
+        "brief": "Victoria's solo exhibition Forget Me Not: Layers of Identity, Memory, & Intention puts projected video on furniture instead of screens. My part was projection mapping and technical integration. The room had to read as one continuous atmosphere, with the bed, a wall, the sink, and a window blind each holding its own loop. The work also had to sit in a dark gallery and hold for the length of the opening.",
+        "process": [
+          "Victoria supplied the video content. The first pass matched each loop to the surface it would land on: the bed, the wall, the sink, and the blind.",
+          "Surfaces were mapped in MadMapper. The bed and the sink are not flat, so each mask was drawn on site against the real object rather than from a plan.",
+          "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could be restarted without disturbing the rest of the room.",
+          "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
+          "The blind carries an orange figure at full height. The vertical strips in that image come from the blind itself, not from the video, which sets the scale.",
+          "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
+          "A playback check ran before opening: every clip, its in point, and its surface."
+        ],
+        "result": [
+          "Runs at 61.1 fps at 1440 x 900 and 60.7 fps at 390 x 844 in headless Chrome 156.",
+          "Four surfaces carry projection: bed, wall, sink, and window blind.",
+          "Five installation stills survive in the project file. Four are used here at 206 KB in total.",
+          "The page is 2.7 KB of HTML and renders the case from one data entry.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Artist",
+            "name": "Victoria"
+          },
+          {
+            "role": "Projection mapping and technical integration",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Software",
+            "name": "Resolume Arena, MadMapper"
+          },
+          {
+            "role": "Press cover",
+            "name": "Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre"
+          },
+          {
+            "role": "Installation stills",
+            "name": "Photographer unconfirmed"
+          },
+          {
+            "role": "Venue and dates",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/forget-me-not/hero.jpg",
+            "alt": "A bed with a blue flora loop projected onto the sheet",
+            "caption": "Bed with a blue flora loop. The sheet is the surface."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/process.jpg",
+            "alt": "A sink with projection spilling onto the wall and floor",
+            "caption": "Sink scene: wall, floor, and basin in one map."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/detail.jpg",
+            "alt": "A window blind carrying an orange figure at full height",
+            "caption": "Window blind with an orange figure at full height."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/press.jpg",
+            "alt": "Trucha press cover for the Forget Me Not exhibition",
+            "caption": "Trucha press cover for the show."
+          }
+        ]
+      },
+      "discipline": "PROJECTION MAPPING"
     },
     {
       "id": "surveillance-status",
@@ -324,200 +416,112 @@
             "caption": "Times Square, 00:55. Last pass. The panel keeps logging."
           }
         ]
-      }
+      },
+      "discipline": "LIVE VIDEO"
     },
     {
-      "id": "motion",
-      "title": "Motion",
-      "year": "2022",
-      "slug": "motion",
-      "href": "projects/motion.html",
-      "image": "assets/images/projects/motion/hero.jpg",
-      "summary": "Self-set motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and type built from repeating marks.",
+      "id": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "slug": "river-pierce",
+      "href": "projects/river-pierce.html",
+      "image": "assets/images/projects/river-pierce/hero.jpg",
+      "summary": "A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.",
       "tags": [],
       "gallery": [],
       "videos": [
         {
           "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 720
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1536,
+          "height": 916
         },
         {
           "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 1280
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 900
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 1024
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 360,
-          "height": 640
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 720
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1798,
+          "height": 930
         }
       ],
-      "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
-      "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
-      "links": [],
-      "caseStudy": {
-        "brief": "Motion is a file of self-set studies, not a commission. Each study takes one visual idea and pushes it until the motion breaks: abstract form, procedural movement, and type drawn from repeating marks. The tools were After Effects, Photoshop, and Blender. There was no client brief and no delivery date. The point was to test a technique at speed and keep the result, so the file grew as a set of experiments rather than a body of finished work.",
-        "process": [
-          "Each study opens with one form or one rule, not with a finished frame.",
-          "Type and shape were built in After Effects or Blender, then finished in Photoshop for grain and print texture.",
-          "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
-          "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
-          "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
-          "The export is a still and a loop. The still is what survives in the project file today."
-        ],
-        "result": [
-          "Runs at 61 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
-          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
-          "The case uses the still plus two detail crops, 348 KB in total.",
-          "The page is 2.5 KB of HTML and needs no script to read.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
-        ],
-        "credits": [
-          {
-            "role": "Work",
-            "name": "Juan Licerio"
-          },
-          {
-            "role": "Tools",
-            "name": "After Effects, Photoshop, Blender"
-          },
-          {
-            "role": "Year",
-            "name": "2022"
-          },
-          {
-            "role": "Study count and run dates",
-            "name": "Unconfirmed"
-          }
-        ],
-        "images": [
-          {
-            "src": "assets/images/projects/motion/hero.jpg",
-            "alt": "Dithered white wave and letterform on a black field",
-            "caption": "Wave and letterform, exported still."
-          },
-          {
-            "src": "assets/images/projects/motion/process.jpg",
-            "alt": "Detail crop: the wave line above the filled letterform",
-            "caption": "Detail: the wave line and the top of the striped fill."
-          },
-          {
-            "src": "assets/images/projects/motion/detail.jpg",
-            "alt": "Detail crop: the dot grid at the base of the letterform",
-            "caption": "Detail: the dot grid at the base."
-          }
-        ]
-      }
-    },
-    {
-      "id": "forget-me-not",
-      "title": "Forget Me Not Exhibition",
-      "year": "2025",
-      "slug": "forget-me-not",
-      "href": "projects/forget-me-not.html",
-      "image": "assets/images/projects/forget-me-not/hero.jpg",
-      "summary": "Projection mapping and technical integration for Victoria's solo exhibition, across a bed, a wall, a sink, and a window blind.",
-      "tags": [],
-      "gallery": [
-        "assets/images/projects/forget-me-not/01.jpg",
-        "assets/images/projects/forget-me-not/02.png",
-        "assets/images/projects/forget-me-not/03.png",
-        "assets/images/projects/forget-me-not/04.png",
-        "assets/images/projects/forget-me-not/05.png"
+      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
+      "tools": "",
+      "links": [
+        {
+          "label": "The Teaching of the Hands event page",
+          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
+        }
       ],
-      "videos": [],
-      "description": "Provided technical setup and specialized support for this immersive light and video installation by Victoria. My role was projection mapping and technical integration. I was responsible for fitting the artist's video content onto the complex surfaces of the exhibition space, including the bed, walls, and sink.",
-      "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
-      "links": [],
       "caseStudy": {
-        "brief": "Victoria's solo exhibition Forget Me Not: Layers of Identity, Memory, & Intention puts projected video on furniture instead of screens. My part was projection mapping and technical integration. The room had to read as one continuous atmosphere, with the bed, a wall, the sink, and a window blind each holding its own loop. The work also had to sit in a dark gallery and hold for the length of the opening.",
+        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
         "process": [
-          "Victoria supplied the video content. The first pass matched each loop to the surface it would land on: the bed, the wall, the sink, and the blind.",
-          "Surfaces were mapped in MadMapper. The bed and the sink are not flat, so each mask was drawn on site against the real object rather than from a plan.",
-          "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could be restarted without disturbing the rest of the room.",
-          "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
-          "The blind carries an orange figure at full height. The vertical strips in that image come from the blind itself, not from the video, which sets the scale.",
-          "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
-          "A playback check ran before opening: every clip, its in point, and its surface."
+          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
+          "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
+          "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
+          "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
+          "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
+          "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
         ],
         "result": [
-          "Runs at 61.1 fps at 1440 x 900 and 60.7 fps at 390 x 844 in headless Chrome 156.",
-          "Four surfaces carry projection: bed, wall, sink, and window blind.",
-          "Five installation stills survive in the project file. Four are used here at 206 KB in total.",
-          "The page is 2.7 KB of HTML and renders the case from one data entry.",
+          "Runs at 60.8 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
+          "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
+          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
+          "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
+          "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
           "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
         ],
         "credits": [
           {
-            "role": "Artist",
-            "name": "Victoria"
+            "role": "Commission",
+            "name": "The River Pierce Foundation"
           },
           {
-            "role": "Projection mapping and technical integration",
-            "name": "Juan Licerio"
+            "role": "AR artist",
+            "name": "Juan Carlos Licerio"
           },
           {
-            "role": "Software",
-            "name": "Resolume Arena, MadMapper"
+            "role": "Program",
+            "name": "The Teaching of the Hands, 10 May 2025, 1 to 4 pm, free and open to the public"
           },
           {
-            "role": "Press cover",
-            "name": "Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre"
+            "role": "Film",
+            "name": "Carolina Caycedo and David de Rozas"
           },
           {
-            "role": "Installation stills",
-            "name": "Photographer unconfirmed"
+            "role": "Panel",
+            "name": "Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa"
           },
           {
-            "role": "Venue and dates",
+            "role": "Support",
+            "name": "Mellon Foundation Humanities in Place Grant; Laredo Film Society"
+          },
+          {
+            "role": "Culinary concept",
+            "name": "Malaquite"
+          },
+          {
+            "role": "Technical stack, AR markers, attendance",
             "name": "Unconfirmed"
           }
         ],
         "images": [
           {
-            "src": "assets/images/projects/forget-me-not/hero.jpg",
-            "alt": "A bed with a blue flora loop projected onto the sheet",
-            "caption": "Bed with a blue flora loop. The sheet is the surface."
+            "src": "assets/images/projects/river-pierce/hero.jpg",
+            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
+            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
           },
           {
-            "src": "assets/images/projects/forget-me-not/process.jpg",
-            "alt": "A sink with projection spilling onto the wall and floor",
-            "caption": "Sink scene: wall, floor, and basin in one map."
+            "src": "assets/images/river-pierce-ar-map.svg",
+            "alt": "Cover graphic for the River Pierce AR project: a river line and site markers",
+            "caption": "Cover graphic used for the AR project. No in-app screenshot survives."
           },
           {
-            "src": "assets/images/projects/forget-me-not/detail.jpg",
-            "alt": "A window blind carrying an orange figure at full height",
-            "caption": "Window blind with an orange figure at full height."
-          },
-          {
-            "src": "assets/images/projects/forget-me-not/press.jpg",
-            "alt": "Trucha press cover for the Forget Me Not exhibition",
-            "caption": "Trucha press cover for the show."
+            "src": "assets/images/projects/river-pierce/detail.jpg",
+            "alt": "Poster detail: venue line and foundation support",
+            "caption": "Poster detail: venue and support line."
           }
         ]
-      }
+      },
+      "discipline": "AUGMENTED REALITY"
     },
     {
       "id": "9ine5ive6eis",
@@ -622,7 +626,8 @@
             "caption": "Product collage placed by the photography team."
           }
         ]
-      }
+      },
+      "discipline": "IDENTITY / TYPE"
     },
     {
       "id": "triqueta",
@@ -706,7 +711,8 @@
             "caption": "Detail crop: the lower loop and its highlight."
           }
         ]
-      }
+      },
+      "discipline": "AR / VR"
     },
     {
       "id": "tigers-blood",
@@ -785,7 +791,114 @@
             "caption": "Detail: the mark and the date list on burnt paper."
           }
         ]
-      }
+      },
+      "discipline": "3D / MOTION"
+    },
+    {
+      "id": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "slug": "motion",
+      "href": "projects/motion.html",
+      "image": "assets/images/projects/motion/hero.jpg",
+      "summary": "Self-set motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and type built from repeating marks.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1280
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 900
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1024
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 360,
+          "height": 640
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
+      "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
+      "links": [],
+      "caseStudy": {
+        "brief": "Motion is a file of self-set studies, not a commission. Each study takes one visual idea and pushes it until the motion breaks: abstract form, procedural movement, and type drawn from repeating marks. The tools were After Effects, Photoshop, and Blender. There was no client brief and no delivery date. The point was to test a technique at speed and keep the result, so the file grew as a set of experiments rather than a body of finished work.",
+        "process": [
+          "Each study opens with one form or one rule, not with a finished frame.",
+          "Type and shape were built in After Effects or Blender, then finished in Photoshop for grain and print texture.",
+          "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
+          "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
+          "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
+          "The export is a still and a loop. The still is what survives in the project file today."
+        ],
+        "result": [
+          "Runs at 61 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
+          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+          "The case uses the still plus two detail crops, 348 KB in total.",
+          "The page is 2.5 KB of HTML and needs no script to read.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Work",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Tools",
+            "name": "After Effects, Photoshop, Blender"
+          },
+          {
+            "role": "Year",
+            "name": "2022"
+          },
+          {
+            "role": "Study count and run dates",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/motion/hero.jpg",
+            "alt": "Dithered white wave and letterform on a black field",
+            "caption": "Wave and letterform, exported still."
+          },
+          {
+            "src": "assets/images/projects/motion/process.jpg",
+            "alt": "Detail crop: the wave line above the filled letterform",
+            "caption": "Detail: the wave line and the top of the striped fill."
+          },
+          {
+            "src": "assets/images/projects/motion/detail.jpg",
+            "alt": "Detail crop: the dot grid at the base of the letterform",
+            "caption": "Detail: the dot grid at the base."
+          }
+        ]
+      },
+      "discipline": "MOTION GRAPHICS"
     },
     {
       "id": "archived",
@@ -889,110 +1002,8 @@
             "caption": "Detail: the objects on the table below the hang."
           }
         ]
-      }
-    },
-    {
-      "id": "river-pierce",
-      "title": "River Pierce Foundation AR Showcase",
-      "year": "2025",
-      "slug": "river-pierce",
-      "href": "projects/river-pierce.html",
-      "image": "assets/images/projects/river-pierce/hero.jpg",
-      "summary": "A commissioned AR project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio as the close of The Teaching of the Hands program.",
-      "tags": [],
-      "gallery": [],
-      "videos": [
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 1536,
-          "height": 916
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 1798,
-          "height": 930
-        }
-      ],
-      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
-      "tools": "",
-      "links": [
-        {
-          "label": "The Teaching of the Hands event page",
-          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
-        }
-      ],
-      "caseStudy": {
-        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The subject came from the site. The event page states that the AR project and the food menu both take inspiration from the history of the Carrizo Comecrudo in San Ygnacio.",
-        "process": [
-          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation and supported by a Mellon Foundation Humanities in Place grant.",
-          "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
-          "The AR shared the room with a film, a panel, and a food service, so it ran as a one-hour debut rather than an installed work.",
-          "The event was free and open to the public. That set the access bar: a visitor with no appointment had to be able to take part.",
-          "The commission put the AR after the testimony rather than before it, so the panel and the film carried the history and the AR closed the day on it.",
-          "The Laredo Film Society attended with resources on film as practice, which framed the AR as part of a public program and not a product launch."
-        ],
-        "result": [
-          "Runs at 60.8 fps at 1440 x 900 and 61.1 fps at 390 x 844 in headless Chrome 156.",
-          "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
-          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-          "Program order recorded on the event page: screening 1 pm, panel 2 pm, AR 3 pm.",
-          "The poster crops total 288 KB and the page is 2.7 KB of HTML.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
-        ],
-        "credits": [
-          {
-            "role": "Commission",
-            "name": "The River Pierce Foundation"
-          },
-          {
-            "role": "AR artist",
-            "name": "Juan Carlos Licerio"
-          },
-          {
-            "role": "Program",
-            "name": "The Teaching of the Hands, 10 May 2025, 1 to 4 pm, free and open to the public"
-          },
-          {
-            "role": "Film",
-            "name": "Carolina Caycedo and David de Rozas"
-          },
-          {
-            "role": "Panel",
-            "name": "Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa"
-          },
-          {
-            "role": "Support",
-            "name": "Mellon Foundation Humanities in Place Grant; Laredo Film Society"
-          },
-          {
-            "role": "Culinary concept",
-            "name": "Malaquite"
-          },
-          {
-            "role": "Technical stack, AR markers, attendance",
-            "name": "Unconfirmed"
-          }
-        ],
-        "images": [
-          {
-            "src": "assets/images/projects/river-pierce/hero.jpg",
-            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
-            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
-          },
-          {
-            "src": "assets/images/river-pierce-ar-map.svg",
-            "alt": "Cover graphic for the River Pierce AR project: a river line and site markers",
-            "caption": "Cover graphic used for the AR project. No in-app screenshot survives."
-          },
-          {
-            "src": "assets/images/projects/river-pierce/detail.jpg",
-            "alt": "Poster detail: venue line and foundation support",
-            "caption": "Poster detail: venue and support line."
-          }
-        ]
-      }
+      },
+      "discipline": "INDEX"
     }
   ],
   "contact": {
