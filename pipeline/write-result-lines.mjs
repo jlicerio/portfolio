@@ -40,15 +40,8 @@ for (const project of site.projects) {
     continue;
   }
 
-  const images = (study.images || []).map((image) => image.src);
-  if (!images.length) { study.result = clean; console.log(project.id.padEnd(20) + 'no image set'); continue; }
-  const bytes = kbOf(images);
-  const weight = bytes >= 1048576
-    ? (bytes / 1048576).toFixed(1) + ' MB'
-    : Math.round(bytes / 1024) + ' KB';
-  clean.unshift('Case media: ' + images.length + ' still' + (images.length === 1 ? '' : 's') + ' at ' + weight + '.');
   study.result = clean;
-  console.log(project.id.padEnd(20) + 'media ' + images.length + ' stills, ' + weight);
+  console.log(project.id.padEnd(20) + 'no frame rate claim');
 }
 
 writeFileSync(file, JSON.stringify(site, null, 2) + '\n');

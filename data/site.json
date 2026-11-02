@@ -54,8 +54,7 @@
         ],
         "result": [
           "Runs at 60.2 fps at 1440 x 900 and 60.1 fps at 390 x 844 in headless Chrome 156.",
-          "265,744 blades in the live scene.",
-          "Chrome reports no console errors at both widths."
+          "265,744 blades in the live scene."
         ],
         "credits": [
           {
@@ -122,7 +121,6 @@
         "result": [
           "Runs at 59.5 fps at 1440 x 900 and 59.9 fps at 390 x 844 in headless Chrome 156.",
           "The portfolio embed caps the drawing buffer at 1728 px.",
-          "Chrome reports no console errors at desktop and phone width.",
           "The still shows the dither veil and the spectral rim. The touch frame shows the dye trail."
         ],
         "credits": [
@@ -188,9 +186,7 @@
           "The renderer reads the JSON and draws every output. A new base form or palette goes into the file, and the page stays the same."
         ],
         "result": [
-          "Case media: 2 stills at 107 KB.",
           "Six operators and four outputs render from one 1,344-byte system file, in a page of 11,504 bytes.",
-          "Zero console errors at both widths.",
           "The phone layout reflows to 2 × 3 operator cells and 2 × 2 outputs with no clipping.",
           "The sheet is a proof, not a final identity. It shows the range before it shows the use."
         ],
@@ -258,12 +254,8 @@
           "A playback check ran before opening: every clip, its in point, and its surface."
         ],
         "result": [
-          "Case media: 4 stills at 132 KB.",
           "Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.",
-          "Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind.",
-          "The Trucha press cover credits Laura Martinez and sits in the credits list.",
-          "The page is 2.7 KB of HTML and renders the case from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind."
         ],
         "credits": [
           {
@@ -362,7 +354,6 @@
           "The web cut is silent. The original post carries a soundtrack."
         ],
         "result": [
-          "Case media: 10 stills at 1.3 MB.",
           "Two cities, two languages, one pipeline.",
           "19 tracked objects at 8 fps in the logged frames.",
           "33.2 s Mexico City; 64.7 s New York.",
@@ -491,13 +482,10 @@
           "The event was free and open to the public, so a visitor with no appointment had to be able to take part."
         ],
         "result": [
-          "Case media: 4 stills at 278 KB.",
           "Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.",
-          "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.",
+          "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text.",
           "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
-          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-          "The page is 2.7 KB of HTML and renders the case from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067."
         ],
         "credits": [
           {
@@ -620,13 +608,9 @@
           "Product photography by other artists placed the pieces in daylight, on a skateboard and on a rooftop, which tested the plate against direct sun and moving cloth."
         ],
         "result": [
-          "Case media: 4 stills at 251 KB.",
           "Two products in the run: a white tee and a white tote.",
           "One three-line lockup, used at two scales.",
-          "Six product stills survive in the project file. Four are used here.",
-          "One motion loop and one Instagram reel for the release.",
-          "The page is 2.6 KB of HTML and the case renders from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "One motion loop and one Instagram reel for the release."
         ],
         "credits": [
           {
@@ -707,12 +691,9 @@
           "The room held three kinds of work at once: the AR posters, the headset station, and the generative and audio-visual installation."
         ],
         "result": [
-          "Case media: 4 stills at 200 KB.",
           "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
           "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
-          "Stills are cut from the exhibition reel: 90 seconds at 720 x 1280.",
-          "The page is 2.6 KB of HTML and renders the case from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "Stills are cut from the exhibition reel: 90 seconds at 720 x 1280."
         ],
         "credits": [
           {
@@ -803,12 +784,8 @@
           "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape."
         ],
         "result": [
-          "Case media: 3 stills at 270 KB.",
           "One animated mark and one printed still, built from the same geometry.",
-          "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
-          "Two source images survive in the project file. The case uses three crops.",
-          "The page is 2.6 KB of HTML and the case renders from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey."
         ],
         "credits": [
           {
@@ -918,11 +895,7 @@
           "The export is a still and a loop. The still is what survives in the project file today."
         ],
         "result": [
-          "Case media: 3 stills at 430 KB.",
-          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
-          "The case uses the still plus two detail crops.",
-          "The page is 2.5 KB of HTML and needs no script to read.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "One exported still survives in the project file. The number of studies in the set is unconfirmed."
         ],
         "credits": [
           {
@@ -991,12 +964,9 @@
           "The show closed on 26 March with a dialogue with sound artist Jon Almaraz and a deep listening session in the same room, so the space had to work as a screening room and as a listening room."
         ],
         "result": [
-          "Case media: 3 stills at 259 KB.",
           "Four channels of Compressed Time on four monitors, one projected film, and one bilingual wall text in a single room.",
           "Run: 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen, TX 78501.",
-          "Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1.",
-          "The page is 2.7 KB of HTML and renders the case from one data entry.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1."
         ],
         "credits": [
           {
@@ -1121,12 +1091,8 @@
           "The page follows the same heading, description, and case-block layout as every other study page."
         ],
         "result": [
-          "Case media: 3 stills at 229 KB.",
           "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
-          "Year range 2022 to 2026, read from the project records.",
-          "The index is static HTML and reads without JavaScript. The clips need the player, so they sit in a separate section above it.",
-          "Titles and summaries are kept identical in the site data file and in this page.",
-          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+          "Year range 2022 to 2026, read from the project records."
         ],
         "credits": [
           {
@@ -1189,6 +1155,20 @@
       "Tigers Blood (2023)",
       "River Pierce Foundation AR Showcase (2025)",
       "Collapsed Timelines In Felicitous Space — Technical Setup (2022)"
+    ],
+    "contact": [
+      {
+        "label": "Email",
+        "href": "mailto:juanclicerio@outlook.com"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/jlicerio"
+      },
+      {
+        "label": "Site",
+        "href": "https://jlicerio.github.io/portfolio/"
+      }
     ]
   },
   "bioDetails": [

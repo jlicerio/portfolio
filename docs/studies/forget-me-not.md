@@ -15,12 +15,8 @@
 
 **Result.**
 
-- Case media: 4 stills at 132 KB.
 - Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.
 - Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind.
-- The Trucha press cover credits Laura Martinez and sits in the credits list.
-- The page is 2.7 KB of HTML and renders the case from one data entry.
-- Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
 

@@ -85,6 +85,12 @@ function renderCv(site) {
   const selected = document.querySelector('[data-cv-work]');
   if (focus) focus.innerHTML = site.cv.focus.map((item, index) => `<div class="focus-item"><span>${String(index + 1).padStart(2, '0')}</span><strong>${escapeHtml(item)}</strong></div>`).join('');
   if (selected) selected.innerHTML = site.cv.selectedWork.map(item => `<div class="selected-item">${escapeHtml(item)}</div>`).join('');
+  const contact = document.querySelector('[data-cv-contact]');
+  if (contact) {
+    const links = Array.isArray(site.cv.contact) ? site.cv.contact : [];
+    if (links.length) contact.innerHTML = links.map((link) => `<a href="${externalUrl(link.href)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)} ↗</a>`).join('');
+    else contact.closest('section')?.remove();
+  }
 }
 
 function renderProject(site) {

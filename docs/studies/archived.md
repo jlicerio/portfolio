@@ -16,12 +16,8 @@
 
 **Result.**
 
-- Case media: 3 stills at 229 KB.
 - Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.
 - Year range 2022 to 2026, read from the project records.
-- The index is static HTML and reads without JavaScript. The clips need the player, so they sit in a separate section above it.
-- Titles and summaries are kept identical in the site data file and in this page.
-- Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
 

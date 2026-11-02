@@ -14,7 +14,6 @@
 
 **Result.**
 
-- Case media: 10 stills at 1.3 MB.
 - Two cities, two languages, one pipeline.
 - 19 tracked objects at 8 fps in the logged frames.
 - 33.2 s Mexico City; 64.7 s New York.

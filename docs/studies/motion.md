@@ -13,11 +13,7 @@
 
 **Result.**
 
-- Case media: 3 stills at 430 KB.
 - One exported still survives in the project file. The number of studies in the set is unconfirmed.
-- The case uses the still plus two detail crops.
-- The page is 2.5 KB of HTML and needs no script to read.
-- Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
 

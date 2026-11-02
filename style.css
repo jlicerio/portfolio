@@ -132,3 +132,7 @@ body[data-theme="light"] .clip-play{background:rgba(242,240,236,.82);color:var(-
 
 /* Section rules carry weight */
 .work-section-head{border-top-color:var(--ink);border-top-width:1px}
+
+/* CV contact strip */
+.cv-contact-section{border-top:1px solid var(--ink);margin-top:70px;padding:25px 0 40px}
+.cv-contact-section .project-links{margin-top:22px}

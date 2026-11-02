@@ -18,7 +18,6 @@
 
 - Runs at 60.2 fps at 1440 x 900 and 60.1 fps at 390 x 844 in headless Chrome 156.
 - 265,744 blades in the live scene.
-- Chrome reports no console errors at both widths.
 
 **Credits.**
 

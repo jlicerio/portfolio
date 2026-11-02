@@ -15,7 +15,6 @@
 
 - Runs at 59.5 fps at 1440 x 900 and 59.9 fps at 390 x 844 in headless Chrome 156.
 - The portfolio embed caps the drawing buffer at 1728 px.
-- Chrome reports no console errors at desktop and phone width.
 - The still shows the dither veil and the spectral rim. The touch frame shows the dye trail.
 
 **Credits.**

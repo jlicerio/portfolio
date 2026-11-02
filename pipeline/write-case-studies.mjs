@@ -33,8 +33,8 @@ const studies = {
       result: [
         "Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.",
         "Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind.",
-        "The Trucha press cover credits Laura Martinez and sits in the credits list.",
-        "The page is 2.7 KB of HTML and renders the case from one data entry.",
+        
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -76,7 +76,7 @@ const studies = {
         "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
         "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
         "Stills are cut from the exhibition reel: 90 seconds at 720 x 1280.",
-        "The page is 2.6 KB of HTML and renders the case from one data entry.",
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -114,10 +114,10 @@ const studies = {
       ],
       result: [
         "Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.",
-        "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text. The case shows three of them plus the event poster.",
+        "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text.",
         "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
         "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067.",
-        "The page is 2.7 KB of HTML and renders the case from one data entry.",
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -156,8 +156,8 @@ const studies = {
       ],
       result: [
         "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
-        "The case uses the still plus two detail crops.",
-        "The page is 2.5 KB of HTML and needs no script to read.",
+        
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -191,9 +191,9 @@ const studies = {
       result: [
         "Two products in the run: a white tee and a white tote.",
         "One three-line lockup, used at two scales.",
-        "Six product stills survive in the project file. Four are used here.",
+        
         "One motion loop and one Instagram reel for the release.",
-        "The page is 2.6 KB of HTML and the case renders from one data entry.",
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -228,8 +228,8 @@ const studies = {
       result: [
         "One animated mark and one printed still, built from the same geometry.",
         "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
-        "Two source images survive in the project file. The case uses three crops.",
-        "The page is 2.6 KB of HTML and the case renders from one data entry.",
+        
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -267,7 +267,7 @@ const studies = {
         "Four channels of Compressed Time on four monitors, one projected film, and one bilingual wall text in a single room.",
         "Run: 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen, TX 78501.",
         "Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1.",
-        "The page is 2.7 KB of HTML and renders the case from one data entry.",
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -308,8 +308,8 @@ const studies = {
       result: [
         "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
         "Year range 2022 to 2026, read from the project records.",
-        "The index is static HTML and reads without JavaScript. The clips need the player, so they sit in a separate section above it.",
-        "Titles and summaries are kept identical in the site data file and in this page.",
+        
+        
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -326,6 +326,8 @@ const studies = {
   }
 };
 
+const quiet = (items = []) => items.filter((line) => !/^(Chrome reports|Zero console errors)/i.test(String(line).trim()));
+
 let changed = 0;
 for (const project of site.projects) {
   const update = studies[project.id];
@@ -335,6 +337,7 @@ for (const project of site.projects) {
   if (update.summary) project.summary = update.summary;
   if (update.description) project.description = update.description;
   if (update.image) project.image = update.image;
+  update.caseStudy.result = quiet(update.caseStudy.result);
   project.caseStudy = update.caseStudy;
   changed += 1;
 }

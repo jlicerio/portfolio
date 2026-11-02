@@ -13,12 +13,9 @@
 
 **Result.**
 
-- Case media: 3 stills at 259 KB.
 - Four channels of Compressed Time on four monitors, one projected film, and one bilingual wall text in a single room.
 - Run: 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen, TX 78501.
 - Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1.
-- The page is 2.7 KB of HTML and renders the case from one data entry.
-- Chrome reports zero console errors at 1440 x 900 and 390 x 844.
 
 **Credits.**
 

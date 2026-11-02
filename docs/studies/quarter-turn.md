@@ -13,9 +13,7 @@
 
 **Result.**
 
-- Case media: 2 stills at 107 KB.
 - Six operators and four outputs render from one 1,344-byte system file, in a page of 11,504 bytes.
-- Zero console errors at both widths.
 - The phone layout reflows to 2 × 3 operator cells and 2 × 2 outputs with no clipping.
 - The sheet is a proof, not a final identity. It shows the range before it shows the use.
 
