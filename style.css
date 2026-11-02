@@ -93,3 +93,15 @@ body[data-page="work"] .site-header a:focus-visible,body[data-page="work"] .them
 .work-index-title .role-tag{display:block;font-size:9px;margin:8px 0 0}
 .project-heading .role-tag{font-size:10px;letter-spacing:.1em}
 @media(max-width:700px){.role-tag{margin-left:6px;font-size:9px}.work-index-title .role-tag{display:block;margin:6px 0 0}}
+
+/* Work index sections */
+.work-section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px) 54px;align-items:baseline;gap:24px;padding:34px 14px 14px;border-top:1px solid var(--line)}
+.work-section:first-child .work-section-head{border-top:0;padding-top:22px}
+.work-section-label{font:11px 'DM Mono',monospace;letter-spacing:.14em;color:var(--ink)}
+.work-section-note{font-size:13px;color:var(--muted);line-height:1.4}
+.work-section-count{font:11px 'DM Mono',monospace;letter-spacing:.08em;color:var(--muted);text-align:right}
+@media(max-width:860px){
+  .work-section-head{grid-template-columns:minmax(0,1fr) 40px;gap:10px 14px;padding:26px 10px 10px}
+  .work-section-note{grid-column:1/-1;order:3;font-size:12px}
+  .work-section-count{text-align:right}
+}

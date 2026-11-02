@@ -90,7 +90,8 @@
         ]
       },
       "discipline": "WEBGPU / WGSL",
-      "role": "Artwork and code"
+      "role": "Artwork and code",
+      "section": "real-time"
     },
     {
       "id": "viscous-orb",
@@ -162,7 +163,8 @@
         ]
       },
       "discipline": "WEBGL2 / FLUID",
-      "role": "Artwork and code"
+      "role": "Artwork and code",
+      "section": "real-time"
     },
     {
       "id": "quarter-turn",
@@ -220,7 +222,8 @@
         ]
       },
       "discipline": "SVG / CANVAS",
-      "role": "System and code"
+      "role": "System and code",
+      "section": "real-time"
     },
     {
       "id": "forget-me-not",
@@ -324,7 +327,8 @@
         ]
       },
       "discipline": "PROJECTION MAPPING",
-      "role": "Technical setup"
+      "role": "Technical setup",
+      "section": "immersion"
     },
     {
       "id": "surveillance-status",
@@ -437,7 +441,8 @@
         ]
       },
       "discipline": "LIVE VIDEO",
-      "role": "Artwork and code"
+      "role": "Artwork and code",
+      "section": "real-time"
     },
     {
       "id": "river-pierce",
@@ -554,7 +559,8 @@
         ]
       },
       "discipline": "AUGMENTED REALITY",
-      "role": "AR project"
+      "role": "AR project",
+      "section": "immersion"
     },
     {
       "id": "9ine5ive6eis",
@@ -661,7 +667,8 @@
         ]
       },
       "discipline": "IDENTITY / TYPE",
-      "role": "Identity and motion"
+      "role": "Identity and motion",
+      "section": "commissions"
     },
     {
       "id": "triqueta",
@@ -753,7 +760,8 @@
         ]
       },
       "discipline": "AR / VR",
-      "role": "AR and VR development"
+      "role": "AR and VR development",
+      "section": "immersion"
     },
     {
       "id": "tigers-blood",
@@ -834,7 +842,8 @@
         ]
       },
       "discipline": "3D / MOTION",
-      "role": "3D and animation"
+      "role": "3D and animation",
+      "section": "commissions"
     },
     {
       "id": "motion",
@@ -941,7 +950,8 @@
         ]
       },
       "discipline": "MOTION GRAPHICS",
-      "role": "Artwork"
+      "role": "Artwork",
+      "section": "studies"
     },
     {
       "id": "collapsed-timelines",
@@ -1026,7 +1036,8 @@
         ]
       },
       "discipline": "FOUR-CHANNEL VIDEO",
-      "role": "Technical setup"
+      "role": "Technical setup",
+      "section": "immersion"
     },
     {
       "id": "archived",
@@ -1160,5 +1171,32 @@
       "River Pierce Foundation AR Showcase (2025)"
     ]
   },
-  "bioDetails": []
+  "bioDetails": [],
+  "sections": [
+    {
+      "id": "real-time",
+      "label": "REAL-TIME / WEB",
+      "note": "Browser systems, shaders, and live data."
+    },
+    {
+      "id": "immersion",
+      "label": "IMMERSION / SPACE",
+      "note": "Projection, AR, and VR in a room."
+    },
+    {
+      "id": "commissions",
+      "label": "COMMISSIONS",
+      "note": "Client work: identity, 3D, and motion."
+    },
+    {
+      "id": "studies",
+      "label": "STUDIES",
+      "note": "Self-set experiments."
+    },
+    {
+      "id": "horror",
+      "label": "HORROR / GENRE",
+      "note": ""
+    }
+  ]
 }

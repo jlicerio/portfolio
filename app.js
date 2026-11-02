@@ -58,7 +58,20 @@ function renderHome(site) {
 
 function renderWork(site) {
   const list = document.querySelector('[data-work-projects]');
-  if (list) list.innerHTML = visibleProjects(site).map(workRow).join('');
+  if (!list) return;
+  const sections = Array.isArray(site.sections) && site.sections.length
+    ? site.sections
+    : [{ id: 'work', label: 'WORK' }];
+  const projects = visibleProjects(site);
+  list.innerHTML = sections.map((section) => {
+    const rows = projects.filter((project) => (project.section || 'work') === section.id);
+    if (!rows.length) return '';
+    const count = String(rows.length).padStart(2, '0');
+    return `<section class="work-section" aria-label="${escapeHtml(section.label)}">
+      <div class="work-section-head"><span class="work-section-label">${escapeHtml(section.label)}</span><span class="work-section-note">${escapeHtml(section.note || '')}</span><span class="work-section-count">${count}</span></div>
+      <ul class="work-index-list">${rows.map((project, index) => workRow(project, index)).join('')}</ul>
+    </section>`;
+  }).join('');
 }
 
 function renderCv(site) {
