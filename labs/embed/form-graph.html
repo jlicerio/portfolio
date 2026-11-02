@@ -439,7 +439,8 @@ function buildDetail(spec) {
   document.getElementById('detailcaption').textContent =
     `${spec.config} · ${spec.folds} folds · ${spec.rings} rings · warp ${spec.warpAmount.toFixed(2)} · ${samples.length.toLocaleString()} particles`;
   document.getElementById('detailbar').hidden = false;
-  tone(196, 523.25, 0.9, 0.09);
+  duckBed(0.3, 0.9);
+  holdEntryTone(spec);
 }
 
 let detailOpen = false;
@@ -461,7 +462,7 @@ function closeDetail() {
   group.visible = true;
   guidesGroup.visible = true;
   document.getElementById('detailbar').hidden = true;
-  tone(261.63, 110, 0.5, 0.07);
+  releaseEntryTone();
   orbit.radius = 28;
   orbit.elevation = 1.02;
 }
@@ -477,25 +478,9 @@ const audio = {
   noise: null,
 };
 
-// A generated impulse response: exponential tail with a soft top end.
-function impulseResponse(context, seconds = 3.4) {
-  const length = Math.floor(context.sampleRate * seconds);
-  const buffer = context.createBuffer(2, length, context.sampleRate);
-  for (let channel = 0; channel < 2; channel += 1) {
-    const data = buffer.getChannelData(channel);
-    let last = 0;
-    for (let i = 0; i < length; i += 1) {
-      const t = i / length;
-      const white = Math.random() * 2 - 1;
-      last = last * 0.86 + white * 0.14;      // dull the tail
-      data[i] = last * Math.pow(1 - t, 2.6) * (1 - t * 0.2);
-    }
-  }
-  return buffer;
-}
-
-// A thin harmonic set in C, so grains never land out of key.
-const GRAIN_SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0, 1046.5];
+// Ambient, built the slow way: one tone per ring, no delay, no reverb.
+const RING_FREQS = [65.41, 73.42, 87.31, 98.0, 110.0];   // C2 D2 F2 G2 A2
+const RING_LEVELS = [0.2, 0.16, 0.13, 0.1, 0.07];
 
 function startAudio() {
   if (audio.ctx) return;
@@ -509,106 +494,131 @@ function startAudio() {
   master.connect(ctx.destination);
   audio.master = master;
 
-  // space: one reverb, everything sends into it
-  const reverb = ctx.createConvolver();
-  reverb.buffer = impulseResponse(ctx, 3.4);
-  const wet = ctx.createGain();
-  wet.gain.value = 0.55;
-  reverb.connect(wet).connect(master);
-  audio.reverb = reverb;
-
-  const dry = ctx.createGain();
-  dry.gain.value = 0.7;
-  dry.connect(master);
-
-  // bed: C, G, C, G, detuned pairs, no noise
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 380;
-  filter.Q.value = 0.7;
-  filter.connect(dry);
-  filter.connect(reverb);
-
-  const voices = [
-    { freq: 65.41, detune: -5, gain: 0.2 },
-    { freq: 65.41, detune: 6, gain: 0.2 },
-    { freq: 98.0, detune: 3, gain: 0.14 },
-    { freq: 130.81, detune: -3, gain: 0.1 },
-    { freq: 196.0, detune: 7, gain: 0.05 },
-  ];
-  for (const voice of voices) {
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = voice.freq;
-    osc.detune.value = voice.detune;
+  // the bed: five rings, each a detuned pair, each with its own pan
+  audio.rings = [];
+  RING_FREQS.forEach((freq, index) => {
     const gain = ctx.createGain();
-    gain.gain.value = voice.gain;
-    osc.connect(gain).connect(filter);
-    osc.start();
-  }
+    gain.gain.value = 0;
+    const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    if (pan) gain.connect(pan).connect(master);
+    else gain.connect(master);
 
-  const lfo = ctx.createOscillator();
-  lfo.frequency.value = 0.035;
-  const lfoGain = ctx.createGain();
-  lfoGain.gain.value = 120;
-  lfo.connect(lfoGain).connect(filter.frequency);
-  lfo.start();
+    for (const detune of [-3, 4]) {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.detune.value = detune;
+      osc.connect(gain);
+      osc.start();
+    }
+    audio.rings.push({ freq, gain, pan, level: RING_LEVELS[index], index });
+  });
 
-  audio.noise = null;
-  scheduleGrains();
+  // the outermost ring carries the dust: sparse shards, no tail effects
+  audio.grains = true;
+  scheduleDust();
 }
 
-// grain cloud: short sine shards, random pitch from the scale, random pan,
-// long reverb tail. This is the ether, and it carries no hiss.
-function scheduleGrains() {
+// rings arrive one at a time, so the room assembles itself
+function openRings(seconds = 18) {
+  if (!audio.ctx) return;
+  const ctx = audio.ctx;
+  const now = ctx.currentTime;
+  audio.rings.forEach((ring, index) => {
+    ring.gain.gain.cancelScheduledValues(now);
+    ring.gain.gain.setValueAtTime(0, now);
+    ring.gain.gain.linearRampToValueAtTime(ring.level, now + seconds + index * 12);
+  });
+}
+
+function duckBed(factor, time = 0.8) {
+  if (!audio.ctx) return;
+  const now = audio.ctx.currentTime;
+  audio.rings.forEach((ring) => {
+    ring.gain.gain.cancelScheduledValues(now);
+    ring.gain.gain.setTargetAtTime(ring.level * factor, now, time);
+  });
+}
+
+// dust: short sine shards tuned to the outer ring, no reverb, no delay
+function scheduleDust() {
   if (!audio.ctx || !audio.on) return;
   const ctx = audio.ctx;
-  const delay = 90 + Math.random() * 340;
   setTimeout(() => {
     if (!audio.on) return;
     const now = ctx.currentTime;
-    const count = Math.random() < 0.25 ? 2 : 1;
-    for (let i = 0; i < count; i += 1) {
-      const osc = ctx.createOscillator();
-      osc.type = Math.random() < 0.2 ? 'triangle' : 'sine';
-      const base = GRAIN_SCALE[Math.floor(Math.random() * GRAIN_SCALE.length)];
-      const octave = Math.random() < 0.35 ? 2 : 1;
-      osc.frequency.value = base * octave * (1 + (Math.random() - 0.5) * 0.004);
-      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-      if (pan) pan.pan.value = Math.random() * 1.6 - 0.8;
-      const gain = ctx.createGain();
-      const peak = 0.006 + Math.random() * 0.012;
-      const attack = 0.008 + Math.random() * 0.02;
-      const decay = 0.22 + Math.random() * 0.55;
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(peak, now + attack);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
-      osc.connect(gain);
-      if (pan) gain.connect(pan).connect(audio.reverb);
-      else gain.connect(audio.reverb);
-      osc.start(now);
-      osc.stop(now + attack + decay + 0.05);
-    }
-    scheduleGrains();
-  }, delay);
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    const octave = [2, 4, 8][Math.floor(Math.random() * 3)];
+    osc.frequency.value = 110 * octave * (1 + (Math.random() - 0.5) * 0.003);
+    const gain = ctx.createGain();
+    const peak = 0.004 + Math.random() * 0.008;
+    const attack = 0.02 + Math.random() * 0.06;
+    const decay = 0.6 + Math.random() * 1.4;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(peak, now + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
+    const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    osc.connect(gain);
+    if (pan) { pan.pan.value = Math.random() * 1.4 - 0.7; gain.connect(pan).connect(audio.master); }
+    else gain.connect(audio.master);
+    osc.start(now);
+    osc.stop(now + attack + decay + 0.05);
+    scheduleDust();
+  }, 2000 + Math.random() * 6000);
 }
 
-function tone(from, to, duration, level = 0.08, type = 'sine') {
+// pan follows the orbit, so turning the camera moves the room
+function updateAudio() {
   if (!audio.ctx || !audio.on) return;
+  const now = audio.ctx.currentTime;
+  audio.rings.forEach((ring) => {
+    if (!ring.pan) return;
+    const value = Math.sin(orbit.azimuth * 0.9 + ring.index * 0.8) * 0.65;
+    ring.pan.pan.setTargetAtTime(value, now, 0.5);
+  });
+}
+
+// one held tone, tuned to the ring the form belongs to; eight seconds, no tail
+let entryVoice = null;
+
+function holdEntryTone(spec) {
+  if (!audio.ctx || !audio.on) return;
+  releaseEntryTone(1.2);
   const ctx = audio.ctx;
-  const now = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  osc.type = type;
-  osc.frequency.setValueAtTime(from, now);
-  osc.frequency.exponentialRampToValueAtTime(to, now + duration);
+  const band = Math.max(0, Math.min(RING_FREQS.length - 1, Math.round(spec.complexity * (RING_FREQS.length - 1))));
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(level, now + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  gain.gain.value = 0;
   gain.connect(audio.master);
-  if (audio.reverb) gain.connect(audio.reverb);
-  osc.start(now);
-  osc.stop(now + duration + 0.05);
+  const voice = { oscs: [], gain };
+
+  for (const multiplier of [1, 2, 3]) {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = RING_FREQS[band] * multiplier;
+    osc.detune.value = multiplier === 1 ? 0 : (Math.random() - 0.5) * 6;
+    const partial = ctx.createGain();
+    partial.gain.value = multiplier === 1 ? 1 : 1 / (multiplier * 1.8);
+    osc.connect(partial).connect(gain);
+    osc.start();
+    voice.oscs.push(osc);
+  }
+
+  const now = ctx.currentTime;
+  gain.gain.linearRampToValueAtTime(0.16, now + 1.4);
+  gain.gain.setTargetAtTime(0.12, now + 4, 1.2);
+  gain.gain.setTargetAtTime(0, now + 9, 2.2);
+  entryVoice = voice;
+}
+
+function releaseEntryTone(time = 4) {
+  if (!entryVoice || !audio.ctx) return;
+  const voice = entryVoice;
+  entryVoice = null;
+  const now = audio.ctx.currentTime;
+  voice.gain.gain.cancelScheduledValues(now);
+  voice.gain.gain.setTargetAtTime(0, now, time / 3);
+  voice.oscs.forEach((osc) => osc.stop(now + time + 0.5));
 }
 
 function toggleSound() {
@@ -621,7 +631,7 @@ function toggleSound() {
   audio.master.gain.setTargetAtTime(audio.on ? 0.5 : 0, now, 0.4);
   document.getElementById('soundToggle').setAttribute('aria-pressed', String(audio.on));
   document.getElementById('soundToggle').textContent = audio.on ? 'Sound on' : 'Sound';
-  if (audio.on) tone(130.81, 196, 0.9, 0.06);
+  if (audio.on) openRings(18);
 }
 
 document.getElementById('soundToggle').addEventListener('click', toggleSound);
@@ -675,7 +685,7 @@ canvasEl.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = M
 function setMode(mode) {
   window.__study.mode = mode;
   if (mode !== 'edges') window.__study.cardMode = mode;
-  if (mode !== 'edges') tone(330, 392, 0.18, 0.03, 'triangle');
+  if (mode !== 'edges') duckBed(0.75, 0.3);
   if (mode === 'edges') {
     edgeMesh.visible = !edgeMesh.visible;
     return;
@@ -708,6 +718,7 @@ renderer.setAnimationLoop(() => {
   );
   camera.lookAt(0, 0, 0);
   renderer.render(scene, camera);
+  updateAudio();
   window.__study.frames += 1;
 });
 
