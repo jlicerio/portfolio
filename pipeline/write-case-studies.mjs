@@ -302,12 +302,13 @@ const studies = {
         "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
         "A study is added with a record in the site data file, a page from the shared shell, and a row in this list, so the three stay in step by review rather than by build.",
         "The cover photograph is a gallery wall of framed works from the archive. The venue is unconfirmed.",
+        "Six clips from the archived pieces sit above the index, each with a poster frame. The player loads only when a clip is pressed.",
         "The page follows the same heading, description, and case-block layout as every other study page."
       ],
       result: [
         "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
         "Year range 2022 to 2026, read from the project records.",
-        "The index is static HTML and reads without JavaScript or a data fetch.",
+        "The index is static HTML and reads without JavaScript. The clips need the player, so they sit in a separate section above it.",
         "Titles and summaries are kept identical in the site data file and in this page.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],

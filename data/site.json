@@ -459,13 +459,15 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 1536,
-          "height": 916
+          "height": 916,
+          "poster": "assets/images/clips/Ap2vIYWzw4N.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 1798,
-          "height": 930
+          "height": 930,
+          "poster": "assets/images/clips/PzqK2ZiCk5L.jpg"
         }
       ],
       "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
@@ -584,7 +586,8 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/DZmtpbNVCa9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 800
+          "height": 800,
+          "poster": "assets/images/clips/DZmtpbNVCa9.jpg"
         },
         {
           "type": "instagram-reel",
@@ -685,7 +688,8 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/7Myv_Tp3Zb9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 1280
+          "height": 1280,
+          "poster": "assets/images/clips/7Myv_Tp3Zb9.jpg"
         }
       ],
       "description": "Triqueta was a collaborative exhibition project developed for the McAllen Creative Incubator. The project allowed me to develop and experiment with Augmented Reality and Virtual Reality, integrating them with the established artistic practice of filmmaker and artist Michael Flanagan. I focused on the technical development, creating a unique VR experience that incorporated Flanagan's video works, and building AR overlays for his original paintings, which also featured AI-generated elements. This installation explored the intersection of traditional painting, AI, and new media.",
@@ -781,7 +785,8 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/IdbY_pPbY9G/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 1080,
-          "height": 1080
+          "height": 1080,
+          "poster": "assets/images/clips/IdbY_pPbY9G.jpg"
         }
       ],
       "description": "Commissioned to create a dynamic digital asset from the client's static 2D logo. The process involved converting the original artwork into a 3D model, then applying a distinct lo-fi chromotype aesthetic with metallic textures and analog video effects. The final animation uses keyframed movement and a subtle glitch/vibration to transform the identity into a bold promotional graphic.",
@@ -860,37 +865,43 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 720
+          "height": 720,
+          "poster": "assets/images/clips/EGw3iYEeiWs.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 1280
+          "height": 1280,
+          "poster": "assets/images/clips/JnUj4vuM9NU.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 900
+          "height": 900,
+          "poster": "assets/images/clips/28exa_qeyUn.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 1024
+          "height": 1024,
+          "poster": "assets/images/clips/-PWpeQcWRMT.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 360,
-          "height": 640
+          "height": 640,
+          "poster": "assets/images/clips/JC2BXHuFEW6.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 720
+          "height": 720,
+          "poster": "assets/images/clips/869awjhwRsw.jpg"
         }
       ],
       "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
@@ -1054,37 +1065,43 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Rv-tfoUQJum/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/Rv-tfoUQJum.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/3oJpfJXneBR/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/3oJpfJXneBR.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/AQJQ7q8nU52/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 480,
-          "height": 854
+          "height": 854,
+          "poster": "assets/images/clips/AQJQ7q8nU52.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/K_48h_zn--8/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/K_48h_zn--8.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/GrQmmTV7QKT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/GrQmmTV7QKT.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/2NyhrUVTu8A/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/2NyhrUVTu8A.jpg"
         }
       ],
       "description": "Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.",
@@ -1100,13 +1117,14 @@
           "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
           "A study is added with a record in the site data file, a page from the shared shell, and a row in this list, so the three stay in step by review rather than by build.",
           "The cover photograph is a gallery wall of framed works from the archive. The venue is unconfirmed.",
+          "Six clips from the archived pieces sit above the index, each with a poster frame. The player loads only when a clip is pressed.",
           "The page follows the same heading, description, and case-block layout as every other study page."
         ],
         "result": [
           "Case media: 3 stills at 229 KB.",
           "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
           "Year range 2022 to 2026, read from the project records.",
-          "The index is static HTML and reads without JavaScript or a data fetch.",
+          "The index is static HTML and reads without JavaScript. The clips need the player, so they sit in a separate section above it.",
           "Titles and summaries are kept identical in the site data file and in this page.",
           "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
         ],

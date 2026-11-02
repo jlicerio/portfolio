@@ -101,10 +101,29 @@ function renderProject(site) {
   const mediaSection = document.querySelector('[data-project-media-section]');
   if (mediaSection && project.videos?.length) {
     mediaSection.hidden = false;
+    const clips = project.videos.length;
+    const label = mediaSection.querySelector('[data-project-media-label]');
+    if (label) label.textContent = `MEDIA / ${clips} CLIP${clips === 1 ? '' : 'S'}`;
+    const note = mediaSection.querySelector('[data-project-media-note]');
+    if (note) {
+      const kinds = [...new Set(project.videos.map((media) => media.type || 'player'))];
+      note.textContent = kinds.join(' / ').replace(/-/g, ' ').toUpperCase();
+    }
     document.querySelector('[data-project-media]').innerHTML = project.videos.map((media, index) => {
       const href = externalUrl(media.url || media.embedUrl);
-      const frame = media.embedUrl ? `<iframe src="${externalUrl(media.embedUrl)}" title="${escapeHtml(project.title)} media ${index + 1}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>` : '';
-      return `<article class="media-item">${frame}<a class="media-link" href="${href}" target="_blank" rel="noreferrer">OPEN MEDIA ${String(index + 1).padStart(2, '0')} ↗</a></article>`;
+      const embed = media.embedUrl ? externalUrl(media.embedUrl) : '';
+      const ratio = media.width && media.height && media.width > 2
+        ? media.width + ' / ' + media.height
+        : '16 / 10';
+      const number = String(index + 1).padStart(2, '0');
+      const poster = media.poster
+        ? `<img src="${localUrl(media.poster)}" alt="${escapeHtml(project.title)} clip ${number}" loading="lazy" decoding="async">`
+        : `<span class="clip-plate">${escapeHtml((media.type || 'clip').replace(/-/g, ' ').toUpperCase())}</span>`;
+      return `<figure class="clip" style="--clip-ratio:${ratio}">
+        ${poster}
+        ${embed ? `<button class="clip-play" type="button" data-clip-embed="${embed}" data-clip-ratio="${ratio}"><span>PLAY</span><em>${number}</em></button>` : ''}
+        <figcaption><span>${number}</span><a href="${href}" target="_blank" rel="noreferrer">OPEN ↗</a></figcaption>
+      </figure>`;
     }).join('');
   }
 
@@ -146,8 +165,22 @@ function renderCaseStudy(project) {
   anchor.after(section);
 }
 
+function setupClipPlayers() {
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-clip-embed]');
+    if (!button) return;
+    const figure = button.closest('.clip');
+    if (!figure) return;
+    const src = button.dataset.clipEmbed;
+    const ratio = button.dataset.clipRatio || '16 / 10';
+    figure.innerHTML = `<iframe style="aspect-ratio:${ratio}" src="${src}" title="Clip player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+    figure.classList.add('is-playing');
+  });
+}
+
 async function init() {
   setupTheme();
+  setupClipPlayers();
   const response = await fetch(`${root}data/site.json?v=2`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Portfolio data request failed: ${response.status}`);
   const site = await response.json();

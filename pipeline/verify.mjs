@@ -24,6 +24,7 @@ const settleMs = Number(readFlag('settle', '3500'));
 const sizesArg = readFlag('sizes', 'desktop:1440x900,phone:390x844');
 const fullPage = args.includes('--full');
 const pageMode = args.includes('--page');
+const maxFull = Number(readFlag('max-full', '4200'));
 
 if (!slug || !url) {
   console.error('Usage: node pipeline/verify.mjs --slug <slug> --url <url> [--sizes desktop:1440x900,phone:390x844] [--min-fps 50] [--full]');
@@ -120,9 +121,14 @@ function connect(wsUrl) {
 }
 
 const readStudy = `(() => {
-  const frame = document.querySelector('iframe');
-  const inner = frame && frame.contentWindow;
-  return (window.__study || (inner && inner.__study) || null);
+  if (window.__study) return window.__study;
+  for (const frame of Array.from(document.querySelectorAll('iframe'))) {
+    try {
+      const inner = frame.contentWindow && frame.contentWindow.__study;
+      if (inner) return inner;
+    } catch (error) {}
+  }
+  return null;
 })()`;
 
 const readyExpression = '(() => { const s = ' + readStudy + '; return s ? Boolean(s.ready) : null; })()';
@@ -210,11 +216,24 @@ try {
 
     const measured = await client.send('Runtime.evaluate', {
       expression: `(async () => {
-        const frame = document.querySelector('canvas')
-          || document.querySelector('iframe')?.contentDocument?.querySelector('canvas');
-        const study = window.__study
-          || document.querySelector('iframe')?.contentWindow?.__study
-          || null;
+        let frame = document.querySelector('canvas');
+        if (!frame) {
+          for (const iframe of Array.from(document.querySelectorAll('iframe'))) {
+            try {
+              frame = iframe.contentDocument && iframe.contentDocument.querySelector('canvas');
+              if (frame) break;
+            } catch (error) {}
+          }
+        }
+        let study = window.__study || null;
+        if (!study) {
+          for (const iframe of Array.from(document.querySelectorAll('iframe'))) {
+            try {
+              study = iframe.contentWindow && iframe.contentWindow.__study;
+              if (study) break;
+            } catch (error) {}
+          }
+        }
         const start = performance.now();
         const first = study ? study.frames : null;
         let raf = 0;
@@ -259,7 +278,8 @@ try {
       await sleep(1500);
       await client.send('Runtime.evaluate', { expression: 'window.scrollTo(0, 0)' });
       const metrics = await client.send('Page.getLayoutMetrics');
-      clip = { x: 0, y: 0, width: size.width, height: Math.ceil(metrics.cssContentSize.height), scale: 1 };
+      const contentHeight = Math.ceil(metrics.cssContentSize.height);
+      clip = { x: 0, y: 0, width: size.width, height: Math.min(contentHeight, maxFull), scale: 1 };
     }
     const shot = await client.send('Page.captureScreenshot', {
       format: 'png',
@@ -292,6 +312,7 @@ try {
       networkErrors: [...new Set(networkErrors)],
       badResponses: [...new Set(badResponses)],
       screenshot: shotPath,
+      contentHeight: clip ? clip.height : null,
     };
     const mediaGate = pageMode
       ? true

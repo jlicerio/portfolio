@@ -15,4 +15,4 @@
 | Tigers Blood | case study | - | 0 | yes | 275 | 2026-11-02 | no canvas, no fps claim |
 | Motion | case study | - | 0 | yes | 265 | 2026-11-02 | no canvas, no fps claim |
 | Collapsed Timelines In Felicitous Space | case study | - | 0 | yes | 337 | 2026-11-02 | no canvas, no fps claim |
-| Archived Works | case study | - | 0 | yes | 296 | 2026-11-02 | no canvas, no fps claim |
+| Archived Works | case study | - | 0 | yes | 330 | 2026-11-02 | no canvas, no fps claim |
