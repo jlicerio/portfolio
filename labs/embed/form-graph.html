@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Form Graph — Volids</title>
+<title>Form Space</title>
 <style>
-  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  :root{--bg:#05060a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
   #view{display:block;width:100%;height:100%}
@@ -33,217 +33,322 @@
 <body>
 <canvas id="view"></canvas>
 <div class="bar top">
-  <div class="label"><b id="title">Volids — form graph</b><br><span id="count">building</span></div>
-  <div class="label" style="text-align:right">nodes: one generated specimen<br>edges: 2 nearest neighbours</div>
+  <div class="label"><b>Form space</b><br><span id="count">building</span></div>
+  <div class="label" style="text-align:right">centre: one component<br>outward: more complexity</div>
 </div>
 <div class="bar bottom">
-  <div class="label">drag to orbit · scroll to zoom</div>
+  <div class="label" id="readout">drag to orbit · scroll to zoom</div>
   <div class="keys">
-    <button type="button" data-mode="graph" aria-pressed="true">Graph</button>
-    <button type="button" data-mode="cloud" aria-pressed="false">Cloud</button>
+    <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
+    <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
+    <button type="button" data-mode="edges" aria-pressed="false">Edges</button>
   </div>
 </div>
 <script type="module">
 import * as THREE from 'three/webgpu';
 
-const canvas = document.getElementById('view');
+const canvasEl = document.getElementById('view');
 const countEl = document.getElementById('count');
+const readout = document.getElementById('readout');
 
-window.__study = { ready: false, frames: 0, error: null, nodes: 0, edges: 0, mode: 'graph' };
+window.__study = { ready: false, frames: 0, error: null, specimens: 0, mode: 'dither' };
 
-// ---- the bounded system, same rules as the runner ----
-const SEED = 114;
-const COUNT = 190;
-const FAMILIES = [
-  { key: 'fold12', label: 'fold 12', folds: 12, colour: '#8ea6ff' },
-  { key: 'fold16', label: 'fold 16', folds: 16, colour: '#7fd8ff' },
-  { key: 'fold20', label: 'fold 20', folds: 20, colour: '#54d6a0' },
-  { key: 'fold26', label: 'fold 26', folds: 26, colour: '#c6ff4a' },
-  { key: 'fold30', label: 'fold 30', folds: 30, colour: '#ff5a3c' },
+const TAU = Math.PI * 2;
+const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+const GLYPHS = ' .:-=+*#%@';
+const PALETTES = [
+  ['#ff5a3c', '#c6ff4a', '#7fd8ff'],
+  ['#f2f0ec', '#8ea6ff', '#3a63b8'],
+  ['#ffd166', '#54d6a0', '#7fd8ff'],
+  ['#ff8fd0', '#b18cff', '#8ea6ff'],
 ];
 
 function rng(seed) {
   let s = seed >>> 0 || 1;
   return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
 }
-const lerp = (a, b, t) => a + (b - a) * t;
 
-const nodes = [];
-const random = rng(SEED);
-for (let i = 0; i < COUNT; i += 1) {
-  const family = FAMILIES[Math.floor(random() * FAMILIES.length)];
-  const node = {
-    id: i,
-    family,
-    rings: Math.round(lerp(2, 5, random())),
-    depth: lerp(0.05, 0.18, random()),
-    sharpness: lerp(0.7, 2.6, random()),
-    warpHarmonics: Math.round(lerp(1, 5, random())),
-    warpAmount: lerp(0, 0.26, random()),
-    scale: lerp(0.72, 1.24, random()),
-  };
-  node.weight =
-    (node.folds ?? family.folds) / 30 * 0.5 +
-    node.rings / 5 * 0.2 +
-    node.warpAmount / 0.26 * 0.2 +
-    node.depth / 0.18 * 0.1;
-  nodes.push(node);
+function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function rampAt(stops, t) {
+  const rgb = stops.map(hexToRgb);
+  const x = Math.max(0, Math.min(1, t)) * (rgb.length - 1);
+  const low = Math.min(rgb.length - 1, Math.floor(x));
+  const high = Math.min(rgb.length - 1, low + 1);
+  const f = x - low;
+  return [
+    Math.round(rgb[low][0] + (rgb[high][0] - rgb[low][0]) * f),
+    Math.round(rgb[low][1] + (rgb[high][1] - rgb[low][1]) * f),
+    Math.round(rgb[low][2] + (rgb[high][2] - rgb[low][2]) * f),
+  ];
 }
 
-// ---- 3D layout: five family centres on a sphere, members spread by their own parameters ----
-const R = 9;
-FAMILIES.forEach((family, index) => {
-  const phi = Math.acos(1 - (2 * (index + 0.5)) / FAMILIES.length);
-  const theta = Math.PI * (1 + Math.sqrt(5)) * (index + 0.5);
-  family.centre = new THREE.Vector3(
-    Math.sin(phi) * Math.cos(theta) * R,
-    Math.cos(phi) * R,
-    Math.sin(phi) * Math.sin(theta) * R,
-  );
+// ---- one specimen, drawn as the valve it is: folds, rings, warp, dither ----
+function drawSpecimen(spec, mode, size = 200) {
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const g = c.getContext('2d');
+  g.fillStyle = '#05060a';
+  g.fillRect(0, 0, size, size);
+
+  const step = Math.max(2, Math.round(size / 74));
+  const cx = size / 2;
+  const cy = size / 2;
+  const R = size * 0.44;
+
+  g.save();
+  g.translate(cx, cy);
+  g.rotate((spec.turn * Math.PI) / 180);
+  if (spec.mirror) g.scale(-1, 1);
+
+  for (let y = -R; y < R; y += step) {
+    for (let x = -R; x < R; x += step) {
+      const d = Math.hypot(x, y) / R;
+      if (d > 1) continue;
+      const a = Math.atan2(y, x);
+      const ringF = Math.min(d, 0.9999) * spec.rings;
+      const ring = Math.floor(ringF);
+      const rim = (ring + 1) / spec.rings;
+      const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+      const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+      const radius = rim * (1 + spec.depth * shaped) * warp;
+      if (d > radius) continue;
+
+      const depthN = 1 - d / radius;
+      const light = Math.max(0.05, Math.min(1, 0.06 + 0.94 * depthN * (0.9 + 0.1 * shaped)));
+      const threshold = (BAYER[Math.abs(Math.round(x / step)) % 4][Math.abs(Math.round(y / step)) % 4] + 0.5) / 16;
+      if (light <= threshold) continue;
+
+      const c3 = rampAt(spec.palette, light);
+      g.fillStyle = `rgb(${c3[0]},${c3[1]},${c3[2]})`;
+
+      if (mode === 'ascii') {
+        g.font = `${Math.ceil(step * 1.8)}px 'DM Mono', ui-monospace, monospace`;
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))], x + cx * 0, y);
+      } else {
+        g.fillRect(x, y, step, step);
+      }
+    }
+  }
+  g.restore();
+  return c;
+}
+
+// ---- specimens: complexity grows with the parameter set ----
+const SEED = 114;
+const COUNT = 72;
+const random = rng(SEED);
+const specimens = [];
+
+// the centre piece: the simplest valve, one component
+specimens.push({
+  id: 0,
+  folds: 8, rings: 2, depth: 0.05, sharpness: 0.7, ringTurn: 0, pores: 0,
+  warpHarmonics: 1, warpAmount: 0, warpTurn: 0,
+  turn: 0, mirror: false,
+  palette: PALETTES[0],
+  complexity: 0,
 });
 
-const clusterMembers = new Map(FAMILIES.map((f) => [f.key, []]));
-for (const node of nodes) clusterMembers.get(node.family.key).push(node);
-
-for (const family of FAMILIES) {
-  const members = clusterMembers.get(family.key);
-  const axis = family.centre.clone().normalize();
-  members.forEach((node, index) => {
-    // Fibonacci sphere inside the cluster, radius driven by the node's own parameters,
-    // so a family is a volume with a dense core and a loose halo.
-    const k = index + 0.5;
-    const phi = Math.acos(1 - (2 * k) / members.length);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * k;
-    const radial = 1.1 + 2.9 * Math.pow(node.warpAmount / 0.26, 0.55);
-    const local = new THREE.Vector3(
-      Math.sin(phi) * Math.cos(theta),
-      Math.cos(phi) * 0.8,
-      Math.sin(phi) * Math.sin(theta),
-    ).multiplyScalar(radial);
-    node.position = family.centre.clone()
-      .add(local)
-      .addScaledVector(axis, (node.depth - 0.11) * 7);
+for (let i = 1; i < COUNT; i += 1) {
+  const t = i / (COUNT - 1);
+  const folds = Math.round(8 + t * 22 + (random() - 0.5) * 4);
+  const rings = Math.round(2 + t * 3 + (random() - 0.5) * 1);
+  const depth = 0.05 + random() * 0.13;
+  const sharpness = 0.7 + random() * 1.9;
+  const warpAmount = t * 0.26 * (0.4 + random() * 0.6);
+  const complexity = (folds - 8) / 22 * 0.5 + (Math.max(2, rings) - 2) / 3 * 0.25 + warpAmount / 0.26 * 0.25;
+  specimens.push({
+    id: i,
+    folds: Math.max(8, Math.min(30, folds)),
+    rings: Math.max(2, Math.min(5, rings)),
+    depth, sharpness,
+    ringTurn: random() * 2,
+    pores: random() * 0.6,
+    warpHarmonics: Math.round(1 + random() * 4),
+    warpAmount,
+    warpTurn: random() * 1.5,
+    turn: [0, 90, 180, 270][Math.floor(random() * 4)],
+    mirror: random() > 0.5,
+    palette: PALETTES[Math.floor(random() * PALETTES.length)],
+    complexity: Math.max(0, Math.min(1, complexity)),
   });
 }
 
-// ---- edges: two nearest neighbours each ----
+// ---- layout: one centre, then rings that thicken with complexity ----
+const BANDS = [0, 1, 2, 3, 4, 5];
+const sorted = [...specimens].sort((a, b) => a.complexity - b.complexity);
+const ringCounts = [1, 7, 12, 16, 18, 18];
+let cursor = 0;
+BANDS.forEach((band, bandIndex) => {
+  const take = ringCounts[bandIndex];
+  const slice = sorted.slice(cursor, cursor + take);
+  cursor += take;
+  slice.forEach((spec, index) => {
+    if (bandIndex === 0) {
+      spec.position = new THREE.Vector3(0, 0, 0);
+      return;
+    }
+    const angle = (index / take) * TAU + bandIndex * 0.5;
+    const radius = 2.7 * bandIndex;
+    spec.position = new THREE.Vector3(
+      Math.cos(angle) * radius,
+      bandIndex * 0.55 + (index % 2 === 0 ? 0.25 : -0.25),
+      Math.sin(angle) * radius,
+    );
+  });
+});
+
+// parent edges: each specimen links to the closest simpler one
 const edges = [];
-for (const node of nodes) {
-  const nearest = nodes
-    .filter((other) => other !== node)
-    .map((other) => ({ other, distance: node.position.distanceToSquared(other.position) }))
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, 2);
-  for (const { other } of nearest) {
-    const key = node.id < other.id ? `${node.id}:${other.id}` : `${other.id}:${node.id}`;
-    if (!edges.some((edge) => edge.key === key)) edges.push({ key, a: node, b: other });
+for (const spec of specimens) {
+  if (spec.id === 0) continue;
+  let parent = specimens[0];
+  let best = Infinity;
+  for (const other of specimens) {
+    if (other.complexity >= spec.complexity) continue;
+    const distance = spec.position.distanceToSquared(other.position);
+    if (distance < best) { best = distance; parent = other; }
   }
+  edges.push({ a: spec, b: parent });
 }
-window.__study.nodes = nodes.length;
-window.__study.edges = edges.length;
-countEl.textContent = `${nodes.length} specimens · ${FAMILIES.length} families · ${edges.length} edges`;
+
+window.__study.specimens = specimens.length;
 
 // ---- renderer ----
-const renderer = new THREE.WebGPURenderer({ canvas, antialias: true });
+const renderer = new THREE.WebGPURenderer({ canvas: canvasEl, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight, false);
 await renderer.init();
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x07080a);
-scene.fog = new THREE.Fog(0x07080a, 30, 62);
-const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
+scene.background = new THREE.Color(0x05060a);
+const camera = new THREE.PerspectiveCamera(44, innerWidth / innerHeight, 0.1, 200);
+const group = new THREE.Group();
+scene.add(group);
 
-// nodes as instanced spheres
-const sphere = new THREE.SphereGeometry(1, 10, 8);
-const nodeMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true, opacity: 0.95 });
-const nodeMesh = new THREE.InstancedMesh(sphere, nodeMaterial, nodes.length);
-const matrix = new THREE.Matrix4();
-const colour = new THREE.Color();
-nodes.forEach((node, index) => {
-  const size = 0.1 + node.weight * 0.3;
-  matrix.makeScale(size, size, size);
-  matrix.setPosition(node.position.x, node.position.y, node.position.z);
-  nodeMesh.setMatrixAt(index, matrix);
-  colour.set(node.family.colour).multiplyScalar(0.55 + node.weight * 0.65);
-  nodeMesh.setColorAt(index, colour);
-});
-nodeMesh.instanceMatrix.needsUpdate = true;
-if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
-scene.add(nodeMesh);
-
-// edges
-const edgePositions = [];
-const edgeColours = [];
-for (const edge of edges) {
-  const a = edge.a.position;
-  const b = edge.b.position;
-  edgePositions.push(a.x, a.y, a.z, b.x, b.y, b.z);
-  const ca = new THREE.Color(edge.a.family.colour).multiplyScalar(0.5);
-  const cb = new THREE.Color(edge.b.family.colour).multiplyScalar(0.5);
-  edgeColours.push(ca.r, ca.g, ca.b, cb.r, cb.g, cb.b);
+// ring guides: the complexity bands drawn as circles, with a count per ring
+const guideMaterial = new THREE.LineBasicNodeMaterial({ color: 0x2a2c33, transparent: true, opacity: 0.8 });
+for (let band = 1; band < 6; band += 1) {
+  const radius = 2.7 * band;
+  const points = [];
+  for (let a = 0; a <= TAU + 0.01; a += 0.05) points.push(new THREE.Vector3(Math.cos(a) * radius, band * 0.55, Math.sin(a) * radius));
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  scene.add(new THREE.Line(geometry, guideMaterial));
 }
-const edgeGeometry = new THREE.BufferGeometry();
-edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(edgePositions, 3));
-edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(edgeColours, 3));
-const edgeMaterial = new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.42 });
-const edgeMesh = new THREE.LineSegments(edgeGeometry, edgeMaterial);
-scene.add(edgeMesh);
 
-// family labels as sprites
-function labelTexture(text, colourHex) {
+function bandLabel(text) {
   const c = document.createElement('canvas');
-  c.width = 512;
+  c.width = 256;
   c.height = 128;
   const g = c.getContext('2d');
-  g.clearRect(0, 0, c.width, c.height);
-  g.fillStyle = colourHex;
-  g.font = "600 54px 'DM Mono', ui-monospace, monospace";
+  g.fillStyle = '#a8a4ad';
+  g.font = "500 44px 'DM Mono', ui-monospace, monospace";
   g.textAlign = 'center';
   g.textBaseline = 'middle';
   g.fillText(text, c.width / 2, c.height / 2);
   const texture = new THREE.CanvasTexture(c);
   texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+  sprite.scale.set(1.6, 0.8, 1);
+  return sprite;
 }
-for (const family of FAMILIES) {
-  const material = new THREE.SpriteMaterial({ map: labelTexture(family.label, family.colour), transparent: true, depthWrite: false });
-  const sprite = new THREE.Sprite(material);
-  sprite.position.copy(family.centre).multiplyScalar(1.46);
-  sprite.scale.set(3, 0.75, 1);
-  scene.add(sprite);
+const counts = ['1', '7', '12', '16', '18', '18'];
+for (let band = 0; band < 6; band += 1) {
+  const label = bandLabel(counts[band]);
+  label.position.set(0, band * 0.55 + 1.4, -2.7 * band - 0.4);
+  scene.add(label);
 }
 
+
+
+const quad = new THREE.PlaneGeometry(1, 1);
+const cards = [];
+
+function buildCards(mode) {
+  for (const mesh of cards) {
+    mesh.material.map?.dispose();
+    mesh.material.dispose();
+    group.remove(mesh);
+  }
+  cards.length = 0;
+
+  for (const spec of specimens) {
+    const texture = new THREE.CanvasTexture(drawSpecimen(spec, mode));
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const mesh = new THREE.Sprite(material);
+    const size = 1.15 + (spec.id === 0 ? 0.5 : 0);
+    mesh.scale.set(size, size, 1);
+    mesh.position.copy(spec.position);
+    mesh.userData = { spec };
+    group.add(mesh);
+    cards.push(mesh);
+  }
+}
+
+// edges
+const edgePositions = [];
+const edgeColours = [];
+for (const edge of edges) {
+  edgePositions.push(edge.a.position.x, edge.a.position.y, edge.a.position.z, edge.b.position.x, edge.b.position.y, edge.b.position.z);
+  edgeColours.push(0.42, 0.41, 0.45, 0.22, 0.22, 0.25);
+}
+const edgeGeometry = new THREE.BufferGeometry();
+edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(edgePositions, 3));
+edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(edgeColours, 3));
+const edgeMesh = new THREE.LineSegments(edgeGeometry, new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.32 }));
+edgeMesh.visible = false;
+scene.add(edgeMesh);
+
+buildCards('dither');
+countEl.textContent = `${specimens.length} specimens · 1 centre · ${edges.length} links`;
+
 // ---- camera ----
-const orbit = { azimuth: 0.6, elevation: 0.2, radius: 40 };
+const orbit = { azimuth: 0.5, elevation: 1.02, radius: 28 };
 let dragging = false;
 let lastX = 0;
 let lastY = 0;
-canvas.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener('pointerup', (e) => { dragging = false; canvas.releasePointerCapture(e.pointerId); });
-canvas.addEventListener('pointermove', (e) => {
+canvasEl.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvasEl.setPointerCapture(e.pointerId); });
+canvasEl.addEventListener('pointerup', (e) => { dragging = false; canvasEl.releasePointerCapture(e.pointerId); });
+canvasEl.addEventListener('pointermove', (e) => {
   if (!dragging) return;
   orbit.azimuth -= (e.clientX - lastX) * 0.004;
-  orbit.elevation = Math.max(-1.2, Math.min(1.2, orbit.elevation + (e.clientY - lastY) * 0.003));
+  orbit.elevation = Math.max(-1.1, Math.min(1.1, orbit.elevation + (e.clientY - lastY) * 0.003));
   lastX = e.clientX;
   lastY = e.clientY;
 });
-canvas.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = Math.max(12, Math.min(70, orbit.radius + e.deltaY * 0.02)); }, { passive: false });
+canvasEl.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = Math.max(8, Math.min(60, orbit.radius + e.deltaY * 0.02)); }, { passive: false });
 
+function setMode(mode) {
+  window.__study.mode = mode;
+  if (mode === 'edges') {
+    edgeMesh.visible = !edgeMesh.visible;
+    return;
+  }
+  edgeMesh.visible = false;
+  buildCards(mode);
+}
 for (const button of document.querySelectorAll('[data-mode]')) {
   button.addEventListener('click', () => {
     const mode = button.dataset.mode;
-    window.__study.mode = mode;
-    edgeMesh.visible = mode === 'graph';
+    setMode(mode);
     for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
   });
 }
 const requested = new URLSearchParams(location.search).get('mode');
-if (requested === 'cloud') { window.__study.mode = 'cloud'; edgeMesh.visible = false; }
+if (requested === 'ascii') setMode('ascii');
 
 let clock = 0;
 renderer.setAnimationLoop(() => {
-  clock += 0.0009;
+  clock += 0.0008;
   const azimuth = orbit.azimuth + clock;
   camera.position.set(
     Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
