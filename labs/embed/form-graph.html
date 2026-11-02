@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form Graph — Volids</title>
+<style>
+  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+  #view{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:20px}
+  .bottom{bottom:20px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
+  .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.webgpu.js",
+    "three/webgpu": "./vendor/three.webgpu.js",
+    "three/tsl": "./vendor/three.tsl.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div class="bar top">
+  <div class="label"><b id="title">Volids — form graph</b><br><span id="count">building</span></div>
+  <div class="label" style="text-align:right">nodes: one generated specimen<br>edges: 2 nearest neighbours</div>
+</div>
+<div class="bar bottom">
+  <div class="label">drag to orbit · scroll to zoom</div>
+  <div class="keys">
+    <button type="button" data-mode="graph" aria-pressed="true">Graph</button>
+    <button type="button" data-mode="cloud" aria-pressed="false">Cloud</button>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three/webgpu';
+
+const canvas = document.getElementById('view');
+const countEl = document.getElementById('count');
+
+window.__study = { ready: false, frames: 0, error: null, nodes: 0, edges: 0, mode: 'graph' };
+
+// ---- the bounded system, same rules as the runner ----
+const SEED = 114;
+const COUNT = 190;
+const FAMILIES = [
+  { key: 'fold12', label: 'fold 12', folds: 12, colour: '#8ea6ff' },
+  { key: 'fold16', label: 'fold 16', folds: 16, colour: '#7fd8ff' },
+  { key: 'fold20', label: 'fold 20', folds: 20, colour: '#54d6a0' },
+  { key: 'fold26', label: 'fold 26', folds: 26, colour: '#c6ff4a' },
+  { key: 'fold30', label: 'fold 30', folds: 30, colour: '#ff5a3c' },
+];
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+const lerp = (a, b, t) => a + (b - a) * t;
+
+const nodes = [];
+const random = rng(SEED);
+for (let i = 0; i < COUNT; i += 1) {
+  const family = FAMILIES[Math.floor(random() * FAMILIES.length)];
+  const node = {
+    id: i,
+    family,
+    rings: Math.round(lerp(2, 5, random())),
+    depth: lerp(0.05, 0.18, random()),
+    sharpness: lerp(0.7, 2.6, random()),
+    warpHarmonics: Math.round(lerp(1, 5, random())),
+    warpAmount: lerp(0, 0.26, random()),
+    scale: lerp(0.72, 1.24, random()),
+  };
+  node.weight =
+    (node.folds ?? family.folds) / 30 * 0.5 +
+    node.rings / 5 * 0.2 +
+    node.warpAmount / 0.26 * 0.2 +
+    node.depth / 0.18 * 0.1;
+  nodes.push(node);
+}
+
+// ---- 3D layout: five family centres on a sphere, members spread by their own parameters ----
+const R = 9;
+FAMILIES.forEach((family, index) => {
+  const phi = Math.acos(1 - (2 * (index + 0.5)) / FAMILIES.length);
+  const theta = Math.PI * (1 + Math.sqrt(5)) * (index + 0.5);
+  family.centre = new THREE.Vector3(
+    Math.sin(phi) * Math.cos(theta) * R,
+    Math.cos(phi) * R,
+    Math.sin(phi) * Math.sin(theta) * R,
+  );
+});
+
+const clusterMembers = new Map(FAMILIES.map((f) => [f.key, []]));
+for (const node of nodes) clusterMembers.get(node.family.key).push(node);
+
+for (const family of FAMILIES) {
+  const members = clusterMembers.get(family.key);
+  const axis = family.centre.clone().normalize();
+  members.forEach((node, index) => {
+    // Fibonacci sphere inside the cluster, radius driven by the node's own parameters,
+    // so a family is a volume with a dense core and a loose halo.
+    const k = index + 0.5;
+    const phi = Math.acos(1 - (2 * k) / members.length);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * k;
+    const radial = 1.1 + 2.9 * Math.pow(node.warpAmount / 0.26, 0.55);
+    const local = new THREE.Vector3(
+      Math.sin(phi) * Math.cos(theta),
+      Math.cos(phi) * 0.8,
+      Math.sin(phi) * Math.sin(theta),
+    ).multiplyScalar(radial);
+    node.position = family.centre.clone()
+      .add(local)
+      .addScaledVector(axis, (node.depth - 0.11) * 7);
+  });
+}
+
+// ---- edges: two nearest neighbours each ----
+const edges = [];
+for (const node of nodes) {
+  const nearest = nodes
+    .filter((other) => other !== node)
+    .map((other) => ({ other, distance: node.position.distanceToSquared(other.position) }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 2);
+  for (const { other } of nearest) {
+    const key = node.id < other.id ? `${node.id}:${other.id}` : `${other.id}:${node.id}`;
+    if (!edges.some((edge) => edge.key === key)) edges.push({ key, a: node, b: other });
+  }
+}
+window.__study.nodes = nodes.length;
+window.__study.edges = edges.length;
+countEl.textContent = `${nodes.length} specimens · ${FAMILIES.length} families · ${edges.length} edges`;
+
+// ---- renderer ----
+const renderer = new THREE.WebGPURenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight, false);
+await renderer.init();
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x07080a);
+scene.fog = new THREE.Fog(0x07080a, 30, 62);
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
+
+// nodes as instanced spheres
+const sphere = new THREE.SphereGeometry(1, 10, 8);
+const nodeMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true, opacity: 0.95 });
+const nodeMesh = new THREE.InstancedMesh(sphere, nodeMaterial, nodes.length);
+const matrix = new THREE.Matrix4();
+const colour = new THREE.Color();
+nodes.forEach((node, index) => {
+  const size = 0.1 + node.weight * 0.3;
+  matrix.makeScale(size, size, size);
+  matrix.setPosition(node.position.x, node.position.y, node.position.z);
+  nodeMesh.setMatrixAt(index, matrix);
+  colour.set(node.family.colour).multiplyScalar(0.55 + node.weight * 0.65);
+  nodeMesh.setColorAt(index, colour);
+});
+nodeMesh.instanceMatrix.needsUpdate = true;
+if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
+scene.add(nodeMesh);
+
+// edges
+const edgePositions = [];
+const edgeColours = [];
+for (const edge of edges) {
+  const a = edge.a.position;
+  const b = edge.b.position;
+  edgePositions.push(a.x, a.y, a.z, b.x, b.y, b.z);
+  const ca = new THREE.Color(edge.a.family.colour).multiplyScalar(0.5);
+  const cb = new THREE.Color(edge.b.family.colour).multiplyScalar(0.5);
+  edgeColours.push(ca.r, ca.g, ca.b, cb.r, cb.g, cb.b);
+}
+const edgeGeometry = new THREE.BufferGeometry();
+edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(edgePositions, 3));
+edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(edgeColours, 3));
+const edgeMaterial = new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.42 });
+const edgeMesh = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+scene.add(edgeMesh);
+
+// family labels as sprites
+function labelTexture(text, colourHex) {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 128;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, c.width, c.height);
+  g.fillStyle = colourHex;
+  g.font = "600 54px 'DM Mono', ui-monospace, monospace";
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(text, c.width / 2, c.height / 2);
+  const texture = new THREE.CanvasTexture(c);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+for (const family of FAMILIES) {
+  const material = new THREE.SpriteMaterial({ map: labelTexture(family.label, family.colour), transparent: true, depthWrite: false });
+  const sprite = new THREE.Sprite(material);
+  sprite.position.copy(family.centre).multiplyScalar(1.46);
+  sprite.scale.set(3, 0.75, 1);
+  scene.add(sprite);
+}
+
+// ---- camera ----
+const orbit = { azimuth: 0.6, elevation: 0.2, radius: 40 };
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+canvas.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointerup', (e) => { dragging = false; canvas.releasePointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  orbit.azimuth -= (e.clientX - lastX) * 0.004;
+  orbit.elevation = Math.max(-1.2, Math.min(1.2, orbit.elevation + (e.clientY - lastY) * 0.003));
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = Math.max(12, Math.min(70, orbit.radius + e.deltaY * 0.02)); }, { passive: false });
+
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => {
+    const mode = button.dataset.mode;
+    window.__study.mode = mode;
+    edgeMesh.visible = mode === 'graph';
+    for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
+  });
+}
+const requested = new URLSearchParams(location.search).get('mode');
+if (requested === 'cloud') { window.__study.mode = 'cloud'; edgeMesh.visible = false; }
+
+let clock = 0;
+renderer.setAnimationLoop(() => {
+  clock += 0.0009;
+  const azimuth = orbit.azimuth + clock;
+  camera.position.set(
+    Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+    Math.sin(orbit.elevation) * orbit.radius,
+    Math.sin(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+  );
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  window.__study.frames += 1;
+});
+
+window.__study.ready = true;
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight, false);
+});
+</script>
+</body>
+</html>
