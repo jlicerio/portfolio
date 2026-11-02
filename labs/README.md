@@ -24,6 +24,7 @@ feedback solver. System Sheet is a print-first page with its own SVG and Canvas 
 | embed/component-board.html | Bento board of 9 components: biomorphic dither, resonance, connectivity, surface division, ASCII, colour sets. |
 | embed/series-runner.html | Bounded operator set plus a seed: six draws per seed, keep or reject, seeds listed for export. |
 | embed/volumetric-diatom.html | The valve in 3D: dither particles, ASCII glyph particles, and iso-contour lines over a dome depth field. |
+| embed/volumetric-archive.html | The 88-image atlas in 3D: cards, dithered cards, and ASCII cards placed by colour, light, and texture. |
 
 ## Add a study
 
