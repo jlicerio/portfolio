@@ -29,6 +29,31 @@ A board passes when all five are true:
 
 The product is then assembled from the board: a study picks components, not styles. Two worked examples: `labs/embed/component-board.html` and `labs/embed/forms-3d.html`.
 
+## How Flexible Visual Systems fits the board
+
+The board and FVS do different jobs, and both are needed.
+
+- **The board is the inventory.** It lists the parts and writes down each rule. It answers "what exists".
+- **FVS is the grammar.** It names the base form, the operators, and the parameter ranges, and it requires a series. It answers "how do the parts combine and vary".
+
+| FVS role | Where it lives in a board | Example in `component-board.html` |
+| :--- | :--- | :--- |
+| Base form, held constant | One cell that never changes across outputs | 04 biomorphic outline |
+| Operator | A transformation applied to the base | 02 resonance (combine), 05 division, 03 orbit |
+| Parameter with a range | A value with a min and a max | 01 harmonic amplitudes, 09 sweep |
+| Grid or field | The layout rule | 05 disc grid, 06 ramp |
+| Surface treatment | How the form is rendered | 06 dither, 07 ASCII |
+| Colour system | Palette as a parameter set | 08 combinations |
+| Series | The same rule at N parameter steps | 09 harmonic series |
+
+Three things FVS demands that a board alone does not:
+
+1. **One base form stays constant.** If every cell is free, there is no identity, only a collection.
+2. **Operators are named and bounded.** Turn 4 x 90 degrees, mirror, scale 6 x 0.13, shear plus or minus 20 degrees, field 4 x 4. A new output is then a decision, not a mood.
+3. **A series, with a stop rule.** At least three valid variants, and a stated reason to stop when variation stops carrying meaning.
+
+Worked pattern already in the repo: Quarter Turn. Base form is a quarter disc at radius 0.55; six operators; four outputs from one JSON file. The component board supplies the modules for the next one; FVS supplies the operator list.
+
 ## Commands
 
 ```bash
