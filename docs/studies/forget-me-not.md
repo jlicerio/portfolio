@@ -15,7 +15,7 @@
 
 **Result.**
 
-- Runs at 60.9 fps at 1440 x 900 and 60.8 fps at 390 x 844 in headless Chrome 156.
+- Runs at 61.1 fps at 1440 x 900 and 60.5 fps at 390 x 844 in headless Chrome 156.
 - Five installations in the show, with the room mapping a bed, a wall, a sink, a basin, a window blind, and the floor in front of the sink.
 - Venue and date: St. Edward's University, February 2025.
 - Four case images from the exhibition photographs by Brian Fitzsimmons, 234 KB in total.
@@ -30,7 +30,7 @@
 - Venue and dates: St. Edward's University, February 2025
 - Installations: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts
 - Support: The City of Austin Economic Development Department
-- Press cover: Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre
+- Press: Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre
 - Image rights: Documentation only. Rights stay with the artist and the photographer
 
 Page: `projects/forget-me-not.html`. Verified report: `pipeline/reports/forget-me-not.json`.

@@ -44,7 +44,7 @@ const studies = {
         { role: 'Venue and dates', name: "St. Edward's University, February 2025" },
         { role: 'Installations', name: "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts" },
         { role: 'Support', name: 'The City of Austin Economic Development Department' },
-        { role: 'Press cover', name: 'Trucha. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
+        { role: 'Press', name: 'Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre' },
         { role: 'Image rights', name: 'Documentation only. Rights stay with the artist and the photographer' }
       ],
       images: [
