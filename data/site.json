@@ -517,8 +517,8 @@
       "year": "2023",
       "slug": "triqueta",
       "href": "projects/triqueta.html",
-      "image": "assets/images/triqueta.jpg",
-      "summary": "AR overlays and a VR experience built around Michael Flanagan's paintings and video works.",
+      "image": "assets/images/projects/triqueta/hero.jpg",
+      "summary": "AR overlays on Michael Flanagan's paintings and a VR scene built from his video works, developed for the McAllen Creative Incubator.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -531,7 +531,69 @@
       ],
       "description": "Triqueta was a collaborative exhibition project developed for the McAllen Creative Incubator. The project allowed me to develop and experiment with Augmented Reality and Virtual Reality, integrating them with the established artistic practice of filmmaker and artist Michael Flanagan. I focused on the technical development, creating a unique VR experience that incorporated Flanagan's video works, and building AR overlays for his original paintings, which also featured AI-generated elements. This installation explored the intersection of traditional painting, AI, and new media.",
       "tools": "VR (Unreal), AR, and AI-assisted art. Collaborator: Michael Flanagan.",
-      "links": []
+      "links": [],
+      "caseStudy": {
+        "brief": "Triqueta pairs two media in one room. Michael Flanagan's paintings get augmented reality overlays, and his video works become a virtual reality scene. The project ran at the McAllen Creative Incubator in 2023. My part was development rather than authorship: build the technical layer that lets a painter's work be entered by a headset and by a phone, without the two reading as separate shows.",
+        "process": [
+          "The work started from Flanagan's existing paintings and video, not from a new image.",
+          "Each painting carried an AR overlay. The overlays include AI-generated elements, which sit over the painted surface rather than replacing it.",
+          "The VR scene was built in Unreal and holds Flanagan's video works. A visitor in the headset sees the footage as the room, not as a screen on a wall.",
+          "The two builds share one visual vocabulary, so a visitor who sees only the phone overlays still recognises the same project.",
+          "Development covered tracking, placement, playback, and the headset build.",
+          "The room had to hold the paintings, a tracking position per work, and a headset station at the same time."
+        ],
+        "result": [
+          "Runs at 60.7 fps at 1440 x 900 and 61.2 fps at 390 x 844 in headless Chrome 156.",
+          "Two modes in one exhibition: AR on paintings and a VR headset scene.",
+          "One collaborator and one venue: the McAllen Creative Incubator, 2023.",
+          "One still survives in the project file. The painting count, the marker count, and the run dates are unconfirmed.",
+          "The page is 2.6 KB of HTML, and the three case images are 399 KB in total.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Artist",
+            "name": "Michael Flanagan"
+          },
+          {
+            "role": "AR and VR development",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Engine",
+            "name": "Unreal Engine for the VR build"
+          },
+          {
+            "role": "Venue",
+            "name": "McAllen Creative Incubator"
+          },
+          {
+            "role": "Year",
+            "name": "2023. Run dates unconfirmed"
+          },
+          {
+            "role": "Additional stills",
+            "name": "None in the project file"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/triqueta/hero.jpg",
+            "alt": "Abstract project cover still with a grain sun and a translucent looping form",
+            "caption": "Cover still from the project file."
+          },
+          {
+            "src": "assets/images/projects/triqueta/process.jpg",
+            "alt": "Detail crop of the cover still: the sun and upper loop",
+            "caption": "Detail crop: grain, sun, and the top of the loop."
+          },
+          {
+            "src": "assets/images/projects/triqueta/detail.jpg",
+            "alt": "Detail crop of the cover still: the lower loop",
+            "caption": "Detail crop: the lower loop and its highlight."
+          }
+        ]
+      }
     },
     {
       "id": "tigers-blood",
