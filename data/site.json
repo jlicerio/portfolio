@@ -525,8 +525,8 @@
       "year": "2023",
       "slug": "9ine5ive6eis",
       "href": "projects/9ine5ive6eis.html",
-      "image": "assets/images/9ine5ive6eis.jpg",
-      "summary": "Visual identity, cloud graphic, custom typography, and a motion loop for a limited apparel release.",
+      "image": "assets/images/projects/9ine5ive6eis/hero.jpg",
+      "summary": "Visual identity for a limited apparel release: one cloud plate, a three-line lockup, a tee and a tote layout, and a brand motion loop.",
       "tags": [],
       "gallery": [
         "assets/images/projects/9ine5ive6eis/01.jpg",
@@ -562,7 +562,67 @@
           "label": "9ine5ive6eis on Instagram",
           "href": "https://www.instagram.com/9ine5ive6eis/"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "9ine5ive6eis releases apparel in series, and each drop takes its own identity. This assignment covered one release: a cloud graphic, custom typography, a layout for a tee and a tote, and a motion loop for the brand. The run was limited. Other artists shot the product photography, so the identity had to survive their framing rather than a studio setup of our own.",
+        "process": [
+          "The image is one sky photograph, cropped as a square plate. The plate is the whole graphic, with no second element and no frame.",
+          "The type is a three-line stack: 9INE, 5IVE, 6EIS, set wide and set small so it reads as a caption rather than a headline.",
+          "On the tee the plate sits at chest height and the type stays out. On the tote the plate runs the full width and the type sits inside the cloud at the lower right.",
+          "Both products are white, so the plate had to hold without a border to separate it from the garment.",
+          "A motion loop carried the same mark for the brand and ran beside the drop.",
+          "Product photography by other artists placed the pieces in daylight, on a skateboard and on a rooftop, which tested the plate against direct sun and moving cloth."
+        ],
+        "result": [
+          "Runs at 60.8 fps at 1440 x 900 and 60.6 fps at 390 x 844 in headless Chrome 156.",
+          "Two products in the run: a white tee and a white tote.",
+          "One three-line lockup, used at two scales.",
+          "Six product stills survive in the project file. Four are used here at 251 KB in total.",
+          "One motion loop and one Instagram reel for the release.",
+          "The page is 2.6 KB of HTML and the case renders from one data entry.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "Identity, graphic, and motion",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Product photography",
+            "name": "Other artists on the release (names unconfirmed)"
+          },
+          {
+            "role": "Client",
+            "name": "9ine5ive6eis"
+          },
+          {
+            "role": "Year",
+            "name": "2023"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/9ine5ive6eis/hero.jpg",
+            "alt": "A person sitting on a skateboard wearing the cloud tee",
+            "caption": "Tee in daylight, shot by another artist on the release."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/process.jpg",
+            "alt": "Flat lay of the white cloud tee",
+            "caption": "Flat lay: the plate at chest height, type left out."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/detail.jpg",
+            "alt": "Detail of the tote with the three-line lockup inside the cloud",
+            "caption": "Tote detail: the lockup inside the cloud."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/extra.jpg",
+            "alt": "Three-image product collage from the release",
+            "caption": "Product collage placed by the photography team."
+          }
+        ]
+      }
     },
     {
       "id": "triqueta",
