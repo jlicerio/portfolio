@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Series Runner</title>
+<style>
+  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.18)}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif}
+  .wrap{max-width:1440px;margin:0 auto;padding:24px 4vw 50px}
+  header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--ink);padding-bottom:14px}
+  h1{font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:.95;letter-spacing:-.04em;font-weight:500;margin:0}
+  .meta{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;line-height:1.8}
+  .meta b{color:var(--ink);font-weight:400}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;padding:8px 12px;cursor:pointer;text-transform:uppercase}
+  button:hover,button:focus-visible{border-color:var(--ink);color:var(--ink);outline:none}
+  button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:rgba(242,240,236,.08)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;max-height:calc(100vh - 210px)}
+  .draw{position:relative;border:1px solid var(--line);background:#0a0b0e;aspect-ratio:4/3;overflow:hidden}
+  .draw canvas{display:block;width:100%;height:100%}
+  .draw .idx{position:absolute;left:8px;top:8px;font:9px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);background:rgba(7,8,10,.8);padding:3px 6px}
+  .draw .ops{position:absolute;left:8px;right:8px;bottom:8px;font:8.5px 'DM Mono',ui-monospace,monospace;letter-spacing:.04em;color:var(--muted);background:rgba(7,8,10,.82);padding:4px 6px;line-height:1.5}
+  .draw .ops b{color:var(--ink);font-weight:400}
+  .draw .keep{position:absolute;right:8px;top:8px;font-size:9px;padding:4px 8px}
+  .draw.is-kept{border-color:var(--ink)}
+  .draw.is-kept::after{content:'';position:absolute;inset:0;border:1px solid var(--ink);pointer-events:none}
+  footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--line);margin-top:16px;padding-top:12px;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;line-height:1.9}
+  footer b{color:var(--ink);font-weight:400}
+  #kept{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Series runner</h1>
+    <div class="meta"><b>Biomorphic series</b><br>one base form · 5 operators · 3 bounds</div>
+  </header>
+
+  <div class="controls">
+    <button type="button" id="reroll">Reroll · seed <b id="seed">114</b></button>
+    <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
+    <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
+    <button type="button" id="reset">Clear kept</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <span>Kept: <b id="keptCount">0</b> · <span id="kept">none</span></span>
+    <span>seed picks inside the bounds · never sets them</span>
+  </footer>
+</div>
+
+<script>
+window.__study = { ready: false, frames: 0, error: null, draws: 0, kept: 0 };
+
+const BAYER2 = [[0, 2], [3, 1]];
+const BAYER4 = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+const BAYER8 = (() => {
+  const m = [];
+  for (let y = 0; y < 8; y += 1) { m.push([]); for (let x = 0; x < 8; x += 1) m[y].push((BAYER4[y % 4][x % 4] * 4 + BAYER2[(y / 4 | 0) % 2][(x / 4 | 0) % 2] + 0.5) / 64); }
+  return m;
+})();
+const GLYPHS = ' .:-=+*#%@';
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+const pick = (random, spec) => {
+  if (spec.values) return spec.values[Math.floor(random() * spec.values.length)];
+  const raw = spec.min + random() * (spec.max - spec.min);
+  const step = spec.step || 0.01;
+  return Math.round(raw / step) * step;
+};
+
+const state = { config: null, seed: 114, mode: 'dither', kept: new Set(), draws: [] };
+
+async function load() {
+  const response = await fetch('../../data/series/biomorphic.json', { cache: 'no-store' });
+  state.config = await response.json();
+  state.seed = Number(new URLSearchParams(location.search).get('seed')) || state.config.seed;
+  build();
+}
+
+function paramsFor(index) {
+  const random = rng(state.seed * 1000 + index * 7919);
+  const config = state.config;
+  return {
+    harmonics: pick(random, config.base.harmonics),
+    amplitude: pick(random, config.base.amplitude),
+    secondary: pick(random, config.base.secondary),
+    turn: pick(random, config.operators.turn),
+    mirror: pick(random, config.operators.mirror),
+    scale: pick(random, config.operators.scale),
+    shear: pick(random, config.operators.shear),
+    field: pick(random, config.operators.field),
+    dither: pick(random, config.operators.dither),
+    ascii: pick(random, config.operators.ascii),
+    palette: [config.palette[Math.floor(random() * config.palette.length)], config.palette[Math.floor(random() * config.palette.length)]],
+    phase: random() * Math.PI * 2,
+  };
+}
+
+function canvas2d(canvas) {
+  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.max(1, Math.round(rect.width * dpr));
+  canvas.height = Math.max(1, Math.round(rect.height * dpr));
+  const ctx = canvas.getContext('2d', { alpha: false });
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+function render(canvas, params, t) {
+  const { ctx, w, h } = canvas2d(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+
+  const size = Math.min(w, h);
+  const cx = w / 2;
+  const cy = h / 2;
+  const R = size * 0.3 * params.scale;
+  const matrices = { 2: BAYER2, 4: BAYER4, 8: BAYER8 };
+  const matrix = matrices[params.dither] || BAYER4;
+  const order = matrix.length;
+  const step = Math.max(2, Math.round(size / 96));
+  const colours = params.palette;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((params.turn * Math.PI) / 180);
+  if (params.mirror) ctx.scale(-1, 1);
+  ctx.transform(1, 0, Math.tan((params.shear * Math.PI) / 180), 1, 0, 0);
+
+  const localR = Math.max(12, R / params.field);
+  for (let fy = 0; fy < params.field; fy += 1) {
+    for (let fx = 0; fx < params.field; fx += 1) {
+      const ox = (fx - (params.field - 1) / 2) * localR * 2.15;
+      const oy = (fy - (params.field - 1) / 2) * localR * 2.15;
+      for (let y = -localR; y < localR; y += step) {
+        for (let x = -localR; x < localR; x += step) {
+          const d = Math.hypot(x, y) / localR;
+          if (d > 1) continue;
+          const a = Math.atan2(y, x);
+          const wobble = 1 + params.amplitude * Math.sin(params.harmonics * a + params.phase + t * 0.0004)
+            + params.secondary * Math.sin((params.harmonics + 2) * a - params.phase);
+          if (d > wobble) continue;
+          const light = Math.max(0.04, 1 - d / wobble);
+          const px = x + ox;
+          const py = y + oy;
+          const gx = Math.round((px + size) / step) % order;
+          const gy = Math.round((py + size) / step) % order;
+          const threshold = matrix[(gy + order) % order][(gx + order) % order];
+          if (light > threshold) {
+            const colour = colours[(gx + gy) % 2];
+            if (params.ascii > 0.01 && ((gx + gy) % 3 === 0)) {
+              ctx.fillStyle = colour;
+              ctx.font = `${Math.ceil(step * 2.1)}px 'DM Mono', ui-monospace, monospace`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))], px, py);
+            } else {
+              ctx.fillStyle = colour;
+              ctx.fillRect(px, py, step, step);
+            }
+          }
+        }
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function build() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  state.draws = [];
+  for (let i = 0; i < state.config.draws; i += 1) {
+    const params = paramsFor(i);
+    state.draws.push({ index: i, params });
+
+    const cell = document.createElement('div');
+    cell.className = 'draw';
+    cell.dataset.index = String(i);
+    cell.innerHTML = `<canvas></canvas>
+      <span class="idx">DRAW ${String(i + 1).padStart(2, '0')}</span>
+      <button class="keep" type="button">KEEP</button>
+      <span class="ops"><b>${params.harmonics}H</b> · amp ${params.amplitude.toFixed(2)} · turn ${params.turn}° · ${params.mirror ? 'mirror' : 'direct'} · field ${params.field} · ${params.dither}×${params.dither}</span>`;
+    grid.appendChild(cell);
+
+    const canvas = cell.querySelector('canvas');
+    render(canvas, params, 0);
+
+    cell.querySelector('.keep').addEventListener('click', () => {
+      const key = `${state.seed}:${i}`;
+      if (state.kept.has(key)) state.kept.delete(key);
+      else state.kept.add(key);
+      refresh();
+    });
+  }
+  document.getElementById('seed').textContent = String(state.seed);
+  refresh();
+}
+
+function refresh() {
+  for (const cell of document.querySelectorAll('.draw')) {
+    const index = Number(cell.dataset.index);
+    const key = `${state.seed}:${index}`;
+    const kept = state.kept.has(key);
+    cell.classList.toggle('is-kept', kept);
+    cell.querySelector('.keep').textContent = kept ? 'KEPT' : 'KEEP';
+    cell.querySelector('.keep').setAttribute('aria-pressed', String(kept));
+  }
+  const list = [...state.kept].sort();
+  document.getElementById('keptCount').textContent = String(list.length);
+  document.getElementById('kept').textContent = list.length ? list.join(' · ') : 'none';
+  document.getElementById('kept').onclick = () => navigator.clipboard?.writeText(list.join(' '));
+  window.__study.kept = list.length;
+}
+
+let frame = 0;
+function loop(now) {
+  frame += 1;
+  if (frame % 4 === 0) {
+    for (const draw of state.draws) {
+      const canvas = document.querySelector(`.draw[data-index="${draw.index}"] canvas`);
+      if (canvas && canvas.getBoundingClientRect().top < innerHeight + 200) render(canvas, draw.params, now);
+    }
+  }
+  window.__study.frames += 1;
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('reroll').addEventListener('click', () => {
+  state.seed += 1;
+  build();
+});
+document.getElementById('reset').addEventListener('click', () => {
+  state.kept.clear();
+  refresh();
+});
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => {
+    state.mode = button.dataset.mode;
+    for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
+    for (const draw of state.draws) {
+      if (state.mode === 'ascii') draw.params.ascii = 1;
+      else draw.params.ascii = 0;
+    }
+    for (const draw of state.draws) {
+      const canvas = document.querySelector(`.draw[data-index="${draw.index}"] canvas`);
+      if (canvas) render(canvas, draw.params, performance.now());
+    }
+  });
+}
+addEventListener('resize', () => {
+  for (const draw of state.draws) {
+    const canvas = document.querySelector(`.draw[data-index="${draw.index}"] canvas`);
+    if (canvas) render(canvas, draw.params, performance.now());
+  }
+});
+
+load()
+  .then(() => {
+    window.__study.draws = state.draws.length;
+    window.__study.ready = true;
+    requestAnimationFrame(loop);
+  })
+  .catch((error) => { window.__study.error = String(error); console.error(error); });
+</script>
+</body>
+</html>
