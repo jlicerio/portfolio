@@ -714,8 +714,8 @@
       "year": "2023",
       "slug": "tigers-blood",
       "href": "projects/tigers-blood.html",
-      "image": "assets/images/tigers-blood.jpg",
-      "summary": "A commissioned 3D animation of a static 2D logo, finished with metallic textures and analog video effects.",
+      "image": "assets/images/projects/tigers-blood/hero.jpg",
+      "summary": "A commissioned 3D animation of a static 2D logo, finished with a frosted metal material, analog video artefacts, and a print still for the 2023 show syllabus.",
       "tags": [],
       "gallery": [
         "assets/images/projects/tigers-blood/01.jpg",
@@ -731,7 +731,61 @@
       ],
       "description": "Commissioned to create a dynamic digital asset from the client's static 2D logo. The process involved converting the original artwork into a 3D model, then applying a distinct lo-fi chromotype aesthetic with metallic textures and analog video effects. The final animation uses keyframed movement and a subtle glitch/vibration to transform the identity into a bold promotional graphic.",
       "tools": "3D modeling, texturing, lighting, animation, and compositing",
-      "links": []
+      "links": [],
+      "caseStudy": {
+        "brief": "Tigers Blood had a flat 2D logo and a 2023 season to promote. The commission was a moving version of that mark: convert the artwork to 3D, give it a material that reads as metal under a bad signal, and keyframe a move that holds attention in a feed and on a poster. The finished animation ran with the show syllabus for the Rio Grande Valley dates, and the same geometry was shot as a print.",
+        "process": [
+          "The 2D lettering was rebuilt as 3D geometry, keeping the hand-drawn spacing of the original rather than setting it in a typeface.",
+          "The glyphs sit on a ring instead of a baseline, so the mark can rotate without losing the word.",
+          "The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.",
+          "The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.",
+          "A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.",
+          "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape."
+        ],
+        "result": [
+          "Runs at 60.6 fps at 1440 x 900 and 60.4 fps at 390 x 844 in headless Chrome 156.",
+          "One animated mark and one printed still, built from the same geometry.",
+          "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
+          "Two source images survive in the project file. The case uses three crops at 270 KB in total.",
+          "The page is 2.6 KB of HTML and the case renders from one data entry.",
+          "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
+        ],
+        "credits": [
+          {
+            "role": "3D, material, and animation",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Client",
+            "name": "Tigers Blood"
+          },
+          {
+            "role": "Year",
+            "name": "2023"
+          },
+          {
+            "role": "Venue list",
+            "name": "From the 2023 show syllabus in the project file"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/tigers-blood/hero.jpg",
+            "alt": "The 3D Tigers Blood mark over the 2023 show syllabus",
+            "caption": "The animated mark on the 2023 syllabus frame."
+          },
+          {
+            "src": "assets/images/projects/tigers-blood/process.jpg",
+            "alt": "The same mark printed in black on burnt paper on a wooden table",
+            "caption": "The same geometry as a print, burned at the edges."
+          },
+          {
+            "src": "assets/images/projects/tigers-blood/detail.jpg",
+            "alt": "Detail of the burnt print showing the mark and dates",
+            "caption": "Detail: the mark and the date list on burnt paper."
+          }
+        ]
+      }
     },
     {
       "id": "archived",
