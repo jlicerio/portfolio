@@ -16,6 +16,7 @@
   .label b{color:var(--ink);font-weight:400}
   #readout{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;color:var(--muted);white-space:nowrap;pointer-events:none}
   #readout b{color:var(--ink);font-weight:400}
+  #axislabel a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
   #err{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:30px;font:12px 'DM Mono',monospace;color:var(--muted)}
   @media(max-width:700px){.bar{left:14px;right:14px}.top{top:14px}.bottom{bottom:12px}#readout{display:none}}
 </style>
@@ -66,13 +67,14 @@ function rng(seed) {
   };
 }
 
+const SEED = Number(new URLSearchParams(location.search).get('seed')) || 114;
 const FAMILIES = ['diatom', 'spore', 'leaf', 'coral', 'cell'];
 const HUES = [188, 42, 96, 268, 205];
 const N = 132;
 
 const forms = [];
 for (let i = 0; i < N; i += 1) {
-  const random = rng(i * 2654435761 + 11);
+  const random = rng(i * 2654435761 + SEED * 7919);
   const family = i % FAMILIES.length;
   forms.push({
     id: i,
@@ -299,6 +301,9 @@ renderer.setAnimationLoop(() => {
 });
 
 countEl.textContent = `${N} forms · 5 modules`;
+document.getElementById('axislabel').innerHTML =
+  `seed <b>${SEED}</b> · <a href="?seed=${SEED + 1}" style="color:inherit">rerun</a> · ` +
+  `${Math.round(positions.length / 6).toLocaleString()} segments`;
 window.__study.forms = N;
 window.__study.lines = positions.length / 6;
 window.__study.ready = true;
