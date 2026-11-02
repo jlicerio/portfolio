@@ -18,6 +18,7 @@ feedback solver. System Sheet is a print-first page with its own SVG and Canvas 
 | strata.html | Study 03. |
 | viscous-orb.html | Study 04. WebGL2 fluid and dither veil. |
 | system-sheet.html | Study 05. SVG and Canvas 2D system sheet. |
+| embed/archive-atlas.html | Atlas of every image on the site, placed by measured colour and texture. Canvas 2D. |
 
 ## Add a study
 

@@ -1,0 +1,1689 @@
+{
+  "built": "2026-11-02",
+  "count": 88,
+  "features": [
+    "mean R",
+    "mean G",
+    "mean B",
+    "luminance",
+    "texture",
+    "saturation",
+    "aspect"
+  ],
+  "method": "Seven features measured from the pixels with ImageMagick, standardised, then projected to two axes with a principal component analysis. No neural network.",
+  "explained": 0.84,
+  "points": [
+    {
+      "path": "assets/images/projects/9ine5ive6eis/01.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.507,
+      "y": 0.359,
+      "lum": 133,
+      "texture": 34,
+      "saturation": 0.19,
+      "aspect": 0.8,
+      "bytes": 218967,
+      "palette": [
+        "#4A4C34",
+        "#99966B",
+        "#9CAB9B"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/02.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.516,
+      "y": 0.426,
+      "lum": 137,
+      "texture": 16,
+      "saturation": 0.2,
+      "aspect": 0.8,
+      "bytes": 181270,
+      "palette": [
+        "#526254",
+        "#7A8C78",
+        "#A5AFA2"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/03.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.575,
+      "y": 0.324,
+      "lum": 149,
+      "texture": 17,
+      "saturation": 0.11,
+      "aspect": 0.8,
+      "bytes": 196337,
+      "palette": [
+        "#5C6559",
+        "#848C79",
+        "#A1ACA2"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/04.png",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.912,
+      "y": 0.416,
+      "lum": 235,
+      "texture": 2,
+      "saturation": 0.04,
+      "aspect": 1,
+      "bytes": 130090,
+      "palette": [
+        "#78BDD6",
+        "#DFE8E3",
+        "#E6E6DB"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/05.png",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.727,
+      "y": 0.439,
+      "lum": 188,
+      "texture": 14,
+      "saturation": 0.15,
+      "aspect": 1,
+      "bytes": 661100,
+      "palette": [
+        "#1D9BAD",
+        "#948A79",
+        "#B7C4C3"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/06.png",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.667,
+      "y": 0.59,
+      "lum": 175,
+      "texture": 43,
+      "saturation": 0.37,
+      "aspect": 1,
+      "bytes": 250468,
+      "palette": [
+        "#95BFC8",
+        "#CEC4BB",
+        "#D0C8C1"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/detail.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 1,
+      "y": 0.432,
+      "lum": 255,
+      "texture": 0,
+      "saturation": 0,
+      "aspect": 1.33,
+      "bytes": 37097,
+      "palette": [
+        "#1DA0BF",
+        "#ABC0C5",
+        "#F7F6F5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/extra.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.566,
+      "y": 0.379,
+      "lum": 146,
+      "texture": 21,
+      "saturation": 0.12,
+      "aspect": 1.33,
+      "bytes": 84544,
+      "palette": [
+        "#5F685A",
+        "#888E77",
+        "#A5ADA0"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/hero.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.584,
+      "y": 0.462,
+      "lum": 153,
+      "texture": 22,
+      "saturation": 0.18,
+      "aspect": 1.33,
+      "bytes": 112895,
+      "palette": [
+        "#464732",
+        "#829178",
+        "#A8B4A5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/9ine5ive6eis/process.jpg",
+      "work": "9ine5ive6eis",
+      "title": "9ine5ive6eis",
+      "year": "2023",
+      "href": "projects/9ine5ive6eis.html",
+      "x": 0.987,
+      "y": 0.409,
+      "lum": 251,
+      "texture": 6,
+      "saturation": 0,
+      "aspect": 1.33,
+      "bytes": 22563,
+      "palette": [
+        "#70BAD5",
+        "#A4D1DE",
+        "#F3F4F0"
+      ]
+    },
+    {
+      "path": "assets/images/projects/archived/detail.jpg",
+      "work": "archived",
+      "title": "Archived Works",
+      "year": "2022–2026",
+      "href": "projects/archived.html",
+      "x": 0.826,
+      "y": 0.602,
+      "lum": 218,
+      "texture": 15,
+      "saturation": 0.21,
+      "aspect": 1.33,
+      "bytes": 45509,
+      "palette": [
+        "#88726E",
+        "#D9D7BB",
+        "#DFD0B4"
+      ]
+    },
+    {
+      "path": "assets/images/projects/archived/hero.jpg",
+      "work": "archived",
+      "title": "Archived Works",
+      "year": "2022–2026",
+      "href": "projects/archived.html",
+      "x": 0.698,
+      "y": 0.587,
+      "lum": 181,
+      "texture": 27,
+      "saturation": 0.25,
+      "aspect": 1.33,
+      "bytes": 122815,
+      "palette": [
+        "#7D5E58",
+        "#A88F73",
+        "#D9C4A9"
+      ]
+    },
+    {
+      "path": "assets/images/projects/archived/process.jpg",
+      "work": "archived",
+      "title": "Archived Works",
+      "year": "2022–2026",
+      "href": "projects/archived.html",
+      "x": 0.714,
+      "y": 0.595,
+      "lum": 185,
+      "texture": 22,
+      "saturation": 0.24,
+      "aspect": 1.33,
+      "bytes": 66589,
+      "palette": [
+        "#805854",
+        "#DAC3A9",
+        "#E4CEB3"
+      ]
+    },
+    {
+      "path": "assets/images/projects/collapsed-timelines/detail.jpg",
+      "work": "collapsed-timelines",
+      "title": "Collapsed Timelines In Felicitous Space",
+      "year": "2022",
+      "href": "projects/collapsed-timelines.html",
+      "x": 0.292,
+      "y": 0.682,
+      "lum": 76,
+      "texture": 25,
+      "saturation": 0.43,
+      "aspect": 1.33,
+      "bytes": 95706,
+      "palette": [
+        "#412C25",
+        "#656057",
+        "#8E9995"
+      ]
+    },
+    {
+      "path": "assets/images/projects/collapsed-timelines/hero.jpg",
+      "work": "collapsed-timelines",
+      "title": "Collapsed Timelines In Felicitous Space",
+      "year": "2022",
+      "href": "projects/collapsed-timelines.html",
+      "x": 0.077,
+      "y": 0.782,
+      "lum": 20,
+      "texture": 17,
+      "saturation": 0.56,
+      "aspect": 1.33,
+      "bytes": 142528,
+      "palette": [
+        "#20150E",
+        "#5B432C",
+        "#97826A"
+      ]
+    },
+    {
+      "path": "assets/images/projects/collapsed-timelines/process.jpg",
+      "work": "collapsed-timelines",
+      "title": "Collapsed Timelines In Felicitous Space",
+      "year": "2022",
+      "href": "projects/collapsed-timelines.html",
+      "x": 0,
+      "y": 0.854,
+      "lum": 3,
+      "texture": 2,
+      "saturation": 0.62,
+      "aspect": 1.09,
+      "bytes": 26946,
+      "palette": [
+        "#0A0805",
+        "#555F59",
+        "#96A396"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/01.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.174,
+      "y": 0.964,
+      "lum": 41,
+      "texture": 10,
+      "saturation": 0.69,
+      "aspect": 0.8,
+      "bytes": 558820,
+      "palette": [
+        "#240E1B",
+        "#502643",
+        "#8E4F76"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/02.png",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.125,
+      "y": 0.595,
+      "lum": 29,
+      "texture": 5,
+      "saturation": 0.35,
+      "aspect": 1.5,
+      "bytes": 186047,
+      "palette": [
+        "#2B1F22",
+        "#374565",
+        "#436CA0"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/03.png",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.205,
+      "y": 0.787,
+      "lum": 45,
+      "texture": 1,
+      "saturation": 0.48,
+      "aspect": 1.5,
+      "bytes": 180633,
+      "palette": [
+        "#291B2B",
+        "#392B48",
+        "#C0B270"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/04.png",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.087,
+      "y": 0.416,
+      "lum": 17,
+      "texture": 5,
+      "saturation": 0.22,
+      "aspect": 1.5,
+      "bytes": 175234,
+      "palette": [
+        "#121215",
+        "#203758",
+        "#5483BD"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/05.png",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.079,
+      "y": 0.606,
+      "lum": 19,
+      "texture": 5,
+      "saturation": 0.44,
+      "aspect": 0.67,
+      "bytes": 347460,
+      "palette": [
+        "#1E1113",
+        "#59371F",
+        "#B35A0D"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/detail.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.118,
+      "y": 0.653,
+      "lum": 28,
+      "texture": 6,
+      "saturation": 0.4,
+      "aspect": 1.5,
+      "bytes": 27859,
+      "palette": [
+        "#2B1F22",
+        "#374566",
+        "#436CA0"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/extra.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.207,
+      "y": 0.8,
+      "lum": 45,
+      "texture": 1,
+      "saturation": 0.49,
+      "aspect": 1.5,
+      "bytes": 28340,
+      "palette": [
+        "#2A1B2B",
+        "#392A49",
+        "#C5B672"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/hero.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.068,
+      "y": 0.591,
+      "lum": 14,
+      "texture": 7,
+      "saturation": 0.37,
+      "aspect": 1.5,
+      "bytes": 37075,
+      "palette": [
+        "#121214",
+        "#1E3556",
+        "#5687C3"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/press.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.054,
+      "y": 0.421,
+      "lum": 10,
+      "texture": 2,
+      "saturation": 0.24,
+      "aspect": 1.33,
+      "bytes": 89160,
+      "palette": [
+        "#130C10",
+        "#512846",
+        "#8C4C72"
+      ]
+    },
+    {
+      "path": "assets/images/projects/forget-me-not/process.jpg",
+      "work": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "href": "projects/forget-me-not.html",
+      "x": 0.072,
+      "y": 0.652,
+      "lum": 16,
+      "texture": 5,
+      "saturation": 0.47,
+      "aspect": 0.81,
+      "bytes": 41694,
+      "palette": [
+        "#281817",
+        "#AF470F",
+        "#C4B207"
+      ]
+    },
+    {
+      "path": "assets/images/projects/motion/detail.jpg",
+      "work": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "href": "projects/motion.html",
+      "x": 0.328,
+      "y": 0.211,
+      "lum": 78,
+      "texture": 10,
+      "saturation": 0.02,
+      "aspect": 1.33,
+      "bytes": 144048,
+      "palette": [
+        "#292929",
+        "#595957",
+        "#9B9A94"
+      ]
+    },
+    {
+      "path": "assets/images/projects/motion/hero.jpg",
+      "work": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "href": "projects/motion.html",
+      "x": 0.168,
+      "y": 0.161,
+      "lum": 36,
+      "texture": 1,
+      "saturation": 0,
+      "aspect": 1.33,
+      "bytes": 162146,
+      "palette": [
+        "#292929",
+        "#595957",
+        "#979690"
+      ]
+    },
+    {
+      "path": "assets/images/projects/motion/process.jpg",
+      "work": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "href": "projects/motion.html",
+      "x": 0.243,
+      "y": 0.18,
+      "lum": 56,
+      "texture": 11,
+      "saturation": 0.02,
+      "aspect": 1.33,
+      "bytes": 133739,
+      "palette": [
+        "#2A2A2A",
+        "#5F5F5C",
+        "#989791"
+      ]
+    },
+    {
+      "path": "assets/images/projects/quarter-turn/sheet-desktop.png",
+      "work": "quarter-turn",
+      "title": "Quarter Turn",
+      "year": "2026",
+      "href": "projects/quarter-turn.html",
+      "x": 0.427,
+      "y": 0.225,
+      "lum": 103,
+      "texture": 21,
+      "saturation": 0.01,
+      "aspect": 1.6,
+      "bytes": 49455,
+      "palette": [
+        "#0F1011",
+        "#5E5E5E",
+        "#D6D5D2"
+      ]
+    },
+    {
+      "path": "assets/images/projects/quarter-turn/sheet-phone.png",
+      "work": "quarter-turn",
+      "title": "Quarter Turn",
+      "year": "2026",
+      "href": "projects/quarter-turn.html",
+      "x": 0.311,
+      "y": 0.073,
+      "lum": 75,
+      "texture": 20,
+      "saturation": 0.01,
+      "aspect": 0.46,
+      "bytes": 31548,
+      "palette": [
+        "#111213",
+        "#5D5D5D",
+        "#D8D6D4"
+      ]
+    },
+    {
+      "path": "assets/images/projects/river-pierce/detail.jpg",
+      "work": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "href": "projects/river-pierce.html",
+      "x": 0.88,
+      "y": 0.354,
+      "lum": 220,
+      "texture": 46,
+      "saturation": 0.08,
+      "aspect": 1.33,
+      "bytes": 59347,
+      "palette": [
+        "#866296",
+        "#A898B0",
+        "#F6F7F5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/river-pierce/hero.jpg",
+      "work": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "href": "projects/river-pierce.html",
+      "x": 0.586,
+      "y": 0.242,
+      "lum": 146,
+      "texture": 27,
+      "saturation": 0.02,
+      "aspect": 1.33,
+      "bytes": 87742,
+      "palette": [
+        "#777773",
+        "#90928F",
+        "#F5F6F4"
+      ]
+    },
+    {
+      "path": "assets/images/projects/river-pierce/poster.jpg",
+      "work": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "href": "projects/river-pierce.html",
+      "x": 0.044,
+      "y": 0.489,
+      "lum": 8,
+      "texture": 3,
+      "saturation": 0.3,
+      "aspect": 1.33,
+      "bytes": 75089,
+      "palette": [
+        "#0F0C11",
+        "#3D3956",
+        "#7C9099"
+      ]
+    },
+    {
+      "path": "assets/images/projects/river-pierce/process.jpg",
+      "work": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "href": "projects/river-pierce.html",
+      "x": 0.94,
+      "y": 0.384,
+      "lum": 240,
+      "texture": 18,
+      "saturation": 0.02,
+      "aspect": 1.33,
+      "bytes": 62332,
+      "palette": [
+        "#64655B",
+        "#949591",
+        "#F7F7F5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/01.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.351,
+      "y": 0.009,
+      "lum": 84,
+      "texture": 65,
+      "saturation": 0.05,
+      "aspect": 0.56,
+      "bytes": 129553,
+      "palette": [
+        "#0F0E0F",
+        "#5D5A58",
+        "#B2BFC3"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/02.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.303,
+      "y": 0.032,
+      "lum": 72,
+      "texture": 52,
+      "saturation": 0.05,
+      "aspect": 0.56,
+      "bytes": 133458,
+      "palette": [
+        "#0F0F10",
+        "#615B5B",
+        "#ADB9BC"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/03.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.367,
+      "y": 0.019,
+      "lum": 89,
+      "texture": 75,
+      "saturation": 0.08,
+      "aspect": 0.56,
+      "bytes": 124578,
+      "palette": [
+        "#111111",
+        "#5E5A5A",
+        "#B1BDBF"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/04.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.323,
+      "y": 0.026,
+      "lum": 78,
+      "texture": 68,
+      "saturation": 0.08,
+      "aspect": 0.56,
+      "bytes": 87824,
+      "palette": [
+        "#121313",
+        "#545251",
+        "#AFB9B9"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/05.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.319,
+      "y": 0,
+      "lum": 76,
+      "texture": 68,
+      "saturation": 0.06,
+      "aspect": 0.56,
+      "bytes": 137969,
+      "palette": [
+        "#131314",
+        "#545254",
+        "#B3B9BA"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/06.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.254,
+      "y": 0.192,
+      "lum": 61,
+      "texture": 37,
+      "saturation": 0.15,
+      "aspect": 0.56,
+      "bytes": 139416,
+      "palette": [
+        "#0C0B0C",
+        "#695D5F",
+        "#988D8C"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/07.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.265,
+      "y": 0.151,
+      "lum": 63,
+      "texture": 39,
+      "saturation": 0.12,
+      "aspect": 0.56,
+      "bytes": 148765,
+      "palette": [
+        "#0C0B0C",
+        "#6A5C5E",
+        "#988685"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/08.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.282,
+      "y": 0.163,
+      "lum": 67,
+      "texture": 38,
+      "saturation": 0.12,
+      "aspect": 0.56,
+      "bytes": 152479,
+      "palette": [
+        "#0B0A0B",
+        "#6B5D5E",
+        "#9E8F8D"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/09.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.275,
+      "y": 0.338,
+      "lum": 62,
+      "texture": 34,
+      "saturation": 0.26,
+      "aspect": 0.56,
+      "bytes": 144076,
+      "palette": [
+        "#0B0A0B",
+        "#6A5D61",
+        "#9B8995"
+      ]
+    },
+    {
+      "path": "assets/images/projects/surveillance-status/10.jpg",
+      "work": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "href": "projects/surveillance-status.html",
+      "x": 0.227,
+      "y": 0.182,
+      "lum": 53,
+      "texture": 29,
+      "saturation": 0.13,
+      "aspect": 0.56,
+      "bytes": 158342,
+      "palette": [
+        "#0D0C0C",
+        "#65595B",
+        "#A08B8A"
+      ]
+    },
+    {
+      "path": "assets/images/projects/tigers-blood/01.jpg",
+      "work": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "href": "projects/tigers-blood.html",
+      "x": 0.137,
+      "y": 0.299,
+      "lum": 31,
+      "texture": 4,
+      "saturation": 0.19,
+      "aspect": 0.56,
+      "bytes": 118028,
+      "palette": [
+        "#201D24",
+        "#4F4F59",
+        "#969EAB"
+      ]
+    },
+    {
+      "path": "assets/images/projects/tigers-blood/02.jpg",
+      "work": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "href": "projects/tigers-blood.html",
+      "x": 0.635,
+      "y": 0.318,
+      "lum": 159,
+      "texture": 12,
+      "saturation": 0.08,
+      "aspect": 0.8,
+      "bytes": 349330,
+      "palette": [
+        "#5C5959",
+        "#867F76",
+        "#AFB4C8"
+      ]
+    },
+    {
+      "path": "assets/images/projects/tigers-blood/detail.jpg",
+      "work": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "href": "projects/tigers-blood.html",
+      "x": 0.628,
+      "y": 0.373,
+      "lum": 156,
+      "texture": 15,
+      "saturation": 0.09,
+      "aspect": 1.33,
+      "bytes": 108944,
+      "palette": [
+        "#53504F",
+        "#867F77",
+        "#AEB3C9"
+      ]
+    },
+    {
+      "path": "assets/images/projects/tigers-blood/hero.jpg",
+      "work": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "href": "projects/tigers-blood.html",
+      "x": 0.068,
+      "y": 0.157,
+      "lum": 10,
+      "texture": 0,
+      "saturation": 0.02,
+      "aspect": 1.33,
+      "bytes": 61772,
+      "palette": [
+        "#131214",
+        "#52525B",
+        "#8C93A1"
+      ]
+    },
+    {
+      "path": "assets/images/projects/tigers-blood/process.jpg",
+      "work": "tigers-blood",
+      "title": "Tigers Blood",
+      "year": "2023",
+      "href": "projects/tigers-blood.html",
+      "x": 0.665,
+      "y": 0.435,
+      "lum": 166,
+      "texture": 6,
+      "saturation": 0.11,
+      "aspect": 1.33,
+      "bytes": 106125,
+      "palette": [
+        "#676362",
+        "#A5A9BD",
+        "#C7CFEA"
+      ]
+    },
+    {
+      "path": "assets/images/projects/triqueta/detail.jpg",
+      "work": "triqueta",
+      "title": "Triqueta AR/VR Exhibition",
+      "year": "2023",
+      "href": "projects/triqueta.html",
+      "x": 0.644,
+      "y": 0.498,
+      "lum": 165,
+      "texture": 6,
+      "saturation": 0.15,
+      "aspect": 1.33,
+      "bytes": 51714,
+      "palette": [
+        "#925431",
+        "#AEA498",
+        "#C2B8AA"
+      ]
+    },
+    {
+      "path": "assets/images/projects/triqueta/extra.jpg",
+      "work": "triqueta",
+      "title": "Triqueta AR/VR Exhibition",
+      "year": "2023",
+      "href": "projects/triqueta.html",
+      "x": 0.727,
+      "y": 0.58,
+      "lum": 189,
+      "texture": 10,
+      "saturation": 0.2,
+      "aspect": 1.33,
+      "bytes": 51464,
+      "palette": [
+        "#464957",
+        "#878280",
+        "#CDBFB5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/triqueta/hero.jpg",
+      "work": "triqueta",
+      "title": "Triqueta AR/VR Exhibition",
+      "year": "2023",
+      "href": "projects/triqueta.html",
+      "x": 0.403,
+      "y": 0.807,
+      "lum": 107,
+      "texture": 20,
+      "saturation": 0.48,
+      "aspect": 1.33,
+      "bytes": 55683,
+      "palette": [
+        "#5C4433",
+        "#8D6B4E",
+        "#AA9479"
+      ]
+    },
+    {
+      "path": "assets/images/projects/triqueta/process.jpg",
+      "work": "triqueta",
+      "title": "Triqueta AR/VR Exhibition",
+      "year": "2023",
+      "href": "projects/triqueta.html",
+      "x": 0.435,
+      "y": 1,
+      "lum": 120,
+      "texture": 18,
+      "saturation": 0.61,
+      "aspect": 1.33,
+      "bytes": 46261,
+      "palette": [
+        "#3D3232",
+        "#9A6F48",
+        "#B29374"
+      ]
+    },
+    {
+      "path": "assets/images/projects/viscous-orb/01.jpg",
+      "work": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "href": "projects/viscous-orb.html",
+      "x": 0.065,
+      "y": 0.718,
+      "lum": 19,
+      "texture": 25,
+      "saturation": 0.58,
+      "aspect": 0.75,
+      "bytes": 70567,
+      "palette": [
+        "#070304",
+        "#423A41",
+        "#888EB5"
+      ]
+    },
+    {
+      "path": "assets/images/projects/viscous-orb/02.jpg",
+      "work": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "href": "projects/viscous-orb.html",
+      "x": 0.062,
+      "y": 0.72,
+      "lum": 18,
+      "texture": 24,
+      "saturation": 0.58,
+      "aspect": 0.75,
+      "bytes": 72998,
+      "palette": [
+        "#070304",
+        "#433B42",
+        "#8491BD"
+      ]
+    },
+    {
+      "path": "assets/images/projects/viscous-orb/03.jpg",
+      "work": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "href": "projects/viscous-orb.html",
+      "x": 0.079,
+      "y": 0.52,
+      "lum": 20,
+      "texture": 26,
+      "saturation": 0.42,
+      "aspect": 0.75,
+      "bytes": 134023,
+      "palette": [
+        "#070304",
+        "#3C3846",
+        "#8B8CA7"
+      ]
+    },
+    {
+      "path": "assets/images/projects/viscous-orb/04.jpg",
+      "work": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "href": "projects/viscous-orb.html",
+      "x": 0.073,
+      "y": 0.723,
+      "lum": 21,
+      "texture": 28,
+      "saturation": 0.59,
+      "aspect": 0.75,
+      "bytes": 75284,
+      "palette": [
+        "#070304",
+        "#3B3542",
+        "#8A8FB0"
+      ]
+    },
+    {
+      "path": "assets/images/projects/warp-and-weft/01.jpg",
+      "work": "warp-and-weft",
+      "title": "Warp and Weft",
+      "year": "2026",
+      "href": "projects/warp-and-weft.html",
+      "x": 0.153,
+      "y": 0.564,
+      "lum": 40,
+      "texture": 16,
+      "saturation": 0.34,
+      "aspect": 1.6,
+      "bytes": 410067,
+      "palette": [
+        "#23291B",
+        "#50583E",
+        "#88906F"
+      ]
+    },
+    {
+      "path": "assets/images/projects/warp-and-weft/02.jpg",
+      "work": "warp-and-weft",
+      "title": "Warp and Weft",
+      "year": "2026",
+      "href": "projects/warp-and-weft.html",
+      "x": 0.259,
+      "y": 0.474,
+      "lum": 72,
+      "texture": 11,
+      "saturation": 0.32,
+      "aspect": 0.46,
+      "bytes": 298519,
+      "palette": [
+        "#414832",
+        "#495138",
+        "#929881"
+      ]
+    },
+    {
+      "path": "assets/images/projects/warp-and-weft/03.jpg",
+      "work": "warp-and-weft",
+      "title": "Warp and Weft",
+      "year": "2026",
+      "href": "projects/warp-and-weft.html",
+      "x": 0.258,
+      "y": 0.484,
+      "lum": 70,
+      "texture": 9,
+      "saturation": 0.3,
+      "aspect": 0.75,
+      "bytes": 288044,
+      "palette": [
+        "#424933",
+        "#495038",
+        "#899071"
+      ]
+    },
+    {
+      "path": "assets/images/clips/-PWpeQcWRMT.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.167,
+      "y": 0.1,
+      "lum": 37,
+      "texture": 0,
+      "saturation": 0,
+      "aspect": 0.7,
+      "bytes": 75461,
+      "palette": [
+        "#282828",
+        "#575757",
+        "#92928E"
+      ]
+    },
+    {
+      "path": "assets/images/clips/28exa_qeyUn.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.101,
+      "y": 0.326,
+      "lum": 22,
+      "texture": 4,
+      "saturation": 0.2,
+      "aspect": 0.8,
+      "bytes": 41937,
+      "palette": [
+        "#1E201E",
+        "#73B198",
+        "#A1B531"
+      ]
+    },
+    {
+      "path": "assets/images/clips/2NyhrUVTu8A.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.82,
+      "y": 0.484,
+      "lum": 212,
+      "texture": 5,
+      "saturation": 0.15,
+      "aspect": 0.56,
+      "bytes": 29813,
+      "palette": [
+        "#845391",
+        "#CAB7AC",
+        "#EAD5C7"
+      ]
+    },
+    {
+      "path": "assets/images/clips/3oJpfJXneBR.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.545,
+      "y": 0.27,
+      "lum": 138,
+      "texture": 44,
+      "saturation": 0.15,
+      "aspect": 0.56,
+      "bytes": 51162,
+      "palette": [
+        "#504347",
+        "#8A5B78",
+        "#C4B8B2"
+      ]
+    },
+    {
+      "path": "assets/images/clips/7Myv_Tp3Zb9.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.726,
+      "y": 0.388,
+      "lum": 187,
+      "texture": 17,
+      "saturation": 0.13,
+      "aspect": 0.56,
+      "bytes": 45037,
+      "palette": [
+        "#534E4D",
+        "#B1A49A",
+        "#CDBEB1"
+      ]
+    },
+    {
+      "path": "assets/images/clips/869awjhwRsw.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.271,
+      "y": 0.091,
+      "lum": 63,
+      "texture": 24,
+      "saturation": 0,
+      "aspect": 1,
+      "bytes": 59035,
+      "palette": [
+        "#323232",
+        "#606060",
+        "#BABABA"
+      ]
+    },
+    {
+      "path": "assets/images/clips/AQJQ7q8nU52.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.352,
+      "y": 0.372,
+      "lum": 85,
+      "texture": 23,
+      "saturation": 0.24,
+      "aspect": 0.56,
+      "bytes": 43026,
+      "palette": [
+        "#31363A",
+        "#605C5C",
+        "#7A7F98"
+      ]
+    },
+    {
+      "path": "assets/images/clips/Ap2vIYWzw4N.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.947,
+      "y": 0.424,
+      "lum": 239,
+      "texture": 17,
+      "saturation": 0.02,
+      "aspect": 1.68,
+      "bytes": 30958,
+      "palette": [
+        "#8B639C",
+        "#A494AB",
+        "#F8F8F8"
+      ]
+    },
+    {
+      "path": "assets/images/clips/DZmtpbNVCa9.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.602,
+      "y": 0.511,
+      "lum": 155,
+      "texture": 25,
+      "saturation": 0.29,
+      "aspect": 0.8,
+      "bytes": 35017,
+      "palette": [
+        "#467B95",
+        "#6294A8",
+        "#C1CFDB"
+      ]
+    },
+    {
+      "path": "assets/images/clips/EGw3iYEeiWs.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.186,
+      "y": 0.21,
+      "lum": 42,
+      "texture": 9,
+      "saturation": 0.08,
+      "aspect": 1,
+      "bytes": 37118,
+      "palette": [
+        "#2C2B2B",
+        "#BAC48E",
+        "#BBCB76"
+      ]
+    },
+    {
+      "path": "assets/images/clips/GrQmmTV7QKT.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.379,
+      "y": 0.211,
+      "lum": 94,
+      "texture": 38,
+      "saturation": 0.14,
+      "aspect": 0.56,
+      "bytes": 32280,
+      "palette": [
+        "#4D4948",
+        "#729899",
+        "#9DCBD0"
+      ]
+    },
+    {
+      "path": "assets/images/clips/IdbY_pPbY9G.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.14,
+      "y": 0.18,
+      "lum": 30,
+      "texture": 5,
+      "saturation": 0.06,
+      "aspect": 1,
+      "bytes": 60209,
+      "palette": [
+        "#1B1A1C",
+        "#48515A",
+        "#7D8FBA"
+      ]
+    },
+    {
+      "path": "assets/images/clips/JC2BXHuFEW6.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.122,
+      "y": 0.289,
+      "lum": 27,
+      "texture": 13,
+      "saturation": 0.21,
+      "aspect": 0.56,
+      "bytes": 19245,
+      "palette": [
+        "#141314",
+        "#475592",
+        "#49476F"
+      ]
+    },
+    {
+      "path": "assets/images/clips/JnUj4vuM9NU.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.011,
+      "y": 0.503,
+      "lum": 2,
+      "texture": 2,
+      "saturation": 0.38,
+      "aspect": 0.56,
+      "bytes": 22293,
+      "palette": [
+        "#060407",
+        "#585261",
+        "#827D8D"
+      ]
+    },
+    {
+      "path": "assets/images/clips/K_48h_zn--8.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.112,
+      "y": 0.172,
+      "lum": 24,
+      "texture": 19,
+      "saturation": 0.13,
+      "aspect": 0.56,
+      "bytes": 15172,
+      "palette": [
+        "#0F0F0F",
+        "#3C4E54",
+        "#82A0B0"
+      ]
+    },
+    {
+      "path": "assets/images/clips/PzqK2ZiCk5L.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.806,
+      "y": 0.36,
+      "lum": 202,
+      "texture": 28,
+      "saturation": 0.01,
+      "aspect": 1.94,
+      "bytes": 36553,
+      "palette": [
+        "#706B69",
+        "#939393",
+        "#F5F5F5"
+      ]
+    },
+    {
+      "path": "assets/images/clips/Rv-tfoUQJum.jpg",
+      "work": "clips",
+      "title": "Clip poster",
+      "year": "",
+      "href": "",
+      "x": 0.531,
+      "y": 0.436,
+      "lum": 136,
+      "texture": 10,
+      "saturation": 0.2,
+      "aspect": 0.56,
+      "bytes": 29089,
+      "palette": [
+        "#31292C",
+        "#715796",
+        "#A59FA2"
+      ]
+    },
+    {
+      "path": "assets/images/9ine5ive6eis.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.583,
+      "y": 0.461,
+      "lum": 153,
+      "texture": 22,
+      "saturation": 0.18,
+      "aspect": 1.33,
+      "bytes": 237896,
+      "palette": [
+        "#464731",
+        "#829278",
+        "#A8B4A5"
+      ]
+    },
+    {
+      "path": "assets/images/archived.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.698,
+      "y": 0.587,
+      "lum": 181,
+      "texture": 27,
+      "saturation": 0.25,
+      "aspect": 1.33,
+      "bytes": 240013,
+      "palette": [
+        "#7D5E58",
+        "#A88F73",
+        "#D9C4A9"
+      ]
+    },
+    {
+      "path": "assets/images/forget-me-not.png",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.096,
+      "y": 0.34,
+      "lum": 19,
+      "texture": 4,
+      "saturation": 0.17,
+      "aspect": 1.33,
+      "bytes": 176368,
+      "palette": [
+        "#121216",
+        "#203758",
+        "#5485BF"
+      ]
+    },
+    {
+      "path": "assets/images/motion.png",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.176,
+      "y": 0.164,
+      "lum": 38,
+      "texture": 1,
+      "saturation": 0,
+      "aspect": 1.33,
+      "bytes": 584884,
+      "palette": [
+        "#2A2A29",
+        "#595957",
+        "#918F8A"
+      ]
+    },
+    {
+      "path": "assets/images/river-pierce-foundation.png",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.884,
+      "y": 0.569,
+      "lum": 231,
+      "texture": 7,
+      "saturation": 0.17,
+      "aspect": 1,
+      "bytes": 363974,
+      "palette": [
+        "#695151",
+        "#D1B8AC",
+        "#F5E8CB"
+      ]
+    },
+    {
+      "path": "assets/images/river-pierce-teaching-hands.png",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.122,
+      "y": 0.765,
+      "lum": 28,
+      "texture": 9,
+      "saturation": 0.56,
+      "aspect": 0.8,
+      "bytes": 768323,
+      "palette": [
+        "#140D16",
+        "#3B314D",
+        "#72899A"
+      ]
+    },
+    {
+      "path": "assets/images/river-pierce.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.698,
+      "y": 0.587,
+      "lum": 181,
+      "texture": 27,
+      "saturation": 0.25,
+      "aspect": 1.33,
+      "bytes": 240013,
+      "palette": [
+        "#7D5E58",
+        "#A88F73",
+        "#D9C4A9"
+      ]
+    },
+    {
+      "path": "assets/images/surveillance-status.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.42,
+      "y": 0.329,
+      "lum": 102,
+      "texture": 15,
+      "saturation": 0.1,
+      "aspect": 1.33,
+      "bytes": 280880,
+      "palette": [
+        "#685B5D",
+        "#887574",
+        "#9D928F"
+      ]
+    },
+    {
+      "path": "assets/images/tigers-blood.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.135,
+      "y": 0.355,
+      "lum": 29,
+      "texture": 7,
+      "saturation": 0.18,
+      "aspect": 1.33,
+      "bytes": 121857,
+      "palette": [
+        "#1E1C21",
+        "#58585E",
+        "#A0A7B5"
+      ]
+    },
+    {
+      "path": "assets/images/triqueta.jpg",
+      "work": "covers",
+      "title": "Cover",
+      "year": "",
+      "href": "",
+      "x": 0.129,
+      "y": 0.18,
+      "lum": 26,
+      "texture": 3,
+      "saturation": 0.03,
+      "aspect": 1.33,
+      "bytes": 322646,
+      "palette": [
+        "#1E1E1E",
+        "#565453",
+        "#A69383"
+      ]
+    }
+  ]
+}
