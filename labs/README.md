@@ -21,6 +21,7 @@ feedback solver. System Sheet is a print-first page with its own SVG and Canvas 
 | embed/archive-atlas.html | Atlas of every image on the site, placed by measured colour and texture. Canvas 2D. |
 | embed/field-of-forms.html | 132 generative forms in 5 nature families, laid out by hue and structure. Canvas 2D. |
 | embed/forms-3d.html | The same rule set in three.js: 132 line modules in 3D, laid out by hue, tone, and density. |
+| embed/component-board.html | Bento board of 9 components: biomorphic dither, resonance, connectivity, surface division, ASCII, colour sets. |
 
 ## Add a study
 

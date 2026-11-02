@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Component Board — Biomorphic Dither</title>
+<style>
+  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif}
+  .wrap{max-width:1440px;margin:0 auto;padding:26px 4vw 60px}
+  header{display:flex;justify-content:space-between;align-items:baseline;gap:20px;border-bottom:1px solid var(--ink);padding-bottom:16px}
+  h1{font-size:clamp(1.8rem,4vw,3.2rem);line-height:.95;letter-spacing:-.04em;font-weight:500;margin:0}
+  .meta{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;line-height:1.8}
+  .meta b{color:var(--ink);font-weight:400}
+  .board{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin-top:16px}
+  .cell{position:relative;border:1px solid var(--line);background:#0a0b0e;overflow:hidden;min-height:0}
+  .cell canvas{display:block;width:100%;height:100%}
+  .cell .tag{position:absolute;left:8px;top:8px;font:9px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;pointer-events:none;background:rgba(7,8,10,.82);padding:4px 7px}
+  .cell .rule{position:absolute;left:8px;bottom:8px;font:9px 'DM Mono',ui-monospace,monospace;letter-spacing:.06em;color:var(--muted);pointer-events:none;background:rgba(7,8,10,.82);padding:4px 7px;max-width:calc(100% - 16px)}
+  .cell .rule b{color:var(--ink);font-weight:400}
+  .hero{grid-column:span 8;aspect-ratio:16/9}
+  .c4{grid-column:span 4;aspect-ratio:4/3}
+  .c6{grid-column:span 6;aspect-ratio:16/10}
+  .c3{grid-column:span 3;aspect-ratio:1/1}
+  @media(max-width:900px){
+    .board{grid-template-columns:repeat(2,1fr)}
+    .hero,.c4,.c6,.c3{grid-column:span 2;aspect-ratio:4/3}
+    .c3{aspect-ratio:1/1}
+  }
+  footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);margin-top:18px;padding-top:12px;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+</style>
+</head>
+<body data-theme="dark">
+<div class="wrap">
+  <header>
+    <h1>Component board</h1>
+    <div class="meta"><b>Biomorphic · dither · ASCII</b><br>9 modules · 1 rule set · seed 114</div>
+  </header>
+
+  <div class="board">
+    <div class="cell hero"><canvas data-mod="blobDither"></canvas><span class="tag">01 / Biomorphic dither</span><span class="rule">field: <b>radius(a, t)</b> · ramp: <b>4×4 Bayer</b> · live</span></div>
+    <div class="cell c4"><canvas data-mod="resonance"></canvas><span class="tag">02 / Resonance</span><span class="rule">2–3 discs · <b>multiply</b> · phase drift</span></div>
+    <div class="cell c4"><canvas data-mod="connectivity"></canvas><span class="tag">03 / Connectivity</span><span class="rule"><b>32</b> great circles · 1 sphere</span></div>
+    <div class="cell c4"><canvas data-mod="blobOutline"></canvas><span class="tag">04 / Biomorphic outline</span><span class="rule">radius from <b>3 harmonics</b> · closed path</span></div>
+    <div class="cell c6"><canvas data-mod="division"></canvas><span class="tag">05 / Perspective surface division</span><span class="rule">one disc · <b>8</b> division rules · flat palette</span></div>
+    <div class="cell c3"><canvas data-mod="ditherRamp"></canvas><span class="tag">06 / Dither ramp</span><span class="rule">linear grey → <b>4×4 Bayer</b></span></div>
+    <div class="cell c3"><canvas data-mod="ascii"></canvas><span class="tag">07 / ASCII</span><span class="rule">glyph ramp <b>. :-=+*#%@</b></span></div>
+    <div class="cell c6"><canvas data-mod="combos"></canvas><span class="tag">08 / Colour combinations</span><span class="rule">1 → <b>2 / 3 / 4</b> colours from one hue set</span></div>
+    <div class="cell c6"><canvas data-mod="harmonics"></canvas><span class="tag">09 / Harmonic series</span><span class="rule">same radius rule · <b>12</b> parameter steps</span></div>
+  </div>
+
+  <footer><span>Juan Licerio · component study</span><span>rule → parameter → output</span></footer>
+</div>
+
+<script>
+window.__study = { ready: false, frames: 0, error: null, modules: 0 };
+
+const SEED = 114;
+const TAU = Math.PI * 2;
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+
+const PALETTE = ['#8ea6ff', '#c6ff4a', '#ff5a3c', '#7fd8ff', '#ff8fd0', '#3a63b8', '#f6f2a8', '#54d6a0', '#ffd166', '#b18cff'];
+const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+
+function setupCanvas(canvas) {
+  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.max(1, Math.round(rect.width * dpr));
+  canvas.height = Math.max(1, Math.round(rect.height * dpr));
+  const ctx = canvas.getContext('2d', { alpha: false });
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: rect.width, h: rect.height, dpr };
+}
+
+/* ---------- 01: biomorphic dither ---------- */
+function blobDither(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  const img = ctx.createImageData(canvas.width, canvas.height);
+  const data = img.data;
+  const step = 2;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const R = Math.min(canvas.width, canvas.height) * 0.36;
+  const phase = t * 0.0006;
+  for (let y = 0; y < canvas.height; y += step) {
+    for (let x = 0; x < canvas.width; x += step) {
+      const dx = (x - cx) / R;
+      const dy = (y - cy) / R;
+      const d = Math.hypot(dx, dy);
+      const a = Math.atan2(dy, dx);
+      const wobble = 1 + 0.16 * Math.sin(3 * a + phase) + 0.1 * Math.sin(5 * a - phase * 1.6) + 0.06 * Math.sin(8 * a + phase * 2.2);
+      const inside = d < wobble;
+      let value = inside ? 1 - d / wobble : 0;
+      if (inside) {
+        const light = Math.max(0, Math.cos(a - phase) * 0.35 + 0.65 - d * 0.35);
+        value = Math.min(1, light * (1 - d / (wobble * 2.4)));
+      }
+      const threshold = (BAYER[(x / step | 0) % 4][(y / step | 0) % 4] + 0.5) / 16;
+      const on = inside ? value > threshold * 0.9 : false;
+      const i = (y * canvas.width + x) * 4;
+      for (let oy = 0; oy < step; oy += 1) {
+        for (let ox = 0; ox < step; ox += 1) {
+          const p = ((y + oy) * canvas.width + (x + ox)) * 4;
+          if (p >= data.length) continue;
+          if (on) {
+            data[p] = 242; data[p + 1] = 240; data[p + 2] = 236; data[p + 3] = 255;
+          } else {
+            data[p] = 7; data[p + 1] = 8; data[p + 2] = 10; data[p + 3] = 255;
+          }
+        }
+      }
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+/* ---------- 02: resonance ---------- */
+function resonance(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalCompositeOperation = 'lighter';
+  const discs = [
+    { x: 0.38, y: 0.5, r: 0.3, c: '142,166,255' },
+    { x: 0.62, y: 0.5, r: 0.26, c: '255,90,60' },
+    { x: 0.5, y: 0.44, r: 0.14, c: '198,255,74' },
+  ];
+  discs.forEach((disc, i) => {
+    const drift = Math.sin(t * 0.0005 + i) * 0.01;
+    const cx = (disc.x + drift) * w;
+    const cy = (disc.y + drift * 0.6) * h;
+    const r = disc.r * Math.min(w, h);
+    const g = ctx.createRadialGradient(cx, cy, r * 0.15, cx, cy, r);
+    g.addColorStop(0, `rgba(${disc.c},0.95)`);
+    g.addColorStop(1, `rgba(${disc.c},0.12)`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fill();
+  });
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/* ---------- 03: connectivity ---------- */
+function connectivity(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(242,240,236,0.5)';
+  ctx.lineWidth = 0.7;
+  const cx = w / 2;
+  const cy = h / 2;
+  const R = Math.min(w, h) * 0.38;
+  for (let i = 0; i < 32; i += 1) {
+    const tilt = (i / 32) * Math.PI + t * 0.0002;
+    const spin = (i / 32) * Math.PI * 2;
+    ctx.beginPath();
+    for (let s = 0; s <= 60; s += 1) {
+      const a = (s / 60) * TAU;
+      const x = Math.cos(a) * R;
+      const y = Math.sin(a) * R * Math.cos(tilt);
+      const z = Math.sin(a) * R * Math.sin(tilt);
+      const px = cx + x * Math.cos(spin) - z * Math.sin(spin) * 0.4;
+      const py = cy + y;
+      if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+}
+
+/* ---------- 04: biomorphic outline ---------- */
+function blobOutline(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  const random = rng(SEED);
+  const cx = w / 2;
+  const cy = h / 2;
+  const R = Math.min(w, h) * 0.33;
+  ctx.strokeStyle = 'rgba(242,240,236,0.72)';
+  ctx.lineWidth = 1;
+  for (let ring = 0; ring < 3; ring += 1) {
+    const h1 = 2 + Math.floor(random() * 3);
+    const h2 = 4 + Math.floor(random() * 4);
+    const a1 = 0.06 + random() * 0.1;
+    const a2 = 0.03 + random() * 0.07;
+    ctx.beginPath();
+    for (let s = 0; s <= 100; s += 1) {
+      const a = (s / 100) * TAU;
+      const r = R * (1 + a1 * Math.sin(h1 * a + ring) + a2 * Math.cos(h2 * a - ring * 0.7));
+      const x = cx + Math.cos(a) * r * 1.1;
+      const y = cy + Math.sin(a) * r * 0.92;
+      if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+}
+
+/* ---------- 05: perspective surface division ---------- */
+function division(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  const cols = 4, rows = 2;
+  const cell = Math.min(w / cols, h / rows) * 0.86;
+  let index = 0;
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      const cx = (c + 0.5) * (w / cols);
+      const cy = (r + 0.5) * (h / rows);
+      const radius = cell / 2;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, TAU);
+      ctx.clip();
+      const a = PALETTE[index % PALETTE.length];
+      const b = PALETTE[(index + 3) % PALETTE.length];
+      const c2 = PALETTE[(index + 6) % PALETTE.length];
+      ctx.fillStyle = a;
+      ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+      const mode = index % 4;
+      if (mode === 0) {
+        ctx.fillStyle = b;
+        ctx.beginPath();
+        ctx.arc(cx - radius * 0.35, cy + radius * 0.2, radius * 1.05, 0, TAU);
+        ctx.fill();
+      } else if (mode === 1) {
+        ctx.strokeStyle = b;
+        ctx.lineWidth = radius * 0.16;
+        for (let i = 0; i < 24; i += 1) {
+          const ang = (i / 24) * TAU + t * 0.0002;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(ang) * radius, cy + Math.sin(ang) * radius);
+          ctx.stroke();
+        }
+      } else if (mode === 2) {
+        ctx.fillStyle = b;
+        for (let i = 0; i < 8; i += 1) {
+          const ang = (i / 8) * TAU + Math.PI / 8;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.arc(cx, cy, radius, ang, ang + TAU / 8);
+          ctx.closePath();
+          if (i % 2 === 0) ctx.fill();
+        }
+      } else {
+        ctx.fillStyle = c2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius * 0.55, 0, TAU);
+        ctx.fill();
+        ctx.fillStyle = b;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius * 0.26, 0, TAU);
+        ctx.fill();
+      }
+      ctx.restore();
+      index += 1;
+    }
+  }
+}
+
+/* ---------- 06: dither ramp ---------- */
+function ditherRamp(canvas) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+
+  const step = Math.max(3, Math.round(Math.min(w, h) / 54));
+  const lit = (x, y, value) => {
+    const threshold = (BAYER[(x / step | 0) % 4][(y / step | 0) % 4] + 0.5) / 16;
+    if (value <= threshold) return;
+    ctx.fillStyle = 'rgba(242,240,236,0.9)';
+    ctx.fillRect(x, y, step, step);
+  };
+
+  // Dithered disc: value falls off from the centre.
+  const cx = w * 0.32;
+  const cy = h * 0.5;
+  const R = Math.min(w, h) * 0.3;
+  for (let y = cy - R; y < cy + R; y += step) {
+    for (let x = cx - R; x < cx + R; x += step) {
+      const d = Math.hypot(x - cx, y - cy) / R;
+      if (d > 1) continue;
+      lit(x, y, 1 - d);
+    }
+  }
+
+  // Strip: linear ramp, so the two rules sit side by side.
+  const x0 = w * 0.58;
+  const x1 = w * 0.92;
+  for (let y = h * 0.16; y < h * 0.84; y += step) {
+    for (let x = x0; x < x1; x += step) {
+      lit(x, y, 1 - (x - x0) / (x1 - x0));
+    }
+  }
+}
+
+/* ---------- 07: ASCII ---------- */
+const GLYPHS = ' .:-=+*#%@';
+function ascii(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  const cols = 34, rows = 24;
+  const cw = w / cols, ch = h / rows;
+  ctx.font = `${Math.floor(ch * 1.05)}px 'DM Mono', ui-monospace, monospace`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < cols; x += 1) {
+      const u = x / cols - 0.5;
+      const v = y / rows - 0.5;
+      const d = Math.hypot(u, v * 1.1);
+      const a = Math.atan2(v, u);
+      const r = 0.34 * (1 + 0.16 * Math.sin(3 * a + t * 0.0008) + 0.09 * Math.sin(6 * a - t * 0.0011));
+      if (d > r) continue;
+      const light = Math.max(0.05, 1 - d / r);
+      const glyph = GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))];
+      ctx.fillStyle = `rgba(242,240,236,${0.35 + light * 0.55})`;
+      ctx.fillText(glyph, x * cw + cw / 2, y * ch + ch / 2);
+    }
+  }
+}
+
+/* ---------- 08: colour combinations ---------- */
+function combos(canvas) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  const sets = [2, 3, 4];
+  const random = rng(SEED * 3);
+  const rowH = h / sets.length;
+  sets.forEach((count, row) => {
+    const start = Math.floor(random() * PALETTE.length);
+    const swatchW = w / count;
+    for (let i = 0; i < count; i += 1) {
+      ctx.fillStyle = PALETTE[(start + i * 2) % PALETTE.length];
+      ctx.fillRect(i * swatchW + 2, row * rowH + 2, swatchW - 4, rowH - 4);
+    }
+  });
+}
+
+/* ---------- 09: harmonic series ---------- */
+function harmonics(canvas, t) {
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, w, h);
+  const cols = 6, rows = 2;
+  const cell = Math.min(w / cols, h / rows) * 0.9;
+  let index = 0;
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      const cx = (c + 0.5) * (w / cols);
+      const cy = (r + 0.5) * (h / rows);
+      const R = cell * 0.36;
+      ctx.strokeStyle = 'rgba(242,240,236,0.62)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      for (let s = 0; s <= 80; s += 1) {
+        const a = (s / 80) * TAU;
+        const k = 2 + index * 0.35;
+        const rr = R * (1 + 0.16 * Math.sin(k * a + t * 0.0004 + index) + 0.07 * Math.sin((k + 2) * a));
+        const x = cx + Math.cos(a) * rr;
+        const y = cy + Math.sin(a) * rr;
+        if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      index += 1;
+    }
+  }
+}
+
+const MODULES = { blobDither, resonance, connectivity, blobOutline, division, ditherRamp, ascii, combos, harmonics };
+const cells = [...document.querySelectorAll('[data-mod]')].map((canvas) => ({
+  canvas,
+  render: MODULES[canvas.dataset.mod],
+  every: canvas.dataset.mod === 'blobDither' ? 2 : 6,
+}));
+
+let frame = 0;
+let t = 0;
+function loop(now) {
+  t = now;
+  frame += 1;
+  for (const cell of cells) {
+    if (frame % cell.every === 0) cell.render(cell.canvas, t);
+  }
+  window.__study.frames += 1;
+  requestAnimationFrame(loop);
+}
+
+window.__study.modules = cells.length;
+requestAnimationFrame(loop);
+window.__study.ready = true;
+addEventListener('resize', () => { for (const cell of cells) cell.render(cell.canvas, t); });
+</script>
+</body>
+</html>
