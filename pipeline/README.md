@@ -7,12 +7,27 @@ It uses the site data file as the only content source.
 
 | Stage | Output | Gate |
 | :--- | :--- | :--- |
-| 1. Reference | Moodboard, three claims | One reference and one target image |
+| 0. Board | Component board or mood board in `labs/embed/` | Every component named, every rule written, one seed fixed |
+| 1. Reference | Three claims from the board | One reference and one target image |
 | 2. Concept | Premise, interaction, palette, budget | One sentence and one interaction |
 | 3. Build | Study page under `labs/embed/` | Runs with no console error |
 | 4. Verify | Screenshots and report | 1440x900 and 390x844 pass |
 | 5. Case study | Brief, process, result, credits | Three images and one measured result |
 | 6. Ship | Live URL | User approval, then remote fetch |
+
+## The board gate
+
+Every study starts with a board, not with a build. The board is a bento page of components drawn from the systems we have studied: Generative Gestaltung for rule-based modules, Flexible Visual Systems for components and operators, the Refik corpus method for data and provenance.
+
+A board passes when all five are true:
+
+1. It holds 6 to 12 components, each in its own cell.
+2. Each cell prints its rule in one line, with the parameters named.
+3. One seed is fixed and printed, and the board reproduces exactly from it.
+4. At least three components come from a studied system, with that system named in the caption.
+5. It runs at 1440x900 and 390x844 with no console error.
+
+The product is then assembled from the board: a study picks components, not styles. Two worked examples: `labs/embed/component-board.html` and `labs/embed/forms-3d.html`.
 
 ## Commands
 

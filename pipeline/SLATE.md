@@ -19,6 +19,7 @@
 
 ## Rules
 
+- Every study starts with a component board. No board, no build.
 - One study is in verification at a time.
 - A study enters the hero only after a passing report.
 - A study enters the work index only after its case study is complete.
