@@ -145,6 +145,16 @@ function renderCv(site) {
 function clipMarkup(project) {
   const clips = project.videos || [];
   return clips.map((media, index) => {
+    if (media.src && media.local) {
+      const ratio = media.width && media.height ? `${media.width} / ${media.height}` : '9 / 16';
+      const number = String(index + 1).padStart(2, '0');
+      return `<figure class="clip clip--video" style="--clip-ratio:${ratio}">
+        <video controls playsinline preload="none" muted poster="${localUrl(media.poster)}" aria-label="${escapeHtml(project.title)} clip ${number}">
+          <source src="${localUrl(media.src)}" type="video/mp4">
+        </video>
+        <figcaption><span>${number}</span>${escapeHtml(media.caption || 'Installation video')}</figcaption>
+      </figure>`;
+    }
     const href = externalUrl(media.url || media.embedUrl);
     const embed = media.embedUrl ? externalUrl(media.embedUrl) : '';
     const ratio = media.width && media.height && media.width > 2
@@ -179,6 +189,11 @@ function buildCaseBody(project) {
   const rows = [];
   const list = (items = []) => items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const credits = (items = []) => items.map(item => `<dt>${escapeHtml(item.role)}</dt><dd>${escapeHtml(item.name)}</dd>`).join('');
+
+  const heroCaption = project.id === 'making-it-20x25'
+    ? (study.images || []).find(image => image.src === project.image)?.caption
+    : '';
+  if (heroCaption) rows.push(caseRow({ title: 'Installation', note: 'HERO', content: `<p>${escapeHtml(heroCaption)}</p>` }));
 
   const about = [project.description || 'Project details are being prepared.'];
   rows.push(caseRow({
@@ -280,7 +295,7 @@ function setupClipPlayers() {
 async function init() {
   setupTheme();
   setupClipPlayers();
-  const response = await fetch(`${root}data/site.json?v=3`, { cache: 'no-store' });
+  const response = await fetch(`${root}data/site.json?v=4`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Portfolio data request failed: ${response.status}`);
   const site = await response.json();
   if (page === 'home') renderHome(site);

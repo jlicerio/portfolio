@@ -166,6 +166,84 @@
       "section": "real-time"
     },
     {
+      "id": "making-it-20x25",
+      "title": "making it, 20x25",
+      "year": "2025",
+      "slug": "making-it-20x25",
+      "href": "projects/making-it-20x25.html",
+      "image": "assets/images/projects/making-it-20x25/hero.jpg",
+      "summary": "A TouchDesigner camera work shown in Trucha RGV's group exhibition at Ponte Creative Studio & Gallery.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "installation-video",
+          "local": true,
+          "src": "assets/videos/making-it-20x25/01-installation.mp4",
+          "poster": "assets/images/projects/making-it-20x25/01-poster.jpg",
+          "width": 9,
+          "height": 16,
+          "caption": "Installation view. The camera and projector sit beneath the cyan projection, with packing still visible around the pedestal."
+        },
+        {
+          "type": "installation-video",
+          "local": true,
+          "src": "assets/videos/making-it-20x25/02-interaction.mp4",
+          "poster": "assets/images/projects/making-it-20x25/02-poster.jpg",
+          "width": 9,
+          "height": 16,
+          "caption": "Live interaction. Two outlined figures appear in the projected camera image."
+        }
+      ],
+      "description": "An interactive camera work made in TouchDesigner. MediaPipe and texture noise shape the live image, which was projected at Trucha RGV's making it, 20x25 group exhibition.",
+      "tools": "TouchDesigner, MediaPipe, texture noise",
+      "links": [
+        {
+          "label": "Trucha RGV exhibition announcement",
+          "href": "https://www.instagram.com/p/DQ-V0hOEmwX/?img_index=4"
+        }
+      ],
+      "caseStudy": {
+        "brief": "A live camera image becomes a textured, noisy projection. The work uses MediaPipe and TouchDesigner to transform a camera feed in real time.",
+        "process": [
+          "TouchDesigner processes the live camera image.",
+          "MediaPipe and texture noise shape the projected image."
+        ],
+        "result": [
+          "Shown in making it, 20x25, a group exhibition announced by Trucha RGV for Ponte Creative Studio & Gallery on 21 November 2025."
+        ],
+        "credits": [
+          {
+            "role": "Artwork",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Exhibition",
+            "name": "making it, 20x25 — Trucha RGV, Ponte Creative Studio & Gallery, 21 November 2025"
+          },
+          {
+            "role": "Photographs",
+            "name": "Installation photographs from the artist's Google Photos album. Photographer credit unconfirmed."
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/making-it-20x25/hero.jpg",
+            "alt": "Camera and projector on a pedestal with packing materials and a projected camera image",
+            "caption": "The camera and projector sit on a pedestal with their packing still on them. The box, the tape, and the bubble wrap stay in the work."
+          },
+          {
+            "src": "assets/images/projects/making-it-20x25/02.jpg",
+            "alt": "A live interaction projected above the projector, which remains wrapped on the pedestal",
+            "caption": "A second installation view. The projector and packing remain visible beneath the live projection."
+          }
+        ]
+      },
+      "discipline": "INTERACTIVE VIDEO",
+      "role": "Artwork and code",
+      "section": "immersion"
+    },
+    {
       "id": "forget-me-not",
       "title": "Forget-me-not",
       "year": "2025",
@@ -1157,7 +1235,7 @@
       "tools": "",
       "links": [],
       "caseStudy": {
-        "brief": "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same twelve studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: twelve studies, four years, one link per study, and no dead ends.",
+          "brief": "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same thirteen studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: thirteen studies, four years, one link per study, and no dead ends.",
         "process": [
           "Every entry is a project already on the site. No image on this page is new.",
           "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
@@ -1169,8 +1247,8 @@
           "Six clips from the archived pieces sit above the index, each with a poster frame. The player loads only when a clip is pressed.",
           "The page opens on the work index row for this study, then numbered rows, the same layout as every other study page."
         ],
-        "result": [
-          "Twelve studies indexed: four from 2026, three from 2025, three from 2023, and two from 2022.",
+          "result": [
+            "Thirteen studies indexed: four from 2026, four from 2025, three from 2023, and two from 2022.",
           "Year range 2022 to 2026, read from the project records."
         ],
         "credits": [

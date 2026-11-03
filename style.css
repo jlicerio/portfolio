@@ -14,7 +14,8 @@ footer{display:flex;justify-content:space-between;border-top:1px solid var(--lin
 .site-nav>a,.back-link,.section-label a,.media-link,.project-links a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
 .project-links a{border-bottom:0;padding-bottom:0}
 strong,b,.work-row-title{font-weight:500}
-.case-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:34px}.case-gallery figure{margin:0;background:var(--soft)}.case-gallery img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.case-gallery figcaption{display:flex;gap:12px;padding:10px 12px 12px;color:var(--muted);font:11px 'DM Mono',monospace;letter-spacing:.04em;line-height:1.5}.case-gallery figcaption span{color:var(--ink)}
+.case-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:34px}.case-gallery figure{margin:0;background:var(--soft)}.case-gallery img{display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover}.case-gallery figcaption{display:flex;gap:12px;padding:10px 12px 12px;color:var(--muted);font:11px 'DM Mono',monospace;letter-spacing:.04em;line-height:1.5}.case-gallery figcaption span{color:var(--ink)}
+body[data-project="making-it-20x25"] .case-gallery img{height:auto;aspect-ratio:auto;object-fit:contain}
 @media(max-width:700px){.case-gallery{grid-template-columns:1fr}}.case-gallery[data-count="5"]{grid-template-columns:repeat(3,minmax(0,1fr))}
 
 /* Work index */
@@ -164,6 +165,7 @@ body[data-page="work"] .site-header a:focus-visible,body[data-page="work"] .them
 /* Clip posters: the player loads on press */
 .clip{position:relative;margin:0;background:#0b0b0b;aspect-ratio:var(--clip-ratio,16 / 10);overflow:hidden;border:1px solid var(--line)}
 .clip img,.clip-plate{display:block;width:100%;height:100%;object-fit:cover}
+.clip video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .clip-plate{display:grid;place-items:center;background:linear-gradient(160deg,#17181c,#0a0b0d);color:#7d7a83;font:10px 'DM Mono',monospace;letter-spacing:.16em;text-align:center;padding:24px 16px}
 .clip iframe{display:block;width:100%;height:100%;border:0;background:#000}
 .clip-play{position:absolute;inset:auto auto 0 0;display:inline-flex;align-items:baseline;gap:8px;margin:14px;padding:9px 14px;border:1px solid var(--ink);background:rgba(7,8,10,.72);color:var(--ink);font:11px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer;backdrop-filter:blur(6px)}
