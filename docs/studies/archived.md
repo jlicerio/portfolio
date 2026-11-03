@@ -1,6 +1,6 @@
 # Archived Works — Index Hub
 
-**Brief.** This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same thirteen studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: thirteen studies, four years, one link per study, and no dead ends.
+**Brief.** This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same twelve studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: twelve studies, four years, one link per study, and no dead ends.
 
 **Process.**
 
@@ -16,7 +16,7 @@
 
 **Result.**
 
-- Thirteen studies indexed: five from 2026, three from 2025, three from 2023, and two from 2022.
+- Twelve studies indexed: four from 2026, three from 2025, three from 2023, and two from 2022.
 - Year range 2022 to 2026, read from the project records.
 
 **Credits.**

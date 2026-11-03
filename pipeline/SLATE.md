@@ -4,7 +4,6 @@
 | :--- | :--- | :--- | :--- | :--- |
 | Viscous Orb | WebGL2 fluid | Entry world | Case study done | Review copy |
 | Warp and Weft | WebGPU meadow | Existing world | Case study done | Review copy |
-| Quarter Turn | SVG and Canvas 2D | System sheet | Case study done | Review copy |
 | Surveillance Status | Live cam and browser vision | Video case | Case study done | Review copy |
 | Forget-me-not | Projection mapping | Installation case | Case study done | Review copy. Ponte run 15 Aug to 16 Oct 2025 |
 | River Pierce | AR, public program | Commission case | Case study done | Review copy |

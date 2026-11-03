@@ -57,18 +57,6 @@ const stages = {
     </div>
   </section>`,
   },
-  'quarter-turn': {
-    head: '<link rel="stylesheet" href="../labs/live.css?v=4">',
-    script: '',
-    row: `<section class="case-row case-stage">
-    <span class="case-row-number" aria-hidden="true"></span>
-    <div class="case-row-main">
-      <div class="case-row-head"><h2>Live / System sheet</h2><span class="case-row-note">SVG + Canvas 2D</span></div>
-      <div class="live-stage"><iframe src="../labs/embed/system-sheet.html" title="Quarter Turn system sheet" loading="lazy"></iframe></div>
-      <div class="live-foot"><span>Six operators, one base form</span><span><a class="media-link" href="../labs/embed/system-sheet.html" target="_blank" rel="noreferrer">OPEN FULL WIDTH ↗</a></span></div>
-    </div>
-  </section>`,
-  },
   'growth-instrument': {
     head: '<link rel="stylesheet" href="../labs/live.css?v=4">',
     script: '',
@@ -126,7 +114,6 @@ const siteUrl = 'https://jlicerio.github.io/portfolio/';
 const shareImages = {
   'warp-and-weft': 'assets/images/projects/warp-and-weft/01.jpg',
   'viscous-orb': 'assets/images/projects/viscous-orb/01.jpg',
-  'quarter-turn': 'assets/images/projects/quarter-turn/sheet-desktop.png',
   'growth-instrument': 'assets/images/projects/growth-instrument/desktop-4x3.png',
   'form-space': 'assets/images/projects/form-space/desktop-4x3.png',
 };

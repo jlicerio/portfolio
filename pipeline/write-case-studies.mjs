@@ -296,7 +296,7 @@ const studies = {
     description: 'Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.',
     image: 'assets/images/projects/archived/hero.jpg',
     caseStudy: {
-      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same thirteen studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: thirteen studies, four years, one link per study, and no dead ends.",
+      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same twelve studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: twelve studies, four years, one link per study, and no dead ends.",
       process: [
         "Every entry is a project already on the site. No image on this page is new.",
         "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
@@ -309,7 +309,7 @@ const studies = {
         "The page opens on the work index row for this study, then numbered rows, the same layout as every other study page."
       ],
       result: [
-        "Thirteen studies indexed: five from 2026, three from 2025, three from 2023, and two from 2022.",
+        "Twelve studies indexed: four from 2026, three from 2025, three from 2023, and two from 2022.",
         "Year range 2022 to 2026, read from the project records.",
         
         

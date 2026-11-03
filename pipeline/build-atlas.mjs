@@ -11,6 +11,7 @@ import { execFileSync } from 'node:child_process';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const site = JSON.parse(readFileSync(resolve(root, 'data/site.json'), 'utf8'));
+const retiredFromPortfolio = new Set(['quarter-turn']);
 
 const walk = (dir) => {
   const out = [];
@@ -82,6 +83,7 @@ const measure = (full) => {
 const raw = [];
 for (const full of files) {
   const path = rel(full);
+  if (retiredFromPortfolio.has(owner(path))) continue;
   const stats = statSync(full);
   const features = measure(full);
   raw.push({ path, work: owner(path), bytes: stats.size, ...features });
