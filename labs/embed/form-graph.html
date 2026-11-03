@@ -457,13 +457,15 @@ function buildDetail(spec) {
 let detailOpen = false;
 function openDetail(spec) {
   buildDetail(spec);
+  if (!detailOpen) { orbit.spaceRadius = orbit.radius; orbit.spaceElevation = orbit.elevation; }
   detailOpen = true;
   window.__study.mode = 'detail';
   group.visible = false;
   guidesGroup.visible = false;
   detailGroup.visible = true;
   edgeMesh.visible = false;
-  orbit.radius = 8.4;
+  // fit the specimen by aspect: a narrow screen needs a longer lens, or the shell crops
+  orbit.radius = Math.max(8.4, 7.9 / camera.aspect);
   orbit.elevation = 0.55;
 }
 function closeDetail() {
@@ -474,8 +476,8 @@ function closeDetail() {
   guidesGroup.visible = true;
   document.getElementById('detailbar').hidden = true;
   duckBed(1, 3);
-  orbit.radius = 28;
-  orbit.elevation = 1.02;
+  orbit.radius = orbit.spaceRadius || 34;
+  orbit.elevation = orbit.spaceElevation ?? 0.95;
 }
 document.getElementById('closeDetail').addEventListener('click', closeDetail);
 addEventListener('keydown', (event) => { if (event.key === 'Escape' && detailOpen) closeDetail(); });
@@ -875,6 +877,7 @@ window.__study.ready = true;
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
+  if (detailOpen) orbit.radius = Math.max(8.4, 7.9 / camera.aspect);
   renderer.setSize(innerWidth, innerHeight, false);
 });
 </script>
