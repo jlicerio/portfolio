@@ -1,6 +1,6 @@
 # Archived Works — Index Hub
 
-**Brief.** This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub exists because the work index only carries the current rotation, so older pieces would otherwise have no route in. Nothing here is a new piece. The value is the map: eleven studies, four years, one link per study, and no dead ends.
+**Brief.** This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same eleven studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: eleven studies, four years, one link per study, and no dead ends.
 
 **Process.**
 

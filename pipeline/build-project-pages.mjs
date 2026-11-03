@@ -97,7 +97,14 @@ const stages = {
 };
 
 // The Pages deploy serves the repo at this path, so share cards need the absolute form.
+// Three studies carry an SVG cover, which scrapers reject, so they point at a raster still.
 const siteUrl = 'https://jlicerio.github.io/portfolio/';
+const shareImages = {
+  'warp-and-weft': 'assets/images/projects/warp-and-weft/01.jpg',
+  'viscous-orb': 'assets/images/projects/viscous-orb/01.jpg',
+  'quarter-turn': 'assets/images/projects/quarter-turn/sheet-desktop.png',
+};
+const shareImage = (project) => shareImages[project.id] || project.image;
 
 const esc = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -117,7 +124,7 @@ const template = (project) => {
 <meta property="og:type" content="article">
 <meta property="og:title" content="${esc(project.title)} — Juan Licerio">
 <meta property="og:description" content="${esc(project.summary)}">
-<meta property="og:image" content="${siteUrl}${project.image}">
+<meta property="og:image" content="${siteUrl}${shareImage(project)}">
 <meta property="og:url" content="${siteUrl}projects/${project.id}.html">
 <title>${esc(project.title)} — Juan Licerio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -39,7 +39,8 @@ function siteSections(site) {
   return Array.isArray(site.sections) && site.sections.length ? site.sections : [{ id: 'work', label: 'WORK' }];
 }
 
-// One number per study, shared by the work index, the archive index, and the study page.
+// One number per study, taken from the section order in the site data.
+// The work index and the study page share it; the archive index numbers its own year rows.
 function indexedProjects(site) {
   const visible = visibleProjects(site);
   const ordered = siteSections(site).flatMap(section => visible.filter(project => (project.section || 'work') === section.id));
@@ -55,8 +56,13 @@ function titleMarkup(title) {
   return `${escapeHtml(words.join(' '))} <em>${escapeHtml(last)}</em>`;
 }
 
+// One discipline label, so the work row, the study label, and the study row agree.
+function disciplineOf(project) {
+  return String(project.discipline || String(project.tools || '').split(',')[0].trim() || '—');
+}
+
 function workRow(project, number) {
-  const discipline = String(project.discipline || String(project.tools || '').split(',')[0].trim() || '—');
+  const discipline = disciplineOf(project);
   return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
     <span class="work-index-number">${number}</span>
     <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
@@ -81,19 +87,26 @@ function renderHome(site) {
   if (projects) projects.innerHTML = visibleProjects(site).slice(0, 6).map(projectRow).join('');
 }
 
+function workSectionMarkup(label, note, rows) {
+  if (!rows.length) return '';
+  const count = String(rows.length).padStart(2, '0');
+  return `<section class="work-section" aria-label="${escapeHtml(label)}">
+      <div class="work-section-head"><span class="work-section-label">${escapeHtml(label)}</span><span class="work-section-note">${escapeHtml(note || '')}</span><span class="work-section-count">${count}</span></div>
+      <ul class="work-index-list">${rows.map(({ project, number }) => workRow(project, number)).join('')}</ul>
+    </section>`;
+}
+
 function renderWork(site) {
   const list = document.querySelector('[data-work-projects]');
   if (!list) return;
+  const sections = siteSections(site);
   const indexed = indexedProjects(site);
-  list.innerHTML = siteSections(site).map((section) => {
-    const rows = indexed.filter(({ project }) => (project.section || 'work') === section.id);
-    if (!rows.length) return '';
-    const count = String(rows.length).padStart(2, '0');
-    return `<section class="work-section" aria-label="${escapeHtml(section.label)}">
-      <div class="work-section-head"><span class="work-section-label">${escapeHtml(section.label)}</span><span class="work-section-note">${escapeHtml(section.note || '')}</span><span class="work-section-count">${count}</span></div>
-      <ul class="work-index-list">${rows.map(({ project, number }) => workRow(project, number)).join('')}</ul>
-    </section>`;
-  }).join('');
+  const labelOf = new Set(sections.map(section => section.id));
+  const parts = sections.map(section => workSectionMarkup(section.label, section.note, indexed.filter(({ project }) => (project.section || 'work') === section.id)));
+  // A record whose section is not in the data still gets a row, so no number goes missing.
+  const rest = indexed.filter(({ project }) => !labelOf.has(project.section || 'work'));
+  if (rest.length) parts.push(workSectionMarkup('MORE', '', rest));
+  list.innerHTML = parts.filter(Boolean).join('');
 }
 
 function renderArchiveIndex(site) {
@@ -223,7 +236,7 @@ function renderProject(site) {
   const isIndex = project.id === 'archived';
   const entry = indexedProjects(site).find(item => item.project.id === project.id);
   const number = entry ? entry.number : '—';
-  const discipline = project.discipline || '';
+  const discipline = disciplineOf(project);
 
   document.title = `${project.title} — Juan Licerio`;
   document.querySelectorAll('[data-project-kicker]').forEach(node => node.textContent = isIndex ? 'ARCHIVE' : 'STUDY');

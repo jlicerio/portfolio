@@ -35,7 +35,7 @@ Use two families only. Use uppercase for labels, never for long body text.
 - Gutters: 4vw on each side.
 - Section separation: one 1 px rule, then 25 px to the label.
 - Work index: number, title and summary, discipline, year, preview.
-- Study page order: intro block, one index row, numbered rows (about, live stage, brief, process, result, credits, media, documentation, links).
+- Study page order: intro block, one index row, numbered rows (live stage, about, brief, process, result, credits, media, documentation, links).
 
 ## Components
 
