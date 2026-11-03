@@ -1,4 +1,4 @@
-# Growth Instrument — Case Study
+# Meristem — Case Study
 
 **Brief.** Five natural growth processes had to share one canvas, so a form could be read as a still, a vector, a solid and a colour field without four separate tools. Each form had to come back from a number, and the printed output had to hold a real colour ramp rather than a single ink.
 

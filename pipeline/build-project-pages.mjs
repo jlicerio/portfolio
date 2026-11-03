@@ -76,7 +76,7 @@ const stages = {
     <span class="case-row-number" aria-hidden="true"></span>
     <div class="case-row-main">
       <div class="case-row-head"><h2>Live / Browser tool</h2><span class="case-row-note">One HTML file</span></div>
-      <div class="live-stage"><iframe src="https://jlicerio.github.io/generative-tools/growth-instrument/?s=rd&amp;seed=3574968473&amp;pal=signal&amp;bands=6" title="Growth Instrument, live in the page" loading="lazy"></iframe></div>
+      <div class="live-stage"><iframe src="https://jlicerio.github.io/generative-tools/growth-instrument/?s=rd&amp;seed=3574968473&amp;pal=signal&amp;bands=6" title="Meristem, live in the page" loading="lazy"></iframe></div>
       <div class="live-foot"><span>Five systems, eight ramps, five exports</span><span><a class="media-link" href="https://jlicerio.github.io/generative-tools/growth-instrument/" target="_blank" rel="noreferrer">OPEN FULL SCREEN ↗</a></span></div>
     </div>
   </section>`,
