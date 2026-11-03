@@ -296,20 +296,20 @@ const studies = {
     description: 'Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.',
     image: 'assets/images/projects/archived/hero.jpg',
     caseStudy: {
-      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub exists because the work index only carries the current rotation, so older pieces would otherwise have no route in. Nothing here is a new piece. The value is the map: eleven studies, four years, one link per study, and no dead ends.",
+      brief: "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same twelve studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: twelve studies, four years, one link per study, and no dead ends.",
       process: [
         "Every entry is a project already on the site. No image on this page is new.",
         "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
         "Each row carries a number, a title, a one-line summary, the discipline, the year, and a thumbnail.",
-        "The list is static HTML, so it reads without JavaScript and without the site data file.",
+        "The list is built from the site data file when the page loads, so one record feeds the work index, this index, and the study page.",
         "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
-        "A study is added with a record in the site data file, a page from the shared shell, and a row in this list, so the three stay in step by review rather than by build.",
-        "The cover photograph is a gallery wall of framed works from the archive. The venue is unconfirmed.",
+        "A study is added with a record in the site data file and a page from the shared shell. Every list reads that one record, so the title, the discipline, and the year cannot drift. Each index numbers its own rows: Work counts down the sections, this index counts down the years.",
+        "The row preview is a gallery wall of framed works from the archive. The venue is unconfirmed.",
         "Six clips from the archived pieces sit above the index, each with a poster frame. The player loads only when a clip is pressed.",
-        "The page follows the same heading, description, and case-block layout as every other study page."
+        "The page opens on the work index row for this study, then numbered rows, the same layout as every other study page."
       ],
       result: [
-        "Eleven studies indexed: three from 2026, three from 2025, three from 2023, and two from 2022.",
+        "Twelve studies indexed: four from 2026, three from 2025, three from 2023, and two from 2022.",
         "Year range 2022 to 2026, read from the project records.",
         
         
@@ -317,7 +317,7 @@ const studies = {
       ],
       credits: [
         { role: 'Work', name: 'Juan Licerio' },
-        { role: 'Cover photograph', name: 'Gallery wall from the archive. Venue unconfirmed' },
+        { role: 'Row preview', name: 'Gallery wall from the archive. Venue unconfirmed' },
         { role: 'Years', name: '2022 to 2026, from the project records' }
       ],
       images: [

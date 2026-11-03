@@ -356,7 +356,7 @@
         "result": [
           "Five systems, eight colour ramps of four stops, and five exports: PNG at 2x, SVG, GLB, PLY and ASCII.",
           "The whole tool is one 54,427-byte HTML file with no dependency and no build step.",
-          "The desktop frame at 1440 x 900 and the phone frame at 390 x 844 both show the form above the controls, with no clipping."
+          "At 1440 x 900 the form sits beside the control panel, and the panel scrolls. At 390 x 844 the form sits above the controls. Neither width scrolls sideways."
         ],
         "credits": [
           {
