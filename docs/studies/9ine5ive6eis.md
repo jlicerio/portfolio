@@ -16,6 +16,7 @@
 - Two products in the run: a white tee and a white tote.
 - One three-line lockup, used at two scales.
 - One motion loop and one Instagram reel for the release.
+- Six product stills survive in the project file, from 130 KB to 660 KB each.
 
 **Credits.**
 

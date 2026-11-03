@@ -152,10 +152,12 @@ const studies = {
         "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
         "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
         "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
-        "The export is a still and a loop. The still is what survives in the project file today."
+        "The export is a still. No loop survives in the project file today, so the case shows the still only."
       ],
       result: [
         "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+        "The source still is 720 x 540 pixels and 209 KB on disk, at assets/images/motion.png.",
+        "The three case images, the still and two detail crops, total 430 KB.",
         
         
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
@@ -193,7 +195,7 @@ const studies = {
         "One three-line lockup, used at two scales.",
         
         "One motion loop and one Instagram reel for the release.",
-        
+        "Six product stills survive in the project file, from 130 KB to 660 KB each.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [
@@ -223,13 +225,13 @@ const studies = {
         "The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.",
         "The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.",
         "A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.",
-        "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape."
+        "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape.",
+        "The clip and the print were exported separately, from the same scene."
       ],
       result: [
         "One animated mark and one printed still, built from the same geometry.",
         "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
-        
-        
+        "One clip survives at 1080 x 1080, and the printed still is 1080 x 1350.",
         "Chrome reports zero console errors at 1440 x 900 and 390 x 844."
       ],
       credits: [

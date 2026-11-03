@@ -53,7 +53,8 @@
           "The GLB chair loads once and is drawn once. The meadow uses no textures; colour comes from the clump fields."
         ],
         "result": [
-          "Runs at 60.2 fps at 1440 x 900 and 60.1 fps at 390 x 844 in headless Chrome 156.",
+          "Runs at 60.2 fps at 1440 x 900 in headless Chrome 156, on the live canvas.",
+          "The phone run draws the same scene on a 359 x 478 canvas with no console error.",
           "265,744 blades in the live scene."
         ],
         "credits": [
@@ -345,7 +346,7 @@
       "caseStudy": {
         "brief": "Two public squares run through one browser pipeline. The Zócalo in Mexico City and Times Square in New York are already watched by cameras, phones, and algorithms. The piece adds a narrator. A vision model tracks each person and object, and a small language model writes one line for each. The line appears beside the box, in the language of the place. The feed is live, so each pass is a new cut. The overlay is the work: boxes, IDs, velocities, and a line of prose over a live street.",
         "process": [
-          "A public camera feed runs in the browser. The detector reports 8 fps and 19 tracked objects in the logged frames.",
+          "A public camera feed runs in the browser. The overlay prints its own log: objects tracked, motion level, and a velocity vector per object.",
           "The vision pass assigns an ID to each person and object. Boxes and labels sit over the feed. The tracker keeps position and velocity for each ID.",
           "Each label reports class, speed, and distance. The status panel prints the model, frame rate, object count, and a live list of IDs. The panel is part of the image, not a debug view.",
           "A small language model writes one line for each tracked object. The prompt asks for one sentence in the language of the place. Mexico City writes in Spanish; New York writes in English.",
@@ -355,7 +356,7 @@
         ],
         "result": [
           "Two cities, two languages, one pipeline.",
-          "19 tracked objects at 8 fps in the logged frames.",
+          "One logged frame reports 24 tracked objects, with a motion level and a velocity vector per object.",
           "33.2 s Mexico City; 64.7 s New York.",
           "The text is generated per object, not scripted per scene.",
           "Each pass produces a different set of lines."
@@ -610,7 +611,8 @@
         "result": [
           "Two products in the run: a white tee and a white tote.",
           "One three-line lockup, used at two scales.",
-          "One motion loop and one Instagram reel for the release."
+          "One motion loop and one Instagram reel for the release.",
+          "Six product stills survive in the project file, from 130 KB to 660 KB each."
         ],
         "credits": [
           {
@@ -781,11 +783,13 @@
           "The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.",
           "The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.",
           "A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.",
-          "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape."
+          "The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape.",
+          "The clip and the print were exported separately, from the same scene."
         ],
         "result": [
           "One animated mark and one printed still, built from the same geometry.",
-          "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey."
+          "The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
+          "One clip survives at 1080 x 1080, and the printed still is 1080 x 1350."
         ],
         "credits": [
           {
@@ -892,10 +896,12 @@
           "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
           "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
           "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
-          "The export is a still and a loop. The still is what survives in the project file today."
+          "The export is a still. No loop survives in the project file today, so the case shows the still only."
         ],
         "result": [
-          "One exported still survives in the project file. The number of studies in the set is unconfirmed."
+          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+          "The source still is 720 x 540 pixels and 209 KB on disk, at assets/images/motion.png.",
+          "The three case images, the still and two detail crops, total 430 KB."
         ],
         "credits": [
           {

@@ -10,11 +10,13 @@
 4. The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.
 5. A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.
 6. The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape.
+7. The clip and the print were exported separately, from the same scene.
 
 **Result.**
 
 - One animated mark and one printed still, built from the same geometry.
 - The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.
+- One clip survives at 1080 x 1080, and the printed still is 1080 x 1350.
 
 **Credits.**
 

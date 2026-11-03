@@ -16,7 +16,8 @@
 
 **Result.**
 
-- Runs at 60.2 fps at 1440 x 900 and 60.1 fps at 390 x 844 in headless Chrome 156.
+- Runs at 60.2 fps at 1440 x 900 in headless Chrome 156, on the live canvas.
+- The phone run draws the same scene on a 359 x 478 canvas with no console error.
 - 265,744 blades in the live scene.
 
 **Credits.**

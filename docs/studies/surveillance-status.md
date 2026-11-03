@@ -4,7 +4,7 @@
 
 **Process.**
 
-1. A public camera feed runs in the browser. The detector reports 8 fps and 19 tracked objects in the logged frames.
+1. A public camera feed runs in the browser. The overlay prints its own log: objects tracked, motion level, and a velocity vector per object.
 2. The vision pass assigns an ID to each person and object. Boxes and labels sit over the feed. The tracker keeps position and velocity for each ID.
 3. Each label reports class, speed, and distance. The status panel prints the model, frame rate, object count, and a live list of IDs. The panel is part of the image, not a debug view.
 4. A small language model writes one line for each tracked object. The prompt asks for one sentence in the language of the place. Mexico City writes in Spanish; New York writes in English.
@@ -15,7 +15,7 @@
 **Result.**
 
 - Two cities, two languages, one pipeline.
-- 19 tracked objects at 8 fps in the logged frames.
+- One logged frame reports 24 tracked objects, with a motion level and a velocity vector per object.
 - 33.2 s Mexico City; 64.7 s New York.
 - The text is generated per object, not scripted per scene.
 - Each pass produces a different set of lines.
