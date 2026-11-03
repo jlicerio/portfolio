@@ -1,0 +1,77 @@
+{
+  "id": "quarter-turn",
+  "title": "QUARTER TURN",
+  "year": "2026",
+  "base": {
+    "form": "quarter-disc",
+    "corner": "top-left",
+    "radius": 0.55
+  },
+  "palette": {
+    "bg": "#07080a",
+    "ink": "#f2f0ec",
+    "muted": "#a8a4ad",
+    "line": "rgba(242,240,236,0.18)"
+  },
+  "operators": [
+    {
+      "id": "turn",
+      "label": "TURN",
+      "rule": "4 × 90°",
+      "copies": 4,
+      "step": 90
+    },
+    {
+      "id": "mirror",
+      "label": "MIRROR",
+      "rule": "VERTICAL",
+      "copies": 2
+    },
+    {
+      "id": "scale",
+      "label": "SCALE",
+      "rule": "6 × 0.13",
+      "copies": 6,
+      "from": 1,
+      "step": -0.13,
+      "offset": 11
+    },
+    {
+      "id": "shift",
+      "label": "SHIFT",
+      "rule": "6 × 0.11",
+      "copies": 6,
+      "step": 11
+    },
+    {
+      "id": "shear",
+      "label": "SHEAR",
+      "rule": "±20°",
+      "angle": 20
+    },
+    {
+      "id": "field",
+      "label": "FIELD",
+      "rule": "4 × 4",
+      "columns": 4,
+      "rows": 4
+    }
+  ],
+  "pattern": {
+    "columns": 6,
+    "rows": 6
+  },
+  "poster": {
+    "title": "SYSTEM 01",
+    "line": "QUARTER TURN",
+    "note": "One base form. Six operators. Four outputs.",
+    "bg": "#f2f0ec",
+    "ink": "#07080a",
+    "muted": "#5f5d62"
+  },
+  "seed": 1,
+  "band": {
+    "columns": 12,
+    "rows": 12
+  }
+}

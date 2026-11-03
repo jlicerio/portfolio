@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self-Archive Atlas</title>
+<style>
+  :root{--bg:#07080a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.18)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif}
+  #wrap{position:relative;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%;cursor:crosshair}
+  .head{position:absolute;top:22px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+  .label b{color:var(--ink);font-weight:400}
+  .read{position:absolute;left:24px;bottom:22px;right:24px;display:flex;justify-content:space-between;gap:20px;pointer-events:none}
+  .hover{position:absolute;transform:translate(-50%,-135%);padding:6px 10px;border:1px solid var(--line);background:rgba(7,8,10,.86);font:11px 'DM Mono',ui-monospace,monospace;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .12s ease;pointer-events:none}
+  .hover.on{opacity:1}
+  .hover i{font-style:normal;color:var(--muted);margin-left:8px}
+  .card{position:absolute;right:24px;top:64px;width:240px;border:1px solid var(--line);background:rgba(7,8,10,.9);padding:10px;opacity:0;transition:opacity .18s ease;pointer-events:none}
+  .card.on{opacity:1}
+  .card img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#111}
+  .card p{margin:8px 0 0;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.06em;color:var(--muted);line-height:1.5}
+  .card b{color:var(--ink);font-weight:400}
+  @media(max-width:700px){.card{display:none}.head{top:14px;left:14px;right:14px}.read{left:14px;right:14px;bottom:12px;flex-direction:column;gap:6px}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="field" aria-label="Atlas of every image on the site, placed by measured colour and texture"></canvas>
+  <div class="head">
+    <div class="label"><b>Self-Archive Atlas</b><br><span id="count">loading</span></div>
+    <div class="label" style="text-align:right">7 features<br>PCA, 2 axes</div>
+  </div>
+  <div class="hover" id="hover"></div>
+  <div class="card" id="card"><img id="cardimg" alt=""><p id="cardtext"></p></div>
+  <div class="read">
+    <div class="label">position: colour, light, texture, aspect</div>
+    <div class="label">click a point to open the work</div>
+  </div>
+</div>
+<script>
+const canvas = document.getElementById('field');
+const ctx = canvas.getContext('2d', { alpha: false });
+const hoverEl = document.getElementById('hover');
+const card = document.getElementById('card');
+const cardImg = document.getElementById('cardimg');
+const cardText = document.getElementById('cardtext');
+const countEl = document.getElementById('count');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+window.__study = { ready: false, frames: 0, error: null, points: 0 };
+
+let points = [];
+let hovered = -1;
+let width = 0;
+let height = 0;
+let dpr = 1;
+const pointer = { x: -1, y: -1 };
+
+function size() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  width = canvas.clientWidth;
+  height = canvas.clientHeight;
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+let clusters = [];
+
+function place() {
+  const padX = Math.max(28, width * 0.06);
+  const padY = Math.max(64, height * 0.1);
+  for (const point of points) {
+    point.px = padX + point.x * (width - padX * 2);
+    point.py = padY + point.y * (height - padY * 2);
+  }
+  const groups = new Map();
+  for (const point of points) {
+    if (!groups.has(point.work)) groups.set(point.work, []);
+    groups.get(point.work).push(point);
+  }
+  clusters = [...groups.entries()]
+    .filter(([, list]) => list.length >= 4)
+    .map(([work, list]) => {
+      const short = list[0].title.split(' ').slice(0, 2).join(' ');
+      return {
+        work,
+        title: short.length > 20 ? short.slice(0, 19) + '…' : short,
+        x: list.reduce((sum, p) => sum + p.px, 0) / list.length,
+        y: Math.min(...list.map((p) => p.py)) - 24,
+        n: list.length,
+      };
+    })
+    .sort((a, b) => a.y - b.y);
+}
+
+function draw(t) {
+  ctx.fillStyle = '#07080a';
+  ctx.fillRect(0, 0, width, height);
+
+  const breathe = reduced ? 0 : Math.sin(t / 2600) * 0.5 + 0.5;
+
+  // Faint grid so the field reads as a map.
+  ctx.strokeStyle = 'rgba(242,240,236,0.05)';
+  ctx.lineWidth = 1;
+  for (let g = 1; g < 4; g += 1) {
+    const x = (width / 4) * g;
+    const y = (height / 4) * g;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+  }
+
+  // Work names at their cluster centre.
+  ctx.font = "9px 'DM Mono', ui-monospace, monospace";
+  ctx.textAlign = 'center';
+  const placed = [];
+  for (const cluster of clusters) {
+    const clash = placed.some((other) => Math.abs(other.x - cluster.x) < 130 && Math.abs(other.y - cluster.y) < 20);
+    if (clash) continue;
+    placed.push(cluster);
+    ctx.fillStyle = 'rgba(168,164,173,0.5)';
+    ctx.fillText(cluster.title.toUpperCase(), cluster.x, cluster.y);
+    ctx.fillStyle = 'rgba(168,164,173,0.26)';
+    ctx.fillText(cluster.n + ' IMG', cluster.x, cluster.y + 11);
+  }
+  ctx.textAlign = 'left';
+
+  for (let i = 0; i < points.length; i += 1) {
+    const point = points[i];
+    const r = 2.2 + (point.lum / 255) * 4.2 + (hovered === i ? 5 : 0);
+    const alpha = 0.32 + (point.lum / 255) * 0.55 + (hovered === i ? 0.4 : 0);
+    const palette = point.palette && point.palette.length ? point.palette : ['#8a8a8a'];
+    const gradient = ctx.createRadialGradient(point.px, point.py, 0, point.px, point.py, r * 2.6);
+    gradient.addColorStop(0, palette[0]);
+    gradient.addColorStop(0.65, palette[palette.length - 1]);
+    gradient.addColorStop(1, 'rgba(7,8,10,0)');
+    ctx.globalAlpha = Math.min(1, alpha + (hovered === i ? 0 : breathe * 0.08));
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(point.px, point.py, r * 2.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (hovered >= 0) {
+    const point = points[hovered];
+    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = '#f2f0ec';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(point.px, point.py, 16, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  window.__study.frames += 1;
+  requestAnimationFrame(draw);
+}
+
+function hit() {
+  let best = -1;
+  let bestDistance = 22 * 22;
+  for (let i = 0; i < points.length; i += 1) {
+    const dx = points[i].px - pointer.x;
+    const dy = points[i].py - pointer.y;
+    const distance = dx * dx + dy * dy;
+    if (distance < bestDistance) { bestDistance = distance; best = i; }
+  }
+  return best;
+}
+
+function setHover(index) {
+  hovered = index;
+  if (index < 0) {
+    hoverEl.classList.remove('on');
+    card.classList.remove('on');
+    return;
+  }
+  const point = points[index];
+  hoverEl.innerHTML = `${point.title}<i>${point.year || ''}</i>`;
+  hoverEl.style.left = point.px + 'px';
+  hoverEl.style.top = point.py + 'px';
+  hoverEl.classList.add('on');
+  cardImg.src = point.path;
+  cardImg.alt = point.title;
+  cardText.innerHTML = `<b>${point.title}</b> ${point.year || ''}<br>${point.work} · ${point.width}×${point.height} · ${Math.round(point.bytes / 1024)} KB`;
+  card.classList.add('on');
+}
+
+canvas.addEventListener('pointermove', (event) => {
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = event.clientX - rect.left;
+  pointer.y = event.clientY - rect.top;
+  setHover(hit());
+});
+canvas.addEventListener('pointerleave', () => { pointer.x = -1; pointer.y = -1; setHover(-1); });
+canvas.addEventListener('click', () => {
+  if (hovered < 0) return;
+  const point = points[hovered];
+  if (point.href) window.location.href = '../' + point.href;
+});
+window.addEventListener('resize', () => { size(); place(); });
+
+fetch('../../data/atlas.json', { cache: 'no-store' })
+  .then((response) => response.json())
+  .then((data) => {
+    points = data.points.filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+    window.__study.points = points.length;
+    countEl.textContent = `${points.length} images · ${new Set(points.map((p) => p.work)).size} bodies of work`;
+    size();
+    place();
+    window.__study.ready = true;
+    requestAnimationFrame(draw);
+  })
+  .catch((error) => { window.__study.error = String(error); console.error(error); });
+</script>
+</body>
+</html>

@@ -19,7 +19,8 @@ async function main() {
   const format = navigator.gpu.getPreferredCanvasFormat();
   context.configure({ device, format, alphaMode: 'opaque' });
 
-  const code = await fetch('./src/' + label + '.wgsl').then((response) => response.text());
+  const shaderUrl = new URL('./' + label + '.wgsl', import.meta.url);
+  const code = await fetch(shaderUrl).then((response) => response.text());
   const module = device.createShaderModule({ code });
 
   const pipeline = device.createRenderPipeline({

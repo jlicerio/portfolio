@@ -1,0 +1,131 @@
+{
+  "id": "biomorphic-series",
+  "title": "Biomorphic series",
+  "note": "One operator list, two base forms. The seed picks inside the bounds; it never sets them.",
+  "draws": 6,
+  "defaultForm": "diatom",
+  "forms": {
+    "blob": {
+      "label": "Blob",
+      "params": {
+        "harmonics": {
+          "min": 2,
+          "max": 6,
+          "step": 1
+        },
+        "amplitude": {
+          "min": 0.04,
+          "max": 0.2,
+          "step": 0.01
+        },
+        "secondary": {
+          "min": 0.02,
+          "max": 0.09,
+          "step": 0.01
+        }
+      }
+    },
+    "diatom": {
+      "label": "Diatom",
+      "params": {
+        "folds": {
+          "min": 10,
+          "max": 30,
+          "step": 2
+        },
+        "rings": {
+          "min": 2,
+          "max": 5,
+          "step": 1
+        },
+        "depth": {
+          "min": 0.05,
+          "max": 0.18,
+          "step": 0.01
+        },
+        "sharpness": {
+          "min": 0.7,
+          "max": 2.6,
+          "step": 0.1
+        },
+        "ringTurn": {
+          "min": 0,
+          "max": 2,
+          "step": 0.25
+        },
+        "pores": {
+          "min": 0,
+          "max": 1,
+          "step": 0.25
+        },
+        "warpHarmonics": {
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        "warpAmount": {
+          "min": 0,
+          "max": 0.26,
+          "step": 0.02
+        },
+        "warpTurn": {
+          "min": 0,
+          "max": 1.5,
+          "step": 0.25
+        }
+      }
+    }
+  },
+  "operators": {
+    "turn": {
+      "values": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    "mirror": {
+      "values": [
+        false,
+        true
+      ]
+    },
+    "scale": {
+      "min": 0.72,
+      "max": 1.24,
+      "step": 0.02
+    },
+    "shear": {
+      "min": -20,
+      "max": 20,
+      "step": 2
+    },
+    "field": {
+      "min": 1,
+      "max": 3,
+      "step": 1
+    },
+    "dither": {
+      "values": [
+        2,
+        4,
+        8
+      ]
+    },
+    "ascii": {
+      "min": 0,
+      "max": 1,
+      "step": 0.25
+    }
+  },
+  "palette": [
+    "#f2f0ec",
+    "#8ea6ff",
+    "#c6ff4a",
+    "#ff5a3c",
+    "#7fd8ff",
+    "#ff8fd0"
+  ],
+  "seed": 114
+}

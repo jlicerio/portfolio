@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volumetric Archive</title>
+<style>
+  :root{--bg:#05060a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+  #view{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:20px}
+  .bottom{bottom:20px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
+  .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.webgpu.js",
+    "three/webgpu": "./vendor/three.webgpu.js",
+    "three/tsl": "./vendor/three.tsl.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div class="bar top">
+  <div class="label"><b>Volumetric archive</b><br><span id="count">loading</span></div>
+  <div class="label" style="text-align:right">x colour · y light · z texture<br>same field as the atlas</div>
+</div>
+<div class="bar bottom">
+  <div class="label" id="readout">drag to orbit · scroll to zoom</div>
+  <div class="keys">
+    <button type="button" data-mode="card" aria-pressed="true">Cards</button>
+    <button type="button" data-mode="dither" aria-pressed="false">Dither</button>
+    <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three/webgpu';
+
+const canvasEl = document.getElementById('view');
+const countEl = document.getElementById('count');
+const readout = document.getElementById('readout');
+
+window.__study = { ready: false, frames: 0, error: null, cards: 0, mode: 'card' };
+
+const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+const GLYPHS = ' .:-=+*#%@';
+
+const renderer = new THREE.WebGPURenderer({ canvas: canvasEl, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight, false);
+await renderer.init();
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+const camera = new THREE.PerspectiveCamera(44, innerWidth / innerHeight, 0.1, 200);
+const group = new THREE.Group();
+scene.add(group);
+
+const atlas = await fetch('../../data/atlas.json', { cache: 'no-store' }).then((r) => r.json());
+const points = atlas.points.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
+countEl.textContent = `${points.length} images · ${new Set(points.map((p) => p.work)).size} bodies of work`;
+window.__study.cards = points.length;
+
+const WIDTH = 18;
+const HEIGHT = 10;
+const DEPTH = 7;
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = '../../' + src;
+  });
+}
+
+function cardCanvas(image, w = 220) {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = Math.round(w * 0.75);
+  const g = c.getContext('2d');
+  g.fillStyle = '#0a0b0e';
+  g.fillRect(0, 0, c.width, c.height);
+  const scale = Math.max(c.width / image.width, c.height / image.height);
+  const dw = image.width * scale;
+  const dh = image.height * scale;
+  g.drawImage(image, (c.width - dw) / 2, (c.height - dh) / 2, dw, dh);
+  return c;
+}
+
+function ditherCanvas(image, cols = 96) {
+  const rows = Math.round(cols * 0.75);
+  const source = document.createElement('canvas');
+  source.width = cols;
+  source.height = rows;
+  const sg = source.getContext('2d');
+  const scale = Math.max(cols / image.width, rows / image.height);
+  const dw = image.width * scale;
+  const dh = image.height * scale;
+  sg.fillStyle = '#000';
+  sg.fillRect(0, 0, cols, rows);
+  sg.drawImage(image, (cols - dw) / 2, (rows - dh) / 2, dw, dh);
+  const data = sg.getImageData(0, 0, cols, rows);
+  const out = document.createElement('canvas');
+  out.width = cols;
+  out.height = rows;
+  const og = out.getContext('2d');
+  const img = og.createImageData(cols, rows);
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < cols; x += 1) {
+      const i = (y * cols + x) * 4;
+      const lum = (0.2126 * data.data[i] + 0.7152 * data.data[i + 1] + 0.0722 * data.data[i + 2]) / 255;
+      const threshold = (BAYER[x % 4][y % 4] + 0.5) / 16;
+      const on = lum > threshold;
+      const v = on ? 242 : 8;
+      img.data[i] = v;
+      img.data[i + 1] = v;
+      img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+  }
+  og.putImageData(img, 0, 0);
+  return out;
+}
+
+function asciiCanvas(image, cols = 46) {
+  const rows = Math.round(cols * 0.72);
+  const source = document.createElement('canvas');
+  source.width = cols;
+  source.height = rows;
+  const sg = source.getContext('2d');
+  const scale = Math.max(cols / image.width, rows / image.height);
+  sg.drawImage(image, (cols - image.width * scale) / 2, (rows - image.height * scale) / 2, image.width * scale, image.height * scale);
+  const data = sg.getImageData(0, 0, cols, rows).data;
+
+  const cell = 10;
+  const out = document.createElement('canvas');
+  out.width = cols * cell;
+  out.height = rows * cell;
+  const og = out.getContext('2d');
+  og.fillStyle = '#05060a';
+  og.fillRect(0, 0, out.width, out.height);
+  og.font = `${cell}px 'DM Mono', ui-monospace, monospace`;
+  og.textAlign = 'center';
+  og.textBaseline = 'middle';
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < cols; x += 1) {
+      const i = (y * cols + x) * 4;
+      const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+      const glyph = GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(lum * GLYPHS.length))];
+      if (glyph === ' ') continue;
+      og.fillStyle = `rgba(242,240,236,${0.35 + lum * 0.6})`;
+      og.fillText(glyph, x * cell + cell / 2, y * cell + cell / 2);
+    }
+  }
+  return out;
+}
+
+const quad = new THREE.PlaneGeometry(1, 1);
+const cards = [];
+let built = 0;
+
+for (const point of points) {
+  let image;
+  try {
+    image = await loadImage(point.path);
+  } catch (error) {
+    continue;
+  }
+  const textures = {
+    card: new THREE.CanvasTexture(cardCanvas(image)),
+    dither: new THREE.CanvasTexture(ditherCanvas(image)),
+    ascii: new THREE.CanvasTexture(asciiCanvas(image)),
+  };
+  for (const texture of Object.values(textures)) {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+  }
+
+  const material = new THREE.MeshBasicNodeMaterial({ map: textures.card, transparent: true, depthWrite: false });
+  const mesh = new THREE.Mesh(quad, material);
+  const size = 0.9 + (point.lum / 255) * 1.1;
+  mesh.scale.set(size, size * 0.75, 1);
+  mesh.position.set(
+    (point.x - 0.5) * WIDTH,
+    (0.5 - point.y) * HEIGHT,
+    (point.texture / 255 - 0.5) * DEPTH,
+  );
+  mesh.userData = { textures, point };
+  group.add(mesh);
+  cards.push(mesh);
+  built += 1;
+}
+
+countEl.textContent = `${built} images · ${new Set(points.map((p) => p.work)).size} bodies of work`;
+
+function setMode(mode) {
+  window.__study.mode = mode;
+  for (const mesh of cards) {
+    mesh.material.map = mesh.userData.textures[mode];
+    mesh.material.needsUpdate = true;
+  }
+  for (const button of document.querySelectorAll('[data-mode]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+  }
+}
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => setMode(button.dataset.mode));
+}
+const requested = new URLSearchParams(location.search).get('mode');
+if (requested && ['card', 'dither', 'ascii'].includes(requested)) setMode(requested);
+
+const orbit = { azimuth: 0.4, elevation: 0.22, radius: 17 };
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+canvasEl.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvasEl.setPointerCapture(e.pointerId); });
+canvasEl.addEventListener('pointerup', (e) => { dragging = false; canvasEl.releasePointerCapture(e.pointerId); });
+canvasEl.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  orbit.azimuth -= (e.clientX - lastX) * 0.004;
+  orbit.elevation = Math.max(-1.1, Math.min(1.1, orbit.elevation + (e.clientY - lastY) * 0.003));
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+canvasEl.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = Math.max(8, Math.min(60, orbit.radius + e.deltaY * 0.02)); }, { passive: false });
+
+let clock = 0;
+renderer.setAnimationLoop(() => {
+  clock += 0.0012;
+  const azimuth = orbit.azimuth + clock;
+  camera.position.set(
+    Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+    Math.sin(orbit.elevation) * orbit.radius,
+    Math.sin(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+  );
+  camera.lookAt(0, 0, 0);
+  group.quaternion.copy(camera.quaternion);
+  renderer.render(scene, camera);
+  window.__study.frames += 1;
+});
+
+window.__study.ready = true;
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight, false);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form Space</title>
+<style>
+  :root{--bg:#05060a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+  #view{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:20px}
+  .bottom{bottom:20px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
+  .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
+  .detailbar[hidden]{display:none}
+  .detailbar{position:absolute;left:24px;right:24px;bottom:64px;display:flex;justify-content:space-between;align-items:center;gap:16px;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .detailbar button{appearance:none;border:1px solid var(--line);background:rgba(5,6,10,.8);color:var(--ink);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;padding:8px 12px;cursor:pointer}
+  .detailbar button:hover{border-color:var(--ink)}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.webgpu.js",
+    "three/webgpu": "./vendor/three.webgpu.js",
+    "three/tsl": "./vendor/three.tsl.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div class="bar top">
+  <div class="label"><b>Form space</b><br><span id="count">building</span></div>
+  <div class="label" style="text-align:right">centre: one component<br>outward: more complexity</div>
+</div>
+<div id="detailbar" class="detailbar" hidden>
+  <button type="button" id="closeDetail">Close ✕</button>
+  <span id="detailcaption"></span>
+</div>
+<div class="bar bottom">
+  <div class="label" id="readout">drag to orbit · scroll to zoom</div>
+  <div class="keys">
+    <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
+    <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
+    <button type="button" data-mode="edges" aria-pressed="false">Edges</button>
+    <button type="button" id="soundToggle" aria-pressed="false">Sound</button>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three/webgpu';
+
+const canvasEl = document.getElementById('view');
+const countEl = document.getElementById('count');
+const readout = document.getElementById('readout');
+
+window.__study = { ready: false, frames: 0, error: null, specimens: 0, mode: 'dither' };
+
+const TAU = Math.PI * 2;
+const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+const GLYPHS = ' .:-=+*#%@';
+const PALETTES = [
+  ['#ff5a3c', '#c6ff4a', '#7fd8ff'],
+  ['#f2f0ec', '#8ea6ff', '#3a63b8'],
+  ['#ffd166', '#54d6a0', '#7fd8ff'],
+  ['#ff8fd0', '#b18cff', '#8ea6ff'],
+  ['#f6f2a8', '#ff5a3c', '#7a2f2a'],
+  ['#c6ff4a', '#1f4a3a', '#0a0b0e'],
+  ['#7fd8ff', '#2a3a6a', '#f2f0ec'],
+  ['#ff5a3c', '#f2f0ec', '#8ea6ff'],
+  ['#b18cff', '#54d6a0', '#ffd166'],
+];
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+// soften every colour toward a warm grey, so nothing shouts
+function soften(rgb, amount = 0.38) {
+  const warm = [214, 208, 198];
+  return [
+    Math.round(rgb[0] + (warm[0] - rgb[0]) * amount),
+    Math.round(rgb[1] + (warm[1] - rgb[1]) * amount),
+    Math.round(rgb[2] + (warm[2] - rgb[2]) * amount),
+  ];
+}
+function rampAt(stops, t) {
+  const rgb = stops.map((hex) => soften(hexToRgb(hex)));
+  const x = Math.max(0, Math.min(1, t)) * (rgb.length - 1);
+  const low = Math.min(rgb.length - 1, Math.floor(x));
+  const high = Math.min(rgb.length - 1, low + 1);
+  const f = x - low;
+  return [
+    Math.round(rgb[low][0] + (rgb[high][0] - rgb[low][0]) * f),
+    Math.round(rgb[low][1] + (rgb[high][1] - rgb[low][1]) * f),
+    Math.round(rgb[low][2] + (rgb[high][2] - rgb[low][2]) * f),
+  ];
+}
+
+// ---- one specimen, drawn as the valve it is: folds, rings, warp, dither ----
+function drawSpecimen(spec, mode, size = 200) {
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0b0c10';
+  g.fillRect(0, 0, size, size);
+
+  const step = Math.max(2, Math.round(size / 74));
+  const cx = size / 2;
+  const cy = size / 2;
+  const R = size * 0.44;
+
+  g.save();
+  g.translate(cx, cy);
+  g.rotate((spec.turn * Math.PI) / 180);
+  if (spec.mirror) g.scale(-1, 1);
+
+  for (let y = -R; y < R; y += step) {
+    for (let x = -R; x < R; x += step) {
+      const d = Math.hypot(x, y) / R;
+      if (d > 1) continue;
+      const a = Math.atan2(y, x);
+      const ringF = Math.min(d, 0.9999) * spec.rings;
+      const ring = Math.floor(ringF);
+      const rim = (ring + 1) / spec.rings;
+      const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+      const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+      const radius = rim * (1 + spec.depth * shaped) * warp;
+      if (d > radius) continue;
+
+      const depthN = 1 - d / radius;
+      const light = Math.max(0.05, Math.min(1, 0.06 + 0.94 * depthN * (0.9 + 0.1 * shaped)));
+      const threshold = (BAYER[Math.abs(Math.round(x / step)) % 4][Math.abs(Math.round(y / step)) % 4] + 0.5) / 16;
+      if (light <= threshold) continue;
+
+      const c3 = rampAt(spec.palette, light);
+      g.fillStyle = `rgb(${c3[0]},${c3[1]},${c3[2]})`;
+
+      if (mode === 'ascii') {
+        g.font = `${Math.ceil(step * 1.8)}px 'DM Mono', ui-monospace, monospace`;
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(light * GLYPHS.length))], x + cx * 0, y);
+      } else {
+        g.fillRect(x, y, step, step);
+      }
+    }
+  }
+  g.restore();
+  return c;
+}
+
+// ---- specimens: complexity grows with the parameter set ----
+const SEED = 114;
+const COUNT = 72;
+const random = rng(SEED);
+const specimens = [];
+
+// the centre piece: the simplest valve, one component
+specimens.push({
+  id: 0,
+  folds: 8, rings: 2, depth: 0.05, sharpness: 0.7, ringTurn: 0, pores: 0,
+  warpHarmonics: 1, warpAmount: 0, warpTurn: 0,
+  turn: 0, mirror: false,
+  palette: PALETTES[0],
+  complexity: 0,
+});
+
+for (let i = 1; i < COUNT; i += 1) {
+  const t = i / (COUNT - 1);
+  const folds = Math.round(6 + t * 42 + (random() - 0.5) * 6);
+  const rings = Math.round(1 + t * 5 + (random() - 0.5) * 1.4);
+  const depth = 0.04 + random() * 0.2;
+  const sharpness = 0.4 + random() * 2.6;
+  const warpAmount = t * 0.34 * (0.3 + random() * 0.7);
+  const complexity = (folds - 8) / 22 * 0.5 + (Math.max(2, rings) - 2) / 3 * 0.25 + warpAmount / 0.26 * 0.25;
+  specimens.push({
+    id: i,
+    folds: Math.max(6, Math.min(48, folds)),
+    rings: Math.max(1, Math.min(6, rings)),
+    depth, sharpness,
+    ringTurn: random() * 2,
+    pores: random() * 0.6,
+    warpHarmonics: Math.round(1 + random() * 4),
+    warpAmount,
+    warpTurn: random() * 1.5,
+    turn: [0, 90, 180, 270][Math.floor(random() * 4)],
+    mirror: random() > 0.5,
+    palette: PALETTES[Math.floor(random() * PALETTES.length)],
+    complexity: Math.max(0, Math.min(1, complexity)),
+  });
+}
+
+// configuration name, read from the parameters rather than stored
+for (const spec of specimens) {
+  spec.ringTurn = spec.ringTurn ?? 0;
+  spec.config = spec.id === 0
+    ? 'valve'
+    : spec.folds >= 34 ? 'burst'
+    : spec.ringTurn >= 2.6 ? 'spiral'
+    : spec.depth >= 0.17 ? 'lobed'
+    : spec.rings >= 5 ? 'stack'
+    : 'valve';
+}
+
+// ---- layout: one centre, then rings that thicken with complexity ----
+const BANDS = [0, 1, 2, 3, 4, 5];
+const sorted = [...specimens].sort((a, b) => a.complexity - b.complexity);
+const ringCounts = [1, 7, 12, 16, 18, 18];
+let cursor = 0;
+BANDS.forEach((band, bandIndex) => {
+  const take = ringCounts[bandIndex];
+  const slice = sorted.slice(cursor, cursor + take);
+  cursor += take;
+  slice.forEach((spec, index) => {
+    if (bandIndex === 0) {
+      spec.position = new THREE.Vector3(0, 0, 0);
+      return;
+    }
+    const angle = (index / take) * TAU + bandIndex * 0.5;
+    const radius = 3.2 * bandIndex;
+    spec.position = new THREE.Vector3(
+      Math.cos(angle) * radius,
+      bandIndex * 0.55 + (index % 2 === 0 ? 0.25 : -0.25),
+      Math.sin(angle) * radius,
+    );
+  });
+});
+
+// parent edges: each specimen links to the closest simpler one
+const edges = [];
+for (const spec of specimens) {
+  if (spec.id === 0) continue;
+  let parent = specimens[0];
+  let best = Infinity;
+  for (const other of specimens) {
+    if (other.complexity >= spec.complexity) continue;
+    const distance = spec.position.distanceToSquared(other.position);
+    if (distance < best) { best = distance; parent = other; }
+  }
+  edges.push({ a: spec, b: parent });
+}
+
+window.__study.specimens = specimens.length;
+
+// ---- renderer ----
+const renderer = new THREE.WebGPURenderer({ canvas: canvasEl, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight, false);
+await renderer.init();
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b0c10);
+
+// A collapsed or hidden frame reports a zero height, which turns the aspect into
+// Infinity or NaN and blanks the canvas. One clamp, used everywhere.
+function viewAspect() {
+  const aspect = innerWidth / innerHeight;
+  return Number.isFinite(aspect) && aspect > 0 ? aspect : 1.6;
+}
+
+const camera = new THREE.PerspectiveCamera(44, viewAspect(), 0.1, 200);
+const group = new THREE.Group();
+scene.add(group);
+
+// ring guides: the complexity bands drawn as circles, with a count per ring
+const guidesGroup = new THREE.Group();
+scene.add(guidesGroup);
+const guideMaterial = new THREE.LineBasicNodeMaterial({ color: 0x2a2c33, transparent: true, opacity: 0.8 });
+for (let band = 1; band < 6; band += 1) {
+  const radius = 2.7 * band;
+  const points = [];
+  for (let a = 0; a <= TAU + 0.01; a += 0.05) points.push(new THREE.Vector3(Math.cos(a) * radius, band * 0.6, Math.sin(a) * radius));
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  guidesGroup.add(new THREE.Line(geometry, guideMaterial));
+}
+
+function bandLabel(text) {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = '#a8a4ad';
+  g.font = "500 44px 'DM Mono', ui-monospace, monospace";
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(text, c.width / 2, c.height / 2);
+  const texture = new THREE.CanvasTexture(c);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+  sprite.scale.set(1.6, 0.8, 1);
+  return sprite;
+}
+const counts = ['1', '7', '12', '16', '18', '18'];
+for (let band = 0; band < 6; band += 1) {
+  const label = bandLabel(counts[band]);
+  label.position.set(0, band * 0.6 + 1.5, -3.2 * band - 0.4);
+  guidesGroup.add(label);
+}
+
+
+
+const quad = new THREE.PlaneGeometry(1, 1);
+const cards = [];
+
+function buildCards(mode) {
+  for (const mesh of cards) {
+    mesh.material.map?.dispose();
+    mesh.material.dispose();
+    group.remove(mesh);
+  }
+  cards.length = 0;
+
+  for (const spec of specimens) {
+    const texture = new THREE.CanvasTexture(drawSpecimen(spec, mode));
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const mesh = new THREE.Sprite(material);
+    const size = 1.15 + (spec.id === 0 ? 0.5 : 0);
+    mesh.scale.set(size, size, 1);
+    mesh.position.copy(spec.position);
+    mesh.userData = { spec };
+    group.add(mesh);
+    cards.push(mesh);
+  }
+}
+
+// edges
+const edgePositions = [];
+const edgeColours = [];
+for (const edge of edges) {
+  edgePositions.push(edge.a.position.x, edge.a.position.y, edge.a.position.z, edge.b.position.x, edge.b.position.y, edge.b.position.z);
+  edgeColours.push(0.42, 0.41, 0.45, 0.22, 0.22, 0.25);
+}
+const edgeGeometry = new THREE.BufferGeometry();
+edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(edgePositions, 3));
+edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(edgeColours, 3));
+const edgeMesh = new THREE.LineSegments(edgeGeometry, new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.32 }));
+edgeMesh.visible = false;
+scene.add(edgeMesh);
+
+buildCards('dither');
+countEl.textContent = `${specimens.length} specimens · 1 centre · ${edges.length} links`;
+
+// ---- volumetric detail: one specimen, particles plus contours ----
+const detailGroup = new THREE.Group();
+detailGroup.visible = false;
+scene.add(detailGroup);
+
+function buildDetail(spec) {
+  while (detailGroup.children.length) {
+    const child = detailGroup.children.pop();
+    child.geometry?.dispose();
+    child.material?.dispose();
+  }
+
+  const samples = [];
+  const step = 0.013;
+  const stops = spec.palette;
+  let index = 0;
+
+  for (let y = -1; y <= 1; y += step) {
+    for (let x = -1; x <= 1; x += step) {
+      const d = Math.hypot(x, y);
+      if (d > 1) { index += 1; continue; }
+      const a = Math.atan2(y, x);
+      const ringF = Math.min(d, 0.9999) * spec.rings;
+      const ring = Math.floor(ringF);
+      const rim = (ring + 1) / spec.rings;
+      const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+      const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+      const radius = rim * (1 + spec.depth * shaped) * warp;
+      if (d > radius) { index += 1; continue; }
+      const depthN = 1 - d / radius;
+      const light = Math.max(0.05, Math.min(1, 0.06 + 0.94 * depthN * (0.9 + 0.1 * shaped)));
+      const threshold = (BAYER[index % 4][Math.floor(index / 4) % 4] + 0.5) / 16;
+      if (light <= threshold) { index += 1; continue; }
+
+      const dome = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 0.45;
+      for (const side of [1, -1]) {
+        const z = side * (dome + spec.depth * shaped * 0.7);
+        const c = rampAt(stops, light);
+        const shade = side > 0 ? 1 : 0.68;
+        samples.push({
+          position: new THREE.Vector3(x * 2.4, z * 2.4, y * 2.4),
+          colour: new THREE.Color(c[0] / 255 * shade, c[1] / 255 * shade, c[2] / 255 * shade),
+          size: 0.02 + depthN * 0.016,
+        });
+      }
+      index += 1;
+    }
+  }
+
+  const geometry = new THREE.SphereGeometry(1, 8, 6);
+  const material = new THREE.MeshBasicNodeMaterial({ transparent: true, opacity: 0.95 });
+  const mesh = new THREE.InstancedMesh(geometry, material, samples.length);
+  const localMatrix = new THREE.Matrix4();
+  samples.forEach((sample, i) => {
+    localMatrix.makeScale(sample.size, sample.size, sample.size);
+    localMatrix.setPosition(sample.position);
+    mesh.setMatrixAt(i, localMatrix);
+    mesh.setColorAt(i, sample.colour);
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  detailGroup.add(mesh);
+
+  // iso lines of the same depth field
+  const lineMaterial = new THREE.LineBasicNodeMaterial({ vertexColors: true, transparent: true, opacity: 0.55 });
+  for (let ring = 0; ring < spec.rings; ring += 1) {
+    for (const level of [0.25, 0.5, 0.75]) {
+      const positions = [];
+      const colours = [];
+      let previous = null;
+      for (let a = 0; a <= TAU + 0.001; a += 0.01) {
+        const ringF = ring + 1 - level;
+        const raw = Math.sin(spec.folds * a + ring * spec.ringTurn + ringF * spec.ringTurn * 0.8);
+        const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), spec.sharpness);
+        const warp = 1 + spec.warpAmount * Math.sin(spec.warpHarmonics * a + ring * spec.warpTurn + ringF * spec.warpTurn * 0.6);
+        const rim = (ring + 1) / spec.rings;
+        const radius = rim * (1 + spec.depth * shaped) * warp;
+        const d = radius * (1 - level);
+        if (d > 1) { previous = null; continue; }
+        const height = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 0.45 + spec.depth * shaped * 0.7;
+        const point = new THREE.Vector3(Math.cos(a) * d * 2.4, height * 2.4, Math.sin(a) * d * 2.4);
+        if (previous) {
+          positions.push(previous.x, previous.y, previous.z, point.x, point.y, point.z);
+          const c = rampAt(stops, level);
+          colours.push(c[0] / 255, c[1] / 255, c[2] / 255, c[0] / 255, c[1] / 255, c[2] / 255);
+        }
+        previous = point;
+      }
+      if (!positions.length) continue;
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colours, 3));
+      detailGroup.add(new THREE.LineSegments(lineGeometry, lineMaterial));
+    }
+  }
+
+  window.__study.detailPoints = samples.length;
+  document.getElementById('detailcaption').textContent =
+    `${spec.config} · ${spec.folds} folds · ${spec.rings} rings · warp ${spec.warpAmount.toFixed(2)} · ${samples.length.toLocaleString()} particles`;
+  document.getElementById('detailbar').hidden = false;
+  duckBed(0.35, 0.9);
+  playFormArp(spec);
+}
+
+let detailOpen = false;
+
+// A narrow screen needs a longer lens, or the shell crops.
+function fitRadius() {
+  return Math.max(8.4, 7.9 / Math.max(0.2, camera.aspect));
+}
+
+function openDetail(spec) {
+  buildDetail(spec);
+  if (!detailOpen) {
+    orbit.spaceRadius = orbit.radius;
+    orbit.spaceElevation = orbit.elevation;
+    orbit.spaceAzimuth = orbit.azimuth;
+  }
+  detailOpen = true;
+  window.__study.mode = 'detail';
+  group.visible = false;
+  guidesGroup.visible = false;
+  detailGroup.visible = true;
+  edgeMesh.visible = false;
+  orbit.detailFit = fitRadius();
+  orbit.detailZoomed = false;
+  orbit.radius = orbit.detailFit;
+  orbit.elevation = 0.55;
+}
+function closeDetail() {
+  detailOpen = false;
+  window.__study.mode = window.__study.cardMode || 'dither';
+  detailGroup.visible = false;
+  group.visible = true;
+  guidesGroup.visible = true;
+  document.getElementById('detailbar').hidden = true;
+  duckBed(1, 3);
+  orbit.radius = orbit.spaceRadius ?? SPACE_VIEW.radius;
+  orbit.elevation = orbit.spaceElevation ?? SPACE_VIEW.elevation;
+  orbit.azimuth = orbit.spaceAzimuth ?? SPACE_VIEW.azimuth;
+}
+document.getElementById('closeDetail').addEventListener('click', closeDetail);
+addEventListener('keydown', (event) => { if (event.key === 'Escape' && detailOpen) closeDetail(); });
+
+// ---- ambient audio: all synthesised, nothing sampled ----
+const audio = {
+  ctx: null,
+  master: null,
+  on: false,
+  bed: null,
+  noise: null,
+};
+
+// Ambient, built the slow way: one tone per ring, no delay, no reverb.
+const RING_FREQS = [65.41, 98.0, 130.81, 196.0, 261.63];   // C2 G2 C3 G3 C4
+const RING_LEVELS = [0.16, 0.14, 0.12, 0.1, 0.08];
+
+function impulseResponse(context, seconds = 3.6) {
+  const length = Math.floor(context.sampleRate * seconds);
+  const buffer = context.createBuffer(2, length, context.sampleRate);
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = buffer.getChannelData(channel);
+    let last = 0;
+    for (let i = 0; i < length; i += 1) {
+      const t = i / length;
+      const white = Math.random() * 2 - 1;
+      last = last * 0.9 + white * 0.1;
+      data[i] = last * Math.pow(1 - t, 2.4);
+    }
+  }
+  return buffer;
+}
+
+function startAudio() {
+  if (audio.ctx) return;
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return;
+  const ctx = new Ctx();
+  audio.ctx = ctx;
+
+  const master = ctx.createGain();
+  master.gain.value = 0;
+
+  // take weight off the bottom and put air on top: tranquil, not heavy
+  const lowShelf = ctx.createBiquadFilter();
+  lowShelf.type = 'lowshelf';
+  lowShelf.frequency.value = 140;
+  lowShelf.gain.value = -4;
+  const highShelf = ctx.createBiquadFilter();
+  highShelf.type = 'highshelf';
+  highShelf.frequency.value = 2800;
+  highShelf.gain.value = 3;
+  master.connect(lowShelf).connect(highShelf).connect(ctx.destination);
+  audio.master = master;
+
+  // one room, generated: the arp needs a tail, the bed needs almost none
+  const convolver = ctx.createConvolver();
+  convolver.buffer = impulseResponse(ctx, 3.6);
+  const wet = ctx.createGain();
+  wet.gain.value = 0.5;
+  convolver.connect(wet).connect(master);
+  audio.reverb = convolver;
+  audio.reverbIn = ctx.createGain();
+  audio.reverbIn.gain.value = 0.8;
+  audio.reverbIn.connect(convolver);
+
+  // the bed: five rings, each a detuned pair, each with its own pan
+  audio.rings = [];
+  RING_FREQS.forEach((freq, index) => {
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    if (pan) gain.connect(pan).connect(master);
+    else gain.connect(master);
+
+    for (const detune of [-1.5, 2]) {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.detune.value = detune;
+      osc.connect(gain);
+      osc.start();
+    }
+    audio.rings.push({ freq, gain, pan, level: RING_LEVELS[index], index });
+  });
+
+  // air: a slow arpeggio in C, sent mostly to the room
+  audio.arpNotes = [1046.5, 1318.5, 1568.0, 2093.0];   // C6 E6 G6 C7
+  scheduleArp();
+
+  // the outermost ring carries the dust: sparse shards, no tail effects
+  audio.grains = true;
+  scheduleDust();
+}
+
+// rings arrive one at a time, so the room assembles itself
+function openRings(seconds = 18) {
+  if (!audio.ctx) return;
+  const ctx = audio.ctx;
+  const now = ctx.currentTime;
+  audio.rings.forEach((ring, index) => {
+    ring.gain.gain.cancelScheduledValues(now);
+    ring.gain.gain.setValueAtTime(0, now);
+    ring.gain.gain.linearRampToValueAtTime(ring.level, now + seconds + index * 12);
+  });
+}
+
+function duckBed(factor, time = 0.8) {
+  if (!audio.ctx) return;
+  const now = audio.ctx.currentTime;
+  audio.rings.forEach((ring) => {
+    ring.gain.gain.cancelScheduledValues(now);
+    ring.gain.gain.setTargetAtTime(ring.level * factor, now, time);
+  });
+}
+
+// arp: one note every 1.1 to 1.9 seconds, sometimes a rest.
+// Mostly wet, so it reads as light in a room rather than a melody.
+function scheduleArp() {
+  if (!audio.ctx || !audio.on) return;
+  const ctx = audio.ctx;
+  const rest = Math.random() < 0.22;
+  const delay = 1100 + Math.random() * 800;
+  setTimeout(() => {
+    if (!audio.on) return;
+    if (!rest && audio.arpNotes) {
+      const now = ctx.currentTime;
+      const note = audio.arpNotes[Math.floor(Math.random() * audio.arpNotes.length)];
+      const osc = ctx.createOscillator();
+      osc.type = Math.random() < 0.15 ? 'triangle' : 'sine';
+      osc.frequency.value = note * (1 + (Math.random() - 0.5) * 0.002);
+      const gain = ctx.createGain();
+      const peak = 0.02 + Math.random() * 0.014;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(peak, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6 + Math.random() * 1.2);
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      osc.connect(gain);
+      if (audio.reverbIn) gain.connect(audio.reverbIn);
+      if (pan) {
+        pan.pan.value = Math.random() * 1.2 - 0.6;
+        gain.connect(pan).connect(audio.master);
+      } else {
+        gain.connect(audio.master);
+      }
+      osc.start(now);
+      osc.stop(now + 3.2);
+    }
+    scheduleArp();
+  }, delay);
+}
+
+// dust: short sine shards tuned to the outer ring, no reverb, no delay
+function scheduleDust() {
+  if (!audio.ctx || !audio.on) return;
+  const ctx = audio.ctx;
+  setTimeout(() => {
+    if (!audio.on) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    const octave = [2, 4, 8][Math.floor(Math.random() * 3)];
+    osc.frequency.value = 110 * octave * (1 + (Math.random() - 0.5) * 0.003);
+    const gain = ctx.createGain();
+    const peak = 0.004 + Math.random() * 0.008;
+    const attack = 0.02 + Math.random() * 0.06;
+    const decay = 0.6 + Math.random() * 1.4;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(peak, now + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
+    const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    osc.connect(gain);
+    if (pan) { pan.pan.value = Math.random() * 1.4 - 0.7; gain.connect(pan).connect(audio.master); }
+    else gain.connect(audio.master);
+    osc.start(now);
+    osc.stop(now + attack + decay + 0.05);
+    scheduleDust();
+  }, 2000 + Math.random() * 6000);
+}
+
+// pan follows the orbit, so turning the camera moves the room
+function updateAudio() {
+  if (!audio.ctx || !audio.on) return;
+  const now = audio.ctx.currentTime;
+  audio.rings.forEach((ring) => {
+    if (!ring.pan) return;
+    const value = Math.sin(orbit.azimuth * 0.9 + ring.index * 0.8) * 0.65;
+    ring.pan.pan.setTargetAtTime(value, now, 0.5);
+  });
+}
+
+// The form space is a rank-2 lattice of our own: ring = fifth step,
+// angle = fourth step. Wicki-Hayden itself uses a major second and a perfect
+// fourth (Wikipedia, Isomorphic keyboard); we borrow the idea of a fixed shape,
+// not its generator pair.
+const LATTICE_FIFTH = 7;    // semitones along the ring axis
+const LATTICE_FOURTH = 5;   // semitones along the angle axis
+const ANGLE_BUCKETS = 12;
+
+// arpeggio shapes written in lattice steps, not in cents
+const ARP_SHAPES = {
+  valve: [[0, 0], [0, 1], [1, 1], [1, 2]],
+  burst: [[0, 0], [1, 0], [1, 1], [2, 1], [2, 2]],
+  spiral: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]],
+  lobed: [[0, 0], [1, 0], [2, 0], [2, 1], [3, 1]],
+  stack: [[0, 0], [0, 1], [1, 1], [0, 2], [1, 2]],
+};
+
+const CONFIG_ACCENTS = { valve: 0, burst: 7, spiral: -11, lobed: 5, stack: -5 };
+
+function latticeOf(spec) {
+  const band = Math.max(0, Math.min(RING_FREQS.length - 1, Math.round(spec.complexity * (RING_FREQS.length - 1))));
+  const angle = Math.atan2(spec.position?.z ?? 0, spec.position?.x ?? 1);
+  const bucket = Math.round(((angle + Math.PI) / TAU) * ANGLE_BUCKETS) % ANGLE_BUCKETS;
+  return { band, bucket };
+}
+
+function semitonesOf([ringSteps, angleSteps]) {
+  return ringSteps * LATTICE_FIFTH + angleSteps * LATTICE_FOURTH;
+}
+
+function playFormArp(spec) {
+  if (!audio.ctx || !audio.on) return;
+  const ctx = audio.ctx;
+  const { band, bucket } = latticeOf(spec);
+  const root = RING_FREQS[0];                              // C2; the lattice moves the pitch, not the root
+  const shape = ARP_SHAPES[spec.config] || ARP_SHAPES.valve;
+  const accent = Math.max(-50, Math.min(50, (CONFIG_ACCENTS[spec.config] || 0) + (spec.folds % 5) * 2));
+  // fold the home pitch into one octave, so position picks the pitch class
+  const homeSemitones = (bucket * LATTICE_FOURTH + band * LATTICE_FIFTH) % 24;
+
+  const now = ctx.currentTime;
+  const spread = 108 + (1 - spec.complexity) * 46;          // simple forms speak slower
+  const count = shape.length;
+
+  // transpose the whole phrase, never single notes, so the shape keeps its intervals
+  const rawSemitones = shape.map((step) => homeSemitones + semitonesOf(step));
+  const lowest = Math.min(...rawSemitones);
+  const highest = Math.max(...rawSemitones);
+  const phraseShift = lowest < 0 ? -lowest : (highest > 45 ? 45 - highest : 0);
+  const direction = spec.complexity > 0.55 ? 1 : -1;        // complex forms rise, simple ones fall
+
+  for (let i = 0; i < count; i += 1) {
+    const step = direction > 0 ? i : count - 1 - i;
+    const semitones = homeSemitones + semitonesOf(shape[step]) + phraseShift;
+    const cents = semitones * 100 + accent;
+    const when = now + (i * spread) / 1000;
+    const osc = ctx.createOscillator();
+    osc.type = i % 3 === 2 ? 'triangle' : 'sine';
+    osc.frequency.value = root * Math.pow(2, cents / 1200);
+    const gain = ctx.createGain();
+    const peak = 0.05 * (1 - i / (count + 2));
+    const decay = 0.34 + Math.random() * 0.2;
+    gain.gain.setValueAtTime(0, when);
+    gain.gain.linearRampToValueAtTime(peak, when + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + decay);
+    const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    osc.connect(gain);
+    if (audio.reverbIn) gain.connect(audio.reverbIn);
+    if (pan) {
+      pan.pan.value = direction > 0 ? -0.35 + (i / count) * 0.7 : 0.35 - (i / count) * 0.7;
+      gain.connect(pan).connect(audio.master);
+    } else {
+      gain.connect(audio.master);
+    }
+    osc.start(when);
+    osc.stop(when + decay + 0.1);
+  }
+
+  // a quiet pad under the run, so it lands rather than stings
+  const pad = ctx.createGain();
+  pad.gain.value = 0;
+  const padOsc = ctx.createOscillator();
+  padOsc.type = 'sine';
+  padOsc.frequency.value = root;
+  padOsc.detune.value = accent;
+  padOsc.connect(pad).connect(audio.master);
+  pad.gain.linearRampToValueAtTime(0.05, now + 0.3);
+  pad.gain.setTargetAtTime(0, now + 2.2, 1.4);
+  padOsc.start(now);
+  padOsc.stop(now + 6);
+
+  window.__study.lastArp = {
+    config: spec.config,
+    lattice: { band, bucket },
+    semitones: rawSemitones.map((value) => value + phraseShift),
+    phraseShift,
+    accent,
+    spread,
+  };
+}
+
+function toggleSound() {
+  if (!audio.ctx) startAudio();
+  if (!audio.ctx) return;
+  audio.on = !audio.on;
+  audio.ctx.resume().catch(() => {});
+  const now = audio.ctx.currentTime;
+  audio.master.gain.cancelScheduledValues(now);
+  audio.master.gain.setTargetAtTime(audio.on ? 0.5 : 0, now, 0.4);
+  document.getElementById('soundToggle').setAttribute('aria-pressed', String(audio.on));
+  document.getElementById('soundToggle').textContent = audio.on ? 'Sound on' : 'Sound';
+  if (audio.on) openRings(18);
+}
+
+document.getElementById('soundToggle').addEventListener('click', toggleSound);
+
+// ---- camera ----
+const SPACE_VIEW = { azimuth: 0.5, elevation: 0.95, radius: 34 };
+const orbit = { ...SPACE_VIEW };
+window.__study.orbit = orbit;
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+let downX = 0;
+let downY = 0;
+let moved = false;
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function pick(clientX, clientY) {
+  const rect = canvasEl.getBoundingClientRect();
+  pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(cards, false);
+  if (!hits.length) return;
+  const spec = hits[0].object.userData?.spec;
+  if (spec) openDetail(spec);
+}
+
+canvasEl.addEventListener('pointerdown', (e) => {
+  dragging = true;
+  moved = false;
+  downX = e.clientX;
+  downY = e.clientY;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  canvasEl.setPointerCapture(e.pointerId);
+});
+canvasEl.addEventListener('pointerup', (e) => {
+  dragging = false;
+  canvasEl.releasePointerCapture(e.pointerId);
+  if (!moved && !detailOpen) pick(e.clientX, e.clientY);
+});
+canvasEl.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 6) moved = true;
+  orbit.azimuth -= (e.clientX - lastX) * 0.004;
+  orbit.elevation = Math.max(-1.1, Math.min(1.1, orbit.elevation + (e.clientY - lastY) * 0.003));
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+canvasEl.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const next = Math.max(8, Math.min(60, orbit.radius + e.deltaY * 0.02));
+  if (detailOpen && Math.abs(next - orbit.radius) > 0.001) orbit.detailZoomed = true;
+  orbit.radius = next;
+}, { passive: false });
+
+function setMode(mode) {
+  window.__study.mode = mode;
+  if (mode !== 'edges') window.__study.cardMode = mode;
+  if (mode !== 'edges') duckBed(0.75, 0.3);
+  if (mode === 'edges') {
+    edgeMesh.visible = !edgeMesh.visible;
+    return;
+  }
+  edgeMesh.visible = false;
+  buildCards(mode);
+}
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => {
+    const mode = button.dataset.mode;
+    setMode(mode);
+    for (const other of document.querySelectorAll('[data-mode]')) other.setAttribute('aria-pressed', String(other === button));
+  });
+}
+const params = new URLSearchParams(location.search);
+const requested = params.get('mode');
+if (requested === 'ascii') setMode('ascii');
+if (params.get('sound') === '1') toggleSound();
+if (params.has('open')) {
+  const openIndex = Number(params.get('open'));
+  if (Number.isFinite(openIndex) && specimens[openIndex]) openDetail(specimens[openIndex]);
+}
+
+let clock = 0;
+renderer.setAnimationLoop(() => {
+  clock += 0.00035;
+  const azimuth = orbit.azimuth + clock;
+  camera.position.set(
+    Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+    Math.sin(orbit.elevation) * orbit.radius,
+    Math.sin(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+  );
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  updateAudio();
+  window.__study.frames += 1;
+});
+
+window.__study.ready = true;
+addEventListener('resize', () => {
+  camera.aspect = viewAspect();
+  camera.updateProjectionMatrix();
+  if (detailOpen) {
+    // a narrow screen still needs to fit, so a fit that grows wins over a deliberate zoom
+    const fit = fitRadius();
+    if (!orbit.detailZoomed || fit > orbit.radius) {
+      orbit.radius = fit;
+      orbit.detailFit = fit;
+      orbit.detailZoomed = false;
+    }
+  }
+  renderer.setSize(innerWidth, innerHeight, false);
+});
+</script>
+</body>
+</html>

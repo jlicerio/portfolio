@@ -1,7 +1,7 @@
 # Labs
 
-Live studies that run in the browser on WebGPU.
-Each study is one page beside a shared engine.
+Live studies that run in the browser. Three use WebGPU; Viscous Orb uses WebGL2 for its fluid
+feedback solver. System Sheet is a print-first page with its own SVG and Canvas 2D renderer.
 
 ## Layout
 
@@ -16,6 +16,16 @@ Each study is one page beside a shared engine.
 | warp-and-weft.html | Study 01, linked from Work. |
 | isolines.html | Study 02. |
 | strata.html | Study 03. |
+| viscous-orb.html | Study 04. WebGL2 fluid and dither veil. |
+| system-sheet.html | Study 05. SVG and Canvas 2D system sheet. |
+| embed/archive-atlas.html | Atlas of every image on the site, placed by measured colour and texture. Canvas 2D. |
+| embed/field-of-forms.html | 132 generative forms in 5 nature families, laid out by hue and structure. Canvas 2D. |
+| embed/forms-3d.html | The same rule set in three.js: 132 line modules in 3D, laid out by hue, tone, and density. |
+| embed/component-board.html | Bento board of 9 components: biomorphic dither, resonance, connectivity, surface division, ASCII, colour sets. |
+| embed/series-runner.html | Bounded operator set plus a seed: six draws per seed, keep or reject, seeds listed for export. |
+| embed/volumetric-diatom.html | The valve in 3D: dither particles, ASCII glyph particles, and iso-contour lines over a dome depth field. |
+| embed/volumetric-archive.html | The 88-image atlas in 3D: cards, dithered cards, and ASCII cards placed by colour, light, and texture. |
+| embed/form-graph.html | Form space: one centre and five rings of real dithered valves, 9 palettes, 5 configurations. Click a form for its volumetric view. |
 
 ## Add a study
 

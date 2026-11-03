@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generative Field</title>
+<style>
+  :root{--bg:#05060a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+  #view{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:22px}
+  .bottom{bottom:22px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  #readout{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;color:var(--muted);white-space:nowrap;pointer-events:none}
+  #readout b{color:var(--ink);font-weight:400}
+  #axislabel a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  #err{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:30px;font:12px 'DM Mono',monospace;color:var(--muted)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:14px}.bottom{bottom:12px}#readout{display:none}}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.webgpu.js",
+    "three/webgpu": "./vendor/three.webgpu.js",
+    "three/tsl": "./vendor/three.tsl.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div class="bar top">
+  <div class="label"><b>Generative Field</b><br><span id="count">building</span></div>
+  <div class="label" style="text-align:right">rule set: 5 modules<br>x hue · y tone · z density</div>
+</div>
+<div class="bar bottom">
+  <div class="label">drag to orbit · scroll to zoom</div>
+  <div class="label" id="axislabel">132 specimens · three.js</div>
+</div>
+<div id="readout"></div>
+<div id="err"></div>
+<script type="module">
+import * as THREE from 'three/webgpu';
+
+const canvas = document.getElementById('view');
+const readout = document.getElementById('readout');
+const countEl = document.getElementById('count');
+const errEl = document.getElementById('err');
+
+window.__study = { ready: false, frames: 0, error: null, forms: 0, lines: 0 };
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- rule set: one module per family ---------- */
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => {
+    s ^= s << 13; s >>>= 0;
+    s ^= s >> 17;
+    s ^= s << 5; s >>>= 0;
+    return s / 4294967296;
+  };
+}
+
+const SEED = Number(new URLSearchParams(location.search).get('seed')) || 114;
+const FAMILIES = ['diatom', 'spore', 'leaf', 'coral', 'cell'];
+const HUES = [188, 42, 96, 268, 205];
+const N = 132;
+
+const forms = [];
+for (let i = 0; i < N; i += 1) {
+  const random = rng(i * 2654435761 + SEED * 7919);
+  const family = i % FAMILIES.length;
+  forms.push({
+    id: i,
+    family,
+    hue: HUES[family] + (random() - 0.5) * 24,
+    tone: 0.45 + random() * 0.5,
+    density: random(),
+    lobes: 3 + Math.floor(random() * 9),
+    arms: 4 + Math.floor(random() * 9),
+    size: 0.45 + random() * 0.4,
+    phase: random() * Math.PI * 2,
+    depth: 0.06 + random() * 0.16,
+  });
+}
+
+/* Every module writes line segments into a shared buffer.
+   A segment is two points; colour is baked per point. */
+const positions = [];
+const colors = [];
+const scratch = new THREE.Color();
+
+let origin = [0, 0, 0];
+
+function push(x1, y1, z1, x2, y2, z2, hue, brightness) {
+  positions.push(
+    x1 + origin[0], y1 + origin[1], z1 + origin[2],
+    x2 + origin[0], y2 + origin[1], z2 + origin[2],
+  );
+  scratch.setHSL(hue / 360, 0.34, brightness);
+  colors.push(scratch.r, scratch.g, scratch.b, scratch.r, scratch.g, scratch.b);
+}
+
+const arc = (fn, steps, hue, brightness) => {
+  let prev = null;
+  for (let i = 0; i <= steps; i += 1) {
+    const point = fn(i / steps);
+    if (prev) push(prev[0], prev[1], prev[2], point[0], point[1], point[2], hue, brightness);
+    prev = point;
+  }
+};
+
+function diatom(f, brightness) {
+  arc((u) => {
+    const a = u * Math.PI * 2;
+    return [Math.cos(a) * f.size, Math.sin(a) * f.size, 0];
+  }, 48, f.hue, brightness);
+  for (let i = 0; i < f.lobes * 2; i += 1) {
+    const a = (i / (f.lobes * 2)) * Math.PI * 2;
+    arc((u) => {
+      const r = f.size * (0.24 + u * 0.72);
+      return [Math.cos(a) * r, Math.sin(a) * r, Math.sin(u * Math.PI) * f.size * 0.5];
+    }, 8, f.hue, brightness * 0.9);
+  }
+  arc((u) => {
+    const a = u * Math.PI * 2;
+    return [Math.cos(a) * f.size * 0.24, Math.sin(a) * f.size * 0.24, 0];
+  }, 24, f.hue, brightness * 0.8);
+}
+
+function spore(f, brightness) {
+  for (let ring = 0; ring < 4; ring += 1) {
+    const radius = f.size * (0.28 + ring * 0.24);
+    arc((u) => {
+      const a = u * Math.PI * 2;
+      const z = Math.sin(a * 4 + f.phase) * f.depth * (ring + 1) * 0.8;
+      return [Math.cos(a) * radius, Math.sin(a) * radius, z];
+    }, 40, f.hue, brightness * (1 - ring * 0.12));
+  }
+}
+
+function leaf(f, brightness) {
+  for (const side of [-1, 1]) {
+    arc((u) => {
+      const a = u * Math.PI * 2;
+      const lobe = Math.sin(a * f.lobes + f.phase);
+      const r = f.size * (0.6 + lobe * 0.18);
+      return [Math.cos(a) * r, Math.sin(a) * r * 1.3, side * f.size * 0.22];
+    }, 46, f.hue, brightness * (side > 0 ? 1 : 0.7));
+  }
+  arc((u) => [0, -f.size * 1.15 + u * f.size * 2.3, 0], 6, f.hue, brightness * 0.6);
+}
+
+function coral(f, brightness) {
+  const branch = (x, y, z, angle, tilt, length, depth) => {
+    if (depth === 0 || length < 0.05) return;
+    const nx = x + Math.cos(angle) * Math.cos(tilt) * length;
+    const ny = y + Math.sin(tilt) * length;
+    const nz = z + Math.sin(angle) * Math.cos(tilt) * length;
+    push(x, y, z, nx, ny, nz, f.hue, brightness * (0.5 + depth * 0.13));
+    branch(nx, ny, nz, angle - 0.5, tilt + 0.42, length * 0.72, depth - 1);
+    branch(nx, ny, nz, angle + 0.5, tilt - 0.3, length * 0.72, depth - 1);
+  };
+  branch(0, -f.size * 0.9, 0, f.phase, 1.1, f.size * 0.6, 4);
+}
+
+function cell(f, brightness) {
+  for (let lat = 1; lat < 7; lat += 1) {
+    const phi = (lat / 7) * Math.PI;
+    const wobble = 1 + Math.sin(phi * f.lobes + f.phase) * 0.12;
+    arc((u) => {
+      const theta = u * Math.PI * 2;
+      return [
+        Math.sin(phi) * Math.cos(theta) * f.size * wobble,
+        Math.cos(phi) * f.size * wobble,
+        Math.sin(phi) * Math.sin(theta) * f.size * wobble,
+      ];
+    }, 36, f.hue, brightness);
+  }
+  for (let lon = 0; lon < 6; lon += 1) {
+    const theta = (lon / 6) * Math.PI * 2;
+    arc((u) => {
+      const phi = u * Math.PI;
+      return [
+        Math.sin(phi) * Math.cos(theta) * f.size,
+        Math.cos(phi) * f.size,
+        Math.sin(phi) * Math.sin(theta) * f.size,
+      ];
+    }, 24, f.hue, brightness * 0.8);
+  }
+}
+
+const MODULE = { diatom, spore, leaf, coral, cell };
+
+/* ---------- layout ---------- */
+
+// Rank order on hue keeps the field even; tone sets height; density sets depth.
+const ordered = [...forms].sort((a, b) => a.hue - b.hue);
+const SPREAD_X = 19;
+const SPREAD_Y = 9;
+const SPREAD_Z = 5;
+
+ordered.forEach((form, rank) => {
+  const u = (rank + 0.5) / ordered.length;
+  const wobble = ((form.id * 37) % 100) / 100 - 0.5;
+  form.px = (u - 0.5) * SPREAD_X + wobble * 0.6;
+  form.py = (form.tone - 0.7) * SPREAD_Y + wobble * 0.5;
+  form.pz = (form.density - 0.5) * SPREAD_Z;
+  const brightness = 0.34 + form.tone * 0.34;
+  origin = [form.px, form.py, form.pz];
+  MODULE[FAMILIES[form.family]](form, brightness);
+});
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+const material = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.92 });
+const lines = new THREE.LineSegments(geometry, material);
+lines.position.set(0, 0, 0);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+scene.fog = new THREE.Fog(0x05060a, 18, 40);
+scene.add(lines);
+
+const camera = new THREE.PerspectiveCamera(46, innerWidth / innerHeight, 0.1, 100);
+
+let renderer;
+try {
+  renderer = new THREE.WebGPURenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight, false);
+  await renderer.init();
+} catch (error) {
+  window.__study.error = String(error);
+  errEl.style.display = 'grid';
+  errEl.textContent = 'This browser has no WebGPU. Use Chrome 113 or newer.';
+  throw error;
+}
+
+/* ---------- camera: slow orbit, pointer drag, wheel zoom ---------- */
+
+const orbit = { azimuth: 0.5, elevation: 0.16, radius: 15, target: new THREE.Vector3(0, -0.7, 0) };
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+
+canvas.addEventListener('pointerdown', (event) => { dragging = true; lastX = event.clientX; lastY = event.clientY; canvas.setPointerCapture(event.pointerId); });
+canvas.addEventListener('pointerup', (event) => { dragging = false; canvas.releasePointerCapture(event.pointerId); });
+canvas.addEventListener('pointermove', (event) => {
+  if (!dragging) { hover(event); return; }
+  orbit.azimuth -= (event.clientX - lastX) * 0.004;
+  orbit.elevation = Math.max(-0.9, Math.min(0.9, orbit.elevation + (event.clientY - lastY) * 0.003));
+  lastX = event.clientX;
+  lastY = event.clientY;
+});
+canvas.addEventListener('wheel', (event) => {
+  event.preventDefault();
+  orbit.radius = Math.max(6, Math.min(38, orbit.radius + event.deltaY * 0.02));
+}, { passive: false });
+
+/* ---------- hover readout ---------- */
+
+const projected = new THREE.Vector3();
+function hover(event) {
+  let best = -1;
+  let bestDistance = 26 * 26;
+  for (const form of forms) {
+    projected.set(form.px, form.py, form.pz).project(camera);
+    const x = (projected.x * 0.5 + 0.5) * innerWidth;
+    const y = (-projected.y * 0.5 + 0.5) * innerHeight;
+    const distance = (x - event.clientX) ** 2 + (y - event.clientY) ** 2;
+    if (distance < bestDistance) { bestDistance = distance; best = form.id; }
+  }
+  if (best < 0) { readout.innerHTML = ''; return; }
+  const form = forms[best];
+  readout.innerHTML = `<b>${FAMILIES[form.family]}</b> · lobes ${form.lobes} · tone ${form.tone.toFixed(2)} · density ${form.density.toFixed(2)} · hue ${Math.round(form.hue)}`;
+}
+
+/* ---------- loop ---------- */
+
+let clock = 0;
+renderer.setAnimationLoop(() => {
+  clock += reduced ? 0 : 0.0016;
+  const azimuth = orbit.azimuth + (reduced ? 0 : clock);
+  camera.position.set(
+    Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+    Math.sin(orbit.elevation) * orbit.radius - 0.4,
+    Math.sin(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+  );
+  camera.lookAt(orbit.target);
+  renderer.render(scene, camera);
+  window.__study.frames += 1;
+});
+
+countEl.textContent = `${N} forms · 5 modules`;
+document.getElementById('axislabel').innerHTML =
+  `seed <b>${SEED}</b> · <a href="?seed=${SEED + 1}" style="color:inherit">rerun</a> · ` +
+  `${Math.round(positions.length / 6).toLocaleString()} segments`;
+window.__study.forms = N;
+window.__study.lines = positions.length / 6;
+window.__study.ready = true;
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight, false);
+});
+</script>
+</body>
+</html>

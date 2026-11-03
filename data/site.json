@@ -28,7 +28,7 @@
       "title": "Warp and Weft",
       "year": "2026",
       "summary": "A real-time WebGPU meadow cut into a checker, with one white chair as the only object.",
-      "description": "A field of grass blades is mown into a checker and one plastic chair stands on a dark square. Three hundred thousand blades bend in the wind in real time, and the pointer parts them. Built in WebGPU with a film pass for halation, grain, and vignette.",
+      "description": "A field of grass blades is mown into a checker and one plastic chair stands on a dark square. 265,744 blades bend in the wind in real time, and the pointer parts them. Built in WebGPU with a film pass for halation, grain, and vignette.",
       "tools": "WebGPU, WGSL, GLB",
       "href": "projects/warp-and-weft.html",
       "image": "assets/images/warp-and-weft.svg",
@@ -38,7 +38,290 @@
           "label": "Open full screen",
           "href": "https://jlicerio.github.io/portfolio/projects/warp-and-weft.html"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "A WebGPU field of grass had to read as cloth. The scene needed one object, one checker cut, and no visible blade cards. The page had to run in a browser tab at full desktop width, hold a steady frame, and keep the chair readable at phone width. The field is the subject, and the chair is the scale reference.",
+        "process": [
+          "A clump table and blade generators build the meadow. Each clump shares a colour field, so the checker reads at distance without a texture.",
+          "A vertex shader bends the blades in the wind. The wind runs on a slow noise field, and a pointer ray parts the grass around the cursor.",
+          "A mask cuts the field into a checker. The dark squares use a shorter blade and a cooler colour, so the pattern survives the camera move.",
+          "One GLB chair sits on a dark square. The chair is the only hard edge in the frame, and it gives the field a human scale.",
+          "A film pass adds halation, grain, and vignette. The grade stays low-contrast so the white chair holds against the grass.",
+          "The camera keeps a low eye height. The horizon stays out of frame, so the field reads as cloth rather than a landscape.",
+          "The drawing buffer caps at the viewport size. The blade count is fixed when the scene starts, so the meadow holds 60 fps on a laptop and on a phone.",
+          "A small status line reports frame rate and blade count. The test run read 265,744 blades at 60 fps.",
+          "The GLB chair loads once and is drawn once. The meadow uses no textures; colour comes from the clump fields."
+        ],
+        "result": [
+          "Runs at 60.2 fps at 1440 x 900 in headless Chrome 156, on the live canvas.",
+          "The phone run draws the same scene on a 359 x 478 canvas with no console error.",
+          "265,744 blades in the live scene."
+        ],
+        "credits": [
+          {
+            "role": "Design and code",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Renderer",
+            "name": "WebGPU / WGSL"
+          },
+          {
+            "role": "Chair model",
+            "name": "3D scan"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/warp-and-weft/01.jpg",
+            "alt": "Warp and Weft checker field at desktop width",
+            "caption": "Checker field at 1440 x 900."
+          },
+          {
+            "src": "assets/images/projects/warp-and-weft/02.jpg",
+            "alt": "Warp and Weft at phone width",
+            "caption": "Phone crop at 390 x 844. The chair stays readable."
+          },
+          {
+            "src": "assets/images/projects/warp-and-weft/03.jpg",
+            "alt": "Warp and Weft at portrait width",
+            "caption": "Portrait frame at 1350 x 1800."
+          }
+        ]
+      },
+      "discipline": "WEBGPU / WGSL",
+      "role": "Artwork and code",
+      "section": "real-time"
+    },
+    {
+      "id": "viscous-orb",
+      "title": "Viscous Orb",
+      "year": "2026",
+      "summary": "A fluid orb with a living dye trail, spectral rim, and a moving dither veil.",
+      "description": "A single glowing sphere holds a real-time fluid surface. Pointer motion and an invisible mover push velocity and dye through the field, and the surface settles after each pass. The veil turns the moving liquid into coarse Bayer pixels. The rim stays analytic, and no tiled texture is sampled in the reflection.",
+      "tools": "WebGL2, GLSL, Three.js",
+      "href": "projects/viscous-orb.html",
+      "image": "assets/images/viscous-orb.svg",
+      "archived": false,
+      "links": [
+        {
+          "label": "Open study",
+          "href": "https://jlicerio.github.io/portfolio/labs/embed/viscous-orb.html"
+        }
+      ],
+      "caseStudy": {
+        "brief": "A single sphere had to hold a real-time fluid interior and keep a clean silhouette. The earlier build used a tiled caustic texture, and the grid repeated in the reflection. The target was a liquid surface that reacts to a pointer, settles on its own, and holds 60 fps at portrait size. The page also had to run inside a portfolio iframe with a capped drawing buffer.",
+        "process": [
+          "The study renders one sphere and one full-screen fluid pass. A pointer ray hits the sphere, and the hit point writes velocity and dye into a 256 x 256 field. An invisible mover crosses the orb on a loop, so the surface moves without input.",
+          "A pressure solve and a vorticity pass move the dye through the field. The velocity decays after each pass. The dye carries the colour, and the field returns to rest in about one second.",
+          "The first build sampled a tiled caustic texture. The tiles showed as a grid in the reflection. I removed the texture and drove the reflection from the fluid field. The grid artifact disappeared.",
+          "A Bayer veil reads the dye and turns the moving liquid into coarse pixels. The veil clears as the field settles. A toggle keeps the veil off for clean stills.",
+          "Bloom runs at quarter resolution with two blur passes. Soft focus mixes the blurred frame at 0.42. An analytic rim keeps the silhouette sharp while the interior stays soft.",
+          "The portfolio embed sets a 1728 px drawing buffer cap. The study scales the fluid field and the bloom pass to that cap, so the frame rate holds at desktop and phone width."
+        ],
+        "result": [
+          "Runs at 59.5 fps at 1440 x 900 and 59.9 fps at 390 x 844 in headless Chrome 156.",
+          "The portfolio embed caps the drawing buffer at 1728 px.",
+          "The still shows the dither veil and the spectral rim. The touch frame shows the dye trail."
+        ],
+        "credits": [
+          {
+            "role": "Design and code",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Fluid solver reference",
+            "name": "sabosugi, CodePen (adapted; licence not stated)"
+          },
+          {
+            "role": "Renderer",
+            "name": "Three.js r170, MIT"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/viscous-orb/01.jpg",
+            "alt": "Viscous Orb at rest with the dither veil active",
+            "caption": "Idle orb at 1350 x 1800. The dye field rests in the lower half."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/02.jpg",
+            "alt": "Viscous Orb after a pointer pass",
+            "caption": "Pointer pass. Velocity and dye move through the surface."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/03.jpg",
+            "alt": "Close view of the Bayer dither veil",
+            "caption": "Veil close-up. The cell size floors at one device pixel."
+          },
+          {
+            "src": "assets/images/projects/viscous-orb/04.jpg",
+            "alt": "Viscous Orb with bloom and soft focus",
+            "caption": "Bloom and soft focus at rest. The rim stays analytic."
+          }
+        ]
+      },
+      "discipline": "WEBGL2 / FLUID",
+      "role": "Artwork and code",
+      "section": "real-time"
+    },
+    {
+      "id": "quarter-turn",
+      "title": "Quarter Turn",
+      "year": "2026",
+      "summary": "One quarter disc, six operators, four outputs. A system sheet that renders a mark, a pattern, a poster, and a motion loop from one JSON file.",
+      "description": "A flexible visual system built from a single quarter disc at radius 0.55. Six operators act on it: turn, mirror, scale, shift, shear, and field. The same values render the operator sheet and all four outputs. The page is SVG and Canvas 2D with no build step, so the whole system is readable in one file.",
+      "tools": "SVG, Canvas 2D, JSON",
+      "href": "projects/quarter-turn.html",
+      "image": "assets/images/quarter-turn.svg",
+      "archived": false,
+      "links": [],
+      "caseStudy": {
+        "brief": "Build one system that produces a mark, a pattern, a poster, and a motion loop. Use the Flexible Visual Systems method. Use no stock images. The system had to stay readable as a set, not as four unrelated pieces, and the renderer had to survive a change of base form without an edit.",
+        "process": [
+          "The base form is a quarter disc at radius 0.55 of the cell. One JSON file holds it, the six operators, the grid, the palette, and the seed.",
+          "Six operators act on the form: turn at 4 × 90°, mirror on the vertical, scale at 6 steps of 0.13 with a 0.11 offset, shift at 6 steps of 0.11, shear at ±20°, and a 4 × 4 field. Each cell shows one operator and its rule.",
+          "The mark is the turn operator alone. Four quarter discs meet and leave a four-pointed hole, so the base form stays visible in the result.",
+          "The pattern repeats the field operator on a 6 × 6 grid. The poster switches to the light palette, runs a 12 × 12 band, and carries the system name.",
+          "The motion frame draws a 5 × 5 field on a canvas and advances the phase each frame. Under reduced motion it holds one still frame.",
+          "The renderer reads the JSON and draws every output. A new base form or palette goes into the file, and the page stays the same."
+        ],
+        "result": [
+          "Six operators and four outputs render from one 1,344-byte system file, in a page of 11,504 bytes.",
+          "The phone layout reflows to 2 × 3 operator cells and 2 × 2 outputs with no clipping.",
+          "The sheet is a proof, not a final identity. It shows the range before it shows the use."
+        ],
+        "credits": [
+          {
+            "role": "Method",
+            "name": "Dr. Martin Lorenz, Flexible Visual Systems (Slanted, 2021)"
+          },
+          {
+            "role": "Form, code, and writing",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Source material",
+            "name": "No Atlas images and no paid course text used"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/quarter-turn/sheet-desktop.svg",
+            "alt": "Quarter Turn system sheet at 1440 by 900",
+            "caption": "Sheet at 1440 × 900: six operator cells, then mark, pattern, poster, motion."
+          },
+          {
+            "src": "assets/images/projects/quarter-turn/sheet-phone.svg",
+            "alt": "Quarter Turn system sheet at 390 by 844",
+            "caption": "Sheet at 390 × 844: 2 × 3 operators and 2 × 2 outputs, no clipping."
+          }
+        ]
+      },
+      "discipline": "SVG / CANVAS",
+      "role": "System and code",
+      "section": "real-time"
+    },
+    {
+      "id": "forget-me-not",
+      "title": "Forget-me-not",
+      "year": "2025",
+      "slug": "forget-me-not",
+      "href": "projects/forget-me-not.html",
+      "image": "assets/images/projects/forget-me-not/hero.jpg",
+      "summary": "Projection mapping and technical setup for the McAllen staging of Victoria Cantu's first solo exhibition at Ponte Creative Studio & Gallery.",
+      "tags": [],
+      "gallery": [
+        "assets/images/projects/forget-me-not/01.jpg",
+        "assets/images/projects/forget-me-not/02.png",
+        "assets/images/projects/forget-me-not/03.png",
+        "assets/images/projects/forget-me-not/04.png",
+        "assets/images/projects/forget-me-not/05.png"
+      ],
+      "videos": [],
+      "description": "Provided technical setup and specialized support for this immersive light and video installation by Victoria. My role was projection mapping and technical integration. I was responsible for fitting the artist's video content onto the complex surfaces of the exhibition space, including the bed, walls, and sink.",
+      "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
+      "links": [],
+      "caseStudy": {
+        "brief": "Forget-me-not is Victoria's first solo exhibition. It puts video on household objects instead of screens, and the set covers identity, archive, memory, aging, and home. It opened at St. Edward's University in February 2025 with five works listed by the artist: Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, and Tender Cuts. It then moved to Ponte Creative Studio & Gallery, the Trucha RGV space at 1305 N Main St in McAllen, where it ran from 15 August to 16 October 2025. My part was the technical setup for the McAllen staging: fit Victoria's video onto the bed, the wall, the sink, and the window blind, and hold each object's image in place through the opening.",
+        "process": [
+          "Victoria's video is the content. Each loop was matched to one surface before anything was mapped.",
+          "Surfaces were mapped in MadMapper. The bed, the sink, and the basin are not flat, so each mask was drawn on site against the real object rather than from a plan.",
+          "Resolume held the layers and the playback order. Each surface ran as its own clip, so one loop could restart without touching the rest of the room.",
+          "The sink scene also lights the floor in front of it. The spill reads as water under the basin and ties the object to the room.",
+          "The blind carries an orange figure at full height. The vertical strips in that image come from the blind, not from the video, which sets the scale.",
+          "Each work is its own clip on its own surface, so the room reads as a set of objects rather than as one image across the space.",
+          "House lights stayed low and the track heads were dimmed during playback, so the projected colour held its own value.",
+          "A playback check ran before opening: every clip, its in point, and its surface."
+        ],
+        "result": [
+          "Two runs: St. Edward's University in February 2025, then Ponte Creative Studio & Gallery in McAllen, 15 August to 16 October 2025.",
+          "Six works in the McAllen show, one more than the first run. The room maps a bed, a wall, a sink, a basin, and a window blind."
+        ],
+        "credits": [
+          {
+            "role": "Artist",
+            "name": "Victoria Cantu, they/them (myonlinebedroom.com, @onlinebedroom)"
+          },
+          {
+            "role": "Technical setup and projection mapping, McAllen staging",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Works",
+            "name": "Forget-me-not, Entre Mundos, Sueños Rosas, 'Til Death Do Us Part, Tender Cuts"
+          },
+          {
+            "role": "First run",
+            "name": "St. Edward's University, February 2025. Photographs by Brian Fitzsimmons"
+          },
+          {
+            "role": "Second run",
+            "name": "Ponte Creative Studio & Gallery (Trucha RGV), 1305 N Main St, McAllen. 15 August to 16 October 2025"
+          },
+          {
+            "role": "Press",
+            "name": "Trucha cover. Photographs Laura Martinez (@acidhaivisuals). Story Abigail Vela. Edited by Santana Peralez and Nina Alegre"
+          },
+          {
+            "role": "Support, first run",
+            "name": "The City of Austin Economic Development Department"
+          },
+          {
+            "role": "Press, McAllen",
+            "name": "MyRGV, 18 August 2025. Francisco E. Jimenez, photographs Joel Martinez. Gallery run by Trucha RGV"
+          },
+          {
+            "role": "McAllen stills",
+            "name": "Photographer unconfirmed. Image rights stay with the artist and the photographer"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/forget-me-not/hero.jpg",
+            "alt": "A bed with a blue flora loop projected onto the sheet",
+            "caption": "Bed with a blue flora loop. The sheet is the surface."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/process.jpg",
+            "alt": "A window blind carrying an orange figure at full height",
+            "caption": "Window blind with an orange figure at full height."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/detail.jpg",
+            "alt": "A sink with projection spilling onto the wall and floor",
+            "caption": "Sink scene: wall, floor, and basin in one map."
+          },
+          {
+            "src": "assets/images/projects/forget-me-not/extra.jpg",
+            "alt": "A basin lit by a circular projection on the wall behind it",
+            "caption": "Basin and wall disc, one map across two surfaces."
+          }
+        ]
+      },
+      "discipline": "PROJECTION MAPPING",
+      "role": "Technical setup",
+      "section": "immersion"
     },
     {
       "id": "growth-instrument",
@@ -59,80 +342,282 @@
           "label": "Source and notes",
           "href": "https://github.com/jlicerio/generative-tools"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "Five natural growth processes had to share one canvas, so a form could be read as a still, a vector, a solid and a colour field without four separate tools. Each form had to come back from a number, and the printed output had to hold a real colour ramp rather than a single ink.",
+        "process": [
+          "One canvas holds five systems: diffusion-limited aggregation, physarum, Gray-Scott reaction-diffusion, differential growth and space colonisation. Each writes into the same density grid, so the shared renderer, ramp and export read one field.",
+          "An integer seed drives mulberry32, and the same seed rebuilds the same form. The permalink carries the system, the seed and every shape parameter, so any form is addressable by URL.",
+          "Ink coverage picks a position on one of eight ramps, four stops each. The band setting dithers the ramp position between tones, not the colour, so a natural process prints as a gradient and not as one flat ink.",
+          "Pause or finish the growth and the volume exports unlock: a voxel mesh as GLB with vertex colours, a 25,000 to 400,000 particle cloud as PLY with per-particle colour, size and contour band, and a Bayer-dithered ASCII volume with one glyph per voxel.",
+          "The tool is one HTML file of 54,427 bytes. There is no build step and no network request after load, so it runs from a static host or a local folder.",
+          "Each system keeps its own parameter set, and the parameter list redraws when the system changes. Live parameter changes grow the form from the current step, and a restart replays it from the seed."
+        ],
+        "result": [
+          "Five systems, eight colour ramps of four stops, and five exports: PNG at 2x, SVG, GLB, PLY and ASCII.",
+          "The whole tool is one 54,427-byte HTML file with no dependency and no build step.",
+          "The desktop frame at 1440 x 900 and the phone frame at 390 x 844 both show the form above the controls, with no clipping."
+        ],
+        "credits": [
+          {
+            "role": "Design and code",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Reference",
+            "name": "Rohan Newman, named in the tool as the study reference (licence not stated)"
+          },
+          {
+            "role": "Renderer",
+            "name": "Canvas 2D, browser native, with custom GLB and PLY writers"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/growth-instrument/desktop-4x3.png",
+            "alt": "Reaction-diffusion with the signal ramp, seed 3574968473, at 1440 x 900",
+            "caption": "Reaction-diffusion at 1440 x 900. The panel holds the shape, time and appearance controls."
+          },
+          {
+            "src": "assets/images/projects/growth-instrument/mobile-4x3.png",
+            "alt": "Differential growth with the violet ramp at 390 x 844",
+            "caption": "Differential growth at 390 x 844. The form sits above the controls."
+          }
+        ]
+      },
+      "discipline": "CANVAS 2D / EXPORT",
+      "role": "Tool and code",
+      "section": "real-time"
     },
     {
-      "id": "motion",
-      "title": "Motion",
-      "year": "2022",
-      "slug": "motion",
-      "href": "projects/motion.html",
-      "image": "assets/images/motion.png",
-      "summary": "Personal experiments in motion graphics, abstract form, and procedural animation.",
+      "id": "surveillance-status",
+      "title": "Surveillance Status",
+      "year": "2025",
+      "summary": "Two public live cameras read by a browser vision model, with a language model writing a line for each tracked object.",
+      "description": "Two public camera feeds, one at the Zócalo in Mexico City and one at Times Square in New York. A browser vision model tracks each person and object, and a small language model writes one line for each. The overlay logs object IDs, position, velocity, and a status panel. The Mexico City cut writes in Spanish; the New York cut writes in English. The overlay is the work: boxes, IDs, velocities, and a line of prose over a live street.",
+      "tools": "MediaPipe, YOLOv8n, Web LLM, live camera",
+      "href": "projects/surveillance-status.html",
+      "image": "assets/images/surveillance-status.jpg",
+      "archived": false,
+      "links": [
+        {
+          "label": "Instagram / Mexico City",
+          "href": "https://www.instagram.com/p/DO32xsEjbGT/"
+        },
+        {
+          "label": "Instagram / New York",
+          "href": "https://www.instagram.com/p/DO3xi58Ddyl/"
+        }
+      ],
+      "caseStudy": {
+        "brief": "Two public squares run through one browser pipeline. The Zócalo in Mexico City and Times Square in New York are already watched by cameras, phones, and algorithms. The piece adds a narrator. A vision model tracks each person and object, and a small language model writes one line for each. The line appears beside the box, in the language of the place. The feed is live, so each pass is a new cut. The overlay is the work: boxes, IDs, velocities, and a line of prose over a live street.",
+        "process": [
+          "A public camera feed runs in the browser. The overlay prints its own log: objects tracked, motion level, and a velocity vector per object.",
+          "The vision pass assigns an ID to each person and object. Boxes and labels sit over the feed. The tracker keeps position and velocity for each ID.",
+          "Each label reports class, speed, and distance. The status panel prints the model, frame rate, object count, and a live list of IDs. The panel is part of the image, not a debug view.",
+          "A small language model writes one line for each tracked object. The prompt asks for one sentence in the language of the place. Mexico City writes in Spanish; New York writes in English.",
+          "The line sits beside the box. Long lines wrap; short lines leave space. The overlay stays legible at phone width.",
+          "The piece runs as one take. There is no narration, no cutaway, and no post-production overlay. The text arrives while the crowd moves.",
+          "The web cut is silent. The original post carries a soundtrack."
+        ],
+        "result": [
+          "Two cities, two languages, one pipeline.",
+          "One logged frame reports 24 tracked objects, with a motion level and a velocity vector per object.",
+          "33.2 s Mexico City; 64.7 s New York.",
+          "The text is generated per object, not scripted per scene.",
+          "Each pass produces a different set of lines."
+        ],
+        "credits": [
+          {
+            "role": "Concept, code, camera pipeline",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Vision",
+            "name": "YOLOv8n (Ultralytics); licence terms apply"
+          },
+          {
+            "role": "Language model",
+            "name": "Small local model"
+          },
+          {
+            "role": "Audio",
+            "name": "Original post soundtrack, removed for the web cut"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/surveillance-status/01.jpg",
+            "alt": "Zócalo feed with boxes on the flag and towers",
+            "caption": "Zócalo, 00:02. Boxes find the flag and the towers."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/02.jpg",
+            "alt": "Zócalo feed with generated Spanish lines",
+            "caption": "Zócalo, 00:08. A line appears beside each tracked object."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/03.jpg",
+            "alt": "Status panel with object IDs",
+            "caption": "Zócalo, 00:14. The panel lists 19 objects at 8 fps."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/04.jpg",
+            "alt": "Spanish lines stacked over the square",
+            "caption": "Zócalo, 00:22. Spanish lines stack over the square."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/05.jpg",
+            "alt": "Last Zócalo pass",
+            "caption": "Zócalo, 00:30. Last pass. The flag keeps its box."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/06.jpg",
+            "alt": "Times Square feed with billboards tracked",
+            "caption": "Times Square, 00:04. Billboards enter the track list."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/07.jpg",
+            "alt": "Times Square feed with generated English lines",
+            "caption": "Times Square, 00:12. Human dreams shape reality."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/08.jpg",
+            "alt": "Crowd in Times Square with tracking boxes",
+            "caption": "Times Square, 00:24. The tracker keeps a list of IDs."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/09.jpg",
+            "alt": "Times Square with quote overlay",
+            "caption": "Times Square, 00:38. Potential awakens the soul's fire."
+          },
+          {
+            "src": "assets/images/projects/surveillance-status/10.jpg",
+            "alt": "Last Times Square pass",
+            "caption": "Times Square, 00:55. Last pass. The panel keeps logging."
+          }
+        ]
+      },
+      "discipline": "LIVE VIDEO",
+      "role": "Artwork and code",
+      "section": "real-time"
+    },
+    {
+      "id": "river-pierce",
+      "title": "River Pierce Foundation AR Showcase",
+      "year": "2025",
+      "slug": "river-pierce",
+      "href": "projects/river-pierce.html",
+      "image": "assets/images/projects/river-pierce/hero.jpg",
+      "summary": "A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription.",
       "tags": [],
       "gallery": [],
       "videos": [
         {
           "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 720
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1536,
+          "height": 916,
+          "poster": "assets/images/clips/Ap2vIYWzw4N.jpg"
         },
         {
           "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 1280
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 900
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 1024
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 360,
-          "height": 640
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 720,
-          "height": 720
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 1798,
+          "height": 930,
+          "poster": "assets/images/clips/PzqK2ZiCk5L.jpg"
         }
       ],
-      "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
-      "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
-      "links": []
-    },
-    {
-      "id": "forget-me-not",
-      "title": "Forget Me Not Exhibition",
-      "year": "2025",
-      "slug": "forget-me-not",
-      "href": "projects/forget-me-not.html",
-      "image": "assets/images/forget-me-not.png",
-      "summary": "Projection mapping and technical integration for an immersive light and video installation.",
-      "tags": [],
-      "gallery": [
-        "assets/images/projects/forget-me-not/01.jpg",
-        "assets/images/projects/forget-me-not/02.png",
-        "assets/images/projects/forget-me-not/03.png",
-        "assets/images/projects/forget-me-not/04.png",
-        "assets/images/projects/forget-me-not/05.png"
+      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Treviño–Uribe Rancho in San Ygnacio, Texas.",
+      "tools": "",
+      "links": [
+        {
+          "label": "The Teaching of the Hands event page",
+          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
+        }
       ],
-      "videos": [],
-      "description": "Provided technical setup and specialized support for this immersive light and video installation by Victoria. My role was projection mapping and technical integration. I was responsible for fitting the artist's video content onto the complex surfaces of the exhibition space, including the bed, walls, and sink.",
-      "tools": "Resolume and MadMapper calibration and programming, on-site technical setup, and light/loop playback management",
-      "links": []
+      "caseStudy": {
+        "brief": "The River Pierce Foundation commissioned an augmented reality project for its 2025 program at the Treviño–Uribe Rancho. The piece debuted on 10 May 2025 as the closing item of The Teaching of the Hands: a free screening of Carolina Caycedo and David de Rozas' documentary, then a panel with Carrizo Comecrudo representatives, then the AR at 3 pm. The content is specific to the place. Each object in the piece carries a panel that names its role in Carrizo Comecrudo practice, and a second reel sets the piece in San Ygnacio with a stone inscription dated 3 December 1871.",
+        "process": [
+          "The brief was the place. San Ygnacio sits on the Rio Grande, and the rancho is a historic building held by the foundation under a Mellon Foundation Humanities in Place grant.",
+          "The content is interpretive rather than decorative. The bison skull is described as a symbol of life, sustenance, and respect, and the panel says the animal was not as central to Carrizo daily survival as it was for Plains cultures.",
+          "The bear carries its own panel: animals are treated as relatives and sources of strength, and bear skins are worn in a Carrizo Comecrudo ceremony called the Bear Dance.",
+          "The poles are named Xie Kua'k Kua̲m. The panel ties them to the four directions and to ceremonial use by the Carrizo.",
+          "A peyote cactus sits with a panel that quotes a peyote ceremony account and names Esto'k Gna culture.",
+          "The second reel sets five purple glyph discs above a bilingual inscription: La paz de Cristo sea con nosotros, 3 December 1871, S. Ygnacio ruega por nosotros.",
+          "The program fixed the schedule: screening at 1 pm, panel at 2 pm, AR debut at 3 pm, food by Malaquite at 3 pm.",
+          "The event was free and open to the public, so a visitor with no appointment had to be able to take part."
+        ],
+        "result": [
+          "Two AR asset reels: 15.0 seconds at 1208 x 720, and 67.7 seconds at 1280 x 662.",
+          "Four objects and one inscription in the reels: bison skull, bear, prayer poles, peyote cactus, and the 1871 San Ygnacio text.",
+          "One commissioned AR piece, debuted 10 May 2025 in the 3 to 4 pm slot.",
+          "Venue: Treviño–Uribe Rancho, 604 Trevino St, San Ygnacio, TX 78067."
+        ],
+        "credits": [
+          {
+            "role": "Commission",
+            "name": "The River Pierce Foundation"
+          },
+          {
+            "role": "AR artist",
+            "name": "Juan Carlos Licerio"
+          },
+          {
+            "role": "Program",
+            "name": "The Teaching of the Hands, 10 May 2025, 1 to 4 pm, free and open to the public"
+          },
+          {
+            "role": "Film",
+            "name": "Carolina Caycedo and David de Rozas"
+          },
+          {
+            "role": "Panel",
+            "name": "Juan Mancias, Christa Mancias, Dr. Christopher Basaldú, Bekah Hinojosa"
+          },
+          {
+            "role": "Support",
+            "name": "Mellon Foundation Humanities in Place Grant; Laredo Film Society"
+          },
+          {
+            "role": "Culinary concept",
+            "name": "Malaquite"
+          },
+          {
+            "role": "Source text",
+            "name": "The interpretation panels inside the reels"
+          },
+          {
+            "role": "Reel filmmaker, marker count, attendance",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/river-pierce/hero.jpg",
+            "alt": "A bison skull between two grey interpretation panels on a white floor",
+            "caption": "Bison skull between its two panels."
+          },
+          {
+            "src": "assets/images/projects/river-pierce/process.jpg",
+            "alt": "Prayer poles, a panel, and a flowering peyote cactus",
+            "caption": "Xie Kua'k Kua̲m prayer poles and a peyote cactus."
+          },
+          {
+            "src": "assets/images/projects/river-pierce/detail.jpg",
+            "alt": "Five purple glyph discs above a bilingual inscription panel",
+            "caption": "Five glyph discs above the 1871 San Ygnacio inscription."
+          },
+          {
+            "src": "assets/images/projects/river-pierce/poster.jpg",
+            "alt": "Event poster for The Teaching of the Hands with the AR slot at 3 pm",
+            "caption": "Event poster, 10 May 2025. The AR slot sits at 3 to 4 pm."
+          }
+        ]
+      },
+      "discipline": "AUGMENTED REALITY",
+      "role": "AR project",
+      "section": "immersion"
     },
     {
       "id": "9ine5ive6eis",
@@ -140,8 +625,8 @@
       "year": "2023",
       "slug": "9ine5ive6eis",
       "href": "projects/9ine5ive6eis.html",
-      "image": "assets/images/9ine5ive6eis.jpg",
-      "summary": "Visual identity, cloud graphic, custom typography, and a motion loop for a limited apparel release.",
+      "image": "assets/images/projects/9ine5ive6eis/hero.jpg",
+      "summary": "Visual identity for a limited apparel release: one cloud plate, a three-line lockup, a tee and a tote layout, and a brand motion loop.",
       "tags": [],
       "gallery": [
         "assets/images/projects/9ine5ive6eis/01.jpg",
@@ -156,7 +641,8 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/DZmtpbNVCa9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 800
+          "height": 800,
+          "poster": "assets/images/clips/DZmtpbNVCa9.jpg"
         },
         {
           "type": "instagram-reel",
@@ -177,7 +663,67 @@
           "label": "9ine5ive6eis on Instagram",
           "href": "https://www.instagram.com/9ine5ive6eis/"
         }
-      ]
+      ],
+      "caseStudy": {
+        "brief": "9ine5ive6eis releases apparel in series, and each drop takes its own identity. This assignment covered one release: a cloud graphic, custom typography, a layout for a tee and a tote, and a motion loop for the brand. The run was limited. Other artists shot the product photography, so the identity had to survive their framing rather than a studio setup of our own.",
+        "process": [
+          "The image is one sky photograph, cropped as a square plate. The plate is the whole graphic, with no second element and no frame.",
+          "The type is a three-line stack: 9INE, 5IVE, 6EIS, set wide and set small so it reads as a caption rather than a headline.",
+          "On the tee the plate sits at chest height and the type stays out. On the tote the plate runs the full width and the type sits inside the cloud at the lower right.",
+          "Both products are white, so the plate had to hold without a border to separate it from the garment.",
+          "A motion loop carried the same mark for the brand and ran beside the drop.",
+          "Product photography by other artists placed the pieces in daylight, on a skateboard and on a rooftop, which tested the plate against direct sun and moving cloth."
+        ],
+        "result": [
+          "Two products in the run: a white tee and a white tote.",
+          "One three-line lockup, used at two scales.",
+          "One motion loop and one Instagram reel for the release.",
+          "Six product stills survive in the project file, from 130 KB to 660 KB each."
+        ],
+        "credits": [
+          {
+            "role": "Identity, graphic, and motion",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Product photography",
+            "name": "Other artists on the release (names unconfirmed)"
+          },
+          {
+            "role": "Client",
+            "name": "9ine5ive6eis"
+          },
+          {
+            "role": "Year",
+            "name": "2023"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/9ine5ive6eis/hero.jpg",
+            "alt": "A person sitting on a skateboard wearing the cloud tee",
+            "caption": "Tee in daylight, shot by another artist on the release."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/process.jpg",
+            "alt": "Flat lay of the white cloud tee",
+            "caption": "Flat lay: the plate at chest height, type left out."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/detail.jpg",
+            "alt": "Detail of the tote with the three-line lockup inside the cloud",
+            "caption": "Tote detail: the lockup inside the cloud."
+          },
+          {
+            "src": "assets/images/projects/9ine5ive6eis/extra.jpg",
+            "alt": "Three-image product collage from the release",
+            "caption": "Product collage placed by the photography team."
+          }
+        ]
+      },
+      "discipline": "IDENTITY / TYPE",
+      "role": "Identity and motion",
+      "section": "commissions"
     },
     {
       "id": "triqueta",
@@ -185,8 +731,8 @@
       "year": "2023",
       "slug": "triqueta",
       "href": "projects/triqueta.html",
-      "image": "assets/images/triqueta.jpg",
-      "summary": "AR overlays and a VR experience built around Michael Flanagan's paintings and video works.",
+      "image": "assets/images/projects/triqueta/hero.jpg",
+      "summary": "AR poster designs, a VR scene built from Michael Flanagan's video works, and an immersive installation at the McAllen Creative Incubator.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -194,12 +740,81 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/7Myv_Tp3Zb9/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 720,
-          "height": 1280
+          "height": 1280,
+          "poster": "assets/images/clips/7Myv_Tp3Zb9.jpg"
         }
       ],
       "description": "Triqueta was a collaborative exhibition project developed for the McAllen Creative Incubator. The project allowed me to develop and experiment with Augmented Reality and Virtual Reality, integrating them with the established artistic practice of filmmaker and artist Michael Flanagan. I focused on the technical development, creating a unique VR experience that incorporated Flanagan's video works, and building AR overlays for his original paintings, which also featured AI-generated elements. This installation explored the intersection of traditional painting, AI, and new media.",
       "tools": "VR (Unreal), AR, and AI-assisted art. Collaborator: Michael Flanagan.",
-      "links": []
+      "links": [],
+      "caseStudy": {
+        "brief": "Triqueta ran at the McAllen Creative Incubator in McAllen, Texas. The showcase carried AR poster designs, a VR experience, audio-visual installation, and generative digital art by regional artist and designer _selfsimilar_. Michael Flanagan's paintings and films were the collaborating body of work: his paintings took the AR overlays and his video became the VR scene. My part was development rather than authorship: build the technical layer that lets painted work be entered by a headset and by a phone, without the two reading as separate shows.",
+        "process": [
+          "The work started from Flanagan's existing paintings and video, not from a new image.",
+          "Each painting carried an AR overlay. The overlays include AI-generated elements, which sit over the painted surface rather than replacing it.",
+          "The VR scene was built in Unreal and holds Flanagan's video works. A visitor in the headset sees the footage as the room, not as a screen on a wall.",
+          "Tracking used printed markers fixed to the wall beside each work. The reel shows a marker next to the poster it registers.",
+          "The overlays read as objects in the room, not as flat images. A dome sits in front of its poster and casts a shadow; slabs float off a wall.",
+          "The phone build and the headset build share one visual vocabulary, so a visitor who only uses the phone still reads the same project.",
+          "The room held three kinds of work at once: the AR posters, the headset station, and the generative and audio-visual installation."
+        ],
+        "result": [
+          "Two modes in one room: AR on posters in a phone view, and a VR scene on a headset.",
+          "Venue: McAllen Creative Incubator, 601 N Main St, McAllen, Texas.",
+          "Stills are cut from the exhibition reel: 90 seconds at 720 x 1280."
+        ],
+        "credits": [
+          {
+            "role": "Paintings and films",
+            "name": "Michael Flanagan"
+          },
+          {
+            "role": "AR, VR, and show design",
+            "name": "Juan Licerio (_selfsimilar)"
+          },
+          {
+            "role": "Engine",
+            "name": "Unreal Engine for the VR build"
+          },
+          {
+            "role": "Venue",
+            "name": "McAllen Creative Incubator, McAllen, Texas"
+          },
+          {
+            "role": "Reel",
+            "name": "90 seconds, 720 x 1280, hosted on the Behance CCV player. Filmmaker unconfirmed"
+          },
+          {
+            "role": "Year and run dates",
+            "name": "2023. Run dates and painting count unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/triqueta/hero.jpg",
+            "alt": "A visitor standing in the gallery wearing a VR headset and holding controllers",
+            "caption": "Visitor in the VR scene, in the gallery."
+          },
+          {
+            "src": "assets/images/projects/triqueta/process.jpg",
+            "alt": "A visitor holding a phone that shows the AR poster view",
+            "caption": "Phone build in use on the show floor."
+          },
+          {
+            "src": "assets/images/projects/triqueta/detail.jpg",
+            "alt": "Yellow slabs and a red plane floating in front of a brick wall with shadows",
+            "caption": "AR slab field over the brick wall."
+          },
+          {
+            "src": "assets/images/projects/triqueta/extra.jpg",
+            "alt": "A poster with a violet circle and a dark dome overlay sitting in front of it, a printed marker on the wall beside it",
+            "caption": "AR dome anchored to a poster, marker on the wall."
+          }
+        ]
+      },
+      "discipline": "AR / VR",
+      "role": "AR and VR development",
+      "section": "immersion"
     },
     {
       "id": "tigers-blood",
@@ -207,8 +822,8 @@
       "year": "2023",
       "slug": "tigers-blood",
       "href": "projects/tigers-blood.html",
-      "image": "assets/images/tigers-blood.jpg",
-      "summary": "A commissioned 3D animation of a static 2D logo, finished with metallic textures and analog video effects.",
+      "image": "assets/images/projects/tigers-blood/hero.jpg",
+      "summary": "A commissioned 3D animation of a static 2D logo, finished with a frosted metal material, analog video artefacts, and a print still for the 2023 show syllabus.",
       "tags": [],
       "gallery": [
         "assets/images/projects/tigers-blood/01.jpg",
@@ -219,21 +834,273 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/IdbY_pPbY9G/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 1080,
-          "height": 1080
+          "height": 1080,
+          "poster": "assets/images/clips/IdbY_pPbY9G.jpg"
         }
       ],
       "description": "Commissioned to create a dynamic digital asset from the client's static 2D logo. The process involved converting the original artwork into a 3D model, then applying a distinct lo-fi chromotype aesthetic with metallic textures and analog video effects. The final animation uses keyframed movement and a subtle glitch/vibration to transform the identity into a bold promotional graphic.",
       "tools": "3D modeling, texturing, lighting, animation, and compositing",
-      "links": []
+      "links": [],
+      "caseStudy": {
+        "brief": "Tigers Blood had a flat 2D logo and a 2023 season to promote. The commission was a moving version of that mark: convert the artwork to 3D, give it a material that reads as metal under a bad signal, and keyframe a move that holds attention in a feed and on a poster. The finished animation ran with the show syllabus for the Rio Grande Valley dates, and the same geometry was shot as a print.",
+        "process": [
+          "The 2D lettering was rebuilt as 3D geometry, keeping the hand-drawn spacing of the original rather than setting it in a typeface.",
+          "The glyphs sit on a ring instead of a baseline, so the mark can rotate without losing the word.",
+          "The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.",
+          "The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.",
+          "A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.",
+          "The same geometry appears on burnt paper in the photograph of the printed sheet, so the animated and printed marks share one shape.",
+          "The clip and the printed sheet were produced separately."
+        ],
+        "result": [
+          "One animated mark, one digital syllabus still, and one burnt-paper print, all carrying the same mark.",
+          "The 2023 syllabus still, 01.jpg at 720 x 1280, lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.",
+          "02.jpg is a burnt-paper print at 1080 x 1350, listing seven dated entries: six at The Gremlin and one at Cine El Rey.",
+          "The animated mark is a hosted player clip at 1080 x 1080; its poster frame is assets/images/clips/IdbY_pPbY9G.jpg. No video file is stored in the repo."
+        ],
+        "credits": [
+          {
+            "role": "3D, material, and animation",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Client",
+            "name": "Tigers Blood"
+          },
+          {
+            "role": "Year",
+            "name": "2023"
+          },
+          {
+            "role": "Venue list",
+            "name": "From the 2023 show syllabus in the project file"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/tigers-blood/hero.jpg",
+            "alt": "The 3D Tigers Blood mark over the 2023 show syllabus",
+            "caption": "The animated mark on the 2023 syllabus frame."
+          },
+          {
+            "src": "assets/images/projects/tigers-blood/process.jpg",
+            "alt": "The same mark printed in black on burnt paper on a wooden table",
+            "caption": "The same geometry as a print, burned at the edges."
+          },
+          {
+            "src": "assets/images/projects/tigers-blood/detail.jpg",
+            "alt": "Detail of the burnt print showing the mark and dates",
+            "caption": "Detail: the mark and the date list on burnt paper."
+          }
+        ]
+      },
+      "discipline": "3D / MOTION",
+      "role": "3D and animation",
+      "section": "commissions"
+    },
+    {
+      "id": "motion",
+      "title": "Motion",
+      "year": "2022",
+      "slug": "motion",
+      "href": "projects/motion.html",
+      "image": "assets/images/projects/motion/hero.jpg",
+      "summary": "Self-set motion graphics studies in After Effects, Photoshop, and Blender: abstract form, procedural animation, and type built from repeating marks.",
+      "tags": [],
+      "gallery": [],
+      "videos": [
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/EGw3iYEeiWs/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720,
+          "poster": "assets/images/clips/EGw3iYEeiWs.jpg"
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JnUj4vuM9NU/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1280,
+          "poster": "assets/images/clips/JnUj4vuM9NU.jpg"
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/28exa_qeyUn/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 900,
+          "poster": "assets/images/clips/28exa_qeyUn.jpg"
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/-PWpeQcWRMT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 1024,
+          "poster": "assets/images/clips/-PWpeQcWRMT.jpg"
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/JC2BXHuFEW6/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 360,
+          "height": 640,
+          "poster": "assets/images/clips/JC2BXHuFEW6.jpg"
+        },
+        {
+          "type": "adobe-player",
+          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/869awjhwRsw/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
+          "width": 720,
+          "height": 720,
+          "poster": "assets/images/clips/869awjhwRsw.jpg"
+        }
+      ],
+      "description": "A collection of personal experiments and studies in motion graphics, focused on exploring visual dynamics, abstract forms, and procedural animation techniques. These pieces were created as personal challenges to push the boundaries of my skills and test new concepts.",
+      "tools": "Adobe After Effects, Adobe Photoshop, and Blender",
+      "links": [],
+      "caseStudy": {
+        "brief": "Motion is a file of self-set studies, not a commission. Each study takes one visual idea and pushes it until the motion breaks: abstract form, procedural movement, and type drawn from repeating marks. The tools were After Effects, Photoshop, and Blender. There was no client brief and no delivery date. The point was to test a technique at speed and keep the result, so the file grew as a set of experiments rather than a body of finished work.",
+        "process": [
+          "Each study opens with one form or one rule, not with a finished frame.",
+          "Type and shape were built in After Effects or Blender, then finished in Photoshop for grain and print texture.",
+          "The surviving still shows the method: a thin wave line sits above a letterform that fills from the top with a striped field, then turns into a dot grid at the base.",
+          "The work is designed as a loop, so the first and last frame have to match before the study counts as done.",
+          "The same form was reused at different densities, which is how one idea produced a short series rather than a single frame.",
+          "The export is a still. No loop survives in the project file today, so the case shows the still only."
+        ],
+        "result": [
+          "One exported still survives in the project file. The number of studies in the set is unconfirmed.",
+          "The source still is 720 x 540 pixels and 209 KB on disk, at assets/images/motion.png.",
+          "The three case images, the still and two detail crops, total 430 KB."
+        ],
+        "credits": [
+          {
+            "role": "Work",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Tools",
+            "name": "After Effects, Photoshop, Blender"
+          },
+          {
+            "role": "Year",
+            "name": "2022"
+          },
+          {
+            "role": "Study count and run dates",
+            "name": "Unconfirmed"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/motion/hero.jpg",
+            "alt": "Dithered white wave and letterform on a black field",
+            "caption": "Wave and letterform, exported still."
+          },
+          {
+            "src": "assets/images/projects/motion/process.jpg",
+            "alt": "Detail crop: the wave line above the filled letterform",
+            "caption": "Detail: the wave line and the top of the striped fill."
+          },
+          {
+            "src": "assets/images/projects/motion/detail.jpg",
+            "alt": "Detail crop: the dot grid at the base of the letterform",
+            "caption": "Detail: the dot grid at the base."
+          }
+        ]
+      },
+      "discipline": "MOTION GRAPHICS",
+      "role": "Artwork",
+      "section": "studies"
+    },
+    {
+      "id": "collapsed-timelines",
+      "title": "Collapsed Timelines In Felicitous Space",
+      "year": "2022",
+      "summary": "Technical setup for C. Díaz's 2022 exhibition at the McAllen Creative Incubator: four-channel video, a projected film, and a bilingual wall text.",
+      "description": "Technical setup for the exhibition at the McAllen Creative Incubator. The show paired a projected film with a four-channel video installation on monitors and a bilingual wall text, all inside a brick gallery with a low ceiling.",
+      "tools": "Four-channel video playback, monitors on plinths, projection alignment",
+      "href": "projects/collapsed-timelines.html",
+      "image": "assets/images/projects/collapsed-timelines/hero.jpg",
+      "archived": false,
+      "links": [
+        {
+          "label": "C. Díaz, the exhibition page",
+          "href": "https://cdiaz.cargo.site/"
+        }
+      ],
+      "caseStudy": {
+        "brief": "Collapsed Timelines In Felicitous Space ran from 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen. C. Díaz built the show around California landscapes and geographical memory: the film Sacred Landscapes: The Arroyo Seco, the four-channel video installation Compressed Time, and the painting Body Landscapes No. 1. My part was the technical setup: four channels of playback on monitors, the projection, and the wall text that frames the room.",
+        "process": [
+          "The show carried two video paths at once. One film played on the hanging screen, and Compressed Time ran across four monitors as a set rather than a mirror of one source.",
+          "Four channels need four sources and four start points, so the monitors were set up as separate players with a sync check before opening.",
+          "The monitors sit on white cylindrical plinths along the brick wall, with the cable runs on the floor behind them. That keeps the screens at seated eye height and leaves the floor clear.",
+          "The wall carries a bilingual projection of the film notes in Spanish and English. It is the first text a visitor reads on entering.",
+          "The projection was aligned to the screen and to the wall, then checked again with the house lights at event level.",
+          "The show closed on 26 March with a dialogue with sound artist Jon Almaraz and a deep listening session in the same room, so the space had to work as a screening room and as a listening room."
+        ],
+        "result": [
+          "Four channels of Compressed Time on four monitors, one projected film, and one bilingual wall text in a single room.",
+          "Run: 4 to 26 March 2022 at the McAllen Creative Incubator, 601 N Main St, McAllen, TX 78501.",
+          "Three works in the show: Sacred Landscapes: The Arroyo Seco, Compressed Time, and Body Landscapes No. 1."
+        ],
+        "credits": [
+          {
+            "role": "Artist",
+            "name": "C. Díaz"
+          },
+          {
+            "role": "Technical setup",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Works",
+            "name": "Sacred Landscapes: The Arroyo Seco (film), Compressed Time (four-channel video, diary entries 2014 to 2020), Body Landscapes No. 1 (painting)"
+          },
+          {
+            "role": "Venue and dates",
+            "name": "McAllen Creative Incubator, 4 to 26 March 2022"
+          },
+          {
+            "role": "Closing event",
+            "name": "Jon Almaraz, dialogue and deep listening session, 26 March 2022"
+          },
+          {
+            "role": "Photographs",
+            "name": "Trucha, Spid (@spidspill), and stills from Compressed Time, credited by the artist. Rights unconfirmed"
+          },
+          {
+            "role": "Show notes",
+            "name": "English and Spanish PDFs on cdiaz.cargo.site"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/collapsed-timelines/hero.jpg",
+            "alt": "Four monitors on white cylindrical plinths along a brick wall, with a bilingual projection beyond",
+            "caption": "Four channels on plinths, with the wall text beyond."
+          },
+          {
+            "src": "assets/images/projects/collapsed-timelines/process.jpg",
+            "alt": "A visitor seated in silhouette in front of the projected film Sacred Landscapes",
+            "caption": "The single-channel film on the hanging screen."
+          },
+          {
+            "src": "assets/images/projects/collapsed-timelines/detail.jpg",
+            "alt": "The opening: a seated audience in front of the projected film, monitors visible at right",
+            "caption": "Opening, 4 March 2022. Monitors sit at right."
+          }
+        ]
+      },
+      "discipline": "FOUR-CHANNEL VIDEO",
+      "role": "Technical setup",
+      "section": "immersion"
     },
     {
       "id": "archived",
       "title": "Archived Works",
-      "year": "2022",
+      "year": "2022–2026",
       "slug": "archived",
       "href": "projects/archived.html",
-      "image": "assets/images/archived.jpg",
-      "summary": "Older studies and experiments.",
+      "image": "assets/images/projects/archived/hero.jpg",
+      "summary": "One index for every study on the site, 2022 to 2026, with a link to each live page.",
       "tags": [],
       "gallery": [],
       "videos": [
@@ -241,84 +1108,113 @@
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Rv-tfoUQJum/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/Rv-tfoUQJum.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/3oJpfJXneBR/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/3oJpfJXneBR.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/AQJQ7q8nU52/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 480,
-          "height": 854
+          "height": 854,
+          "poster": "assets/images/clips/AQJQ7q8nU52.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/K_48h_zn--8/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/K_48h_zn--8.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/GrQmmTV7QKT/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/GrQmmTV7QKT.jpg"
         },
         {
           "type": "adobe-player",
           "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/2NyhrUVTu8A/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
           "width": 640,
-          "height": 1138
+          "height": 1138,
+          "poster": "assets/images/clips/2NyhrUVTu8A.jpg"
         }
       ],
-      "description": "",
+      "description": "Older studies and experiments, kept as a record. This page indexes every study on the site by year and links each one to its live page and case study.",
       "tools": "",
-      "links": []
-    },
-    {
-      "id": "river-pierce",
-      "title": "River Pierce Foundation AR Showcase",
-      "year": "2025",
-      "slug": "river-pierce",
-      "href": "projects/river-pierce.html",
-      "image": "assets/images/river-pierce-teaching-hands.png",
-      "summary": "Commissioned augmented reality project for River Pierce Foundation's 2025 event program.",
-      "tags": [],
-      "gallery": [],
-      "videos": [
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/Ap2vIYWzw4N/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 1536,
-          "height": 916
-        },
-        {
-          "type": "adobe-player",
-          "embedUrl": "https://www-ccv.adobe.io/v1/player/ccv/PzqK2ZiCk5L/embed?bgcolor=%23000000&lazyLoading=true&api_key=BehancePro2View",
-          "width": 1798,
-          "height": 930
-        }
-      ],
-      "description": "A commissioned augmented reality project debuted alongside The Teaching of the Hands experimental documentary screening and panel discussion at Trevi\u00f1o\u2013Uribe Rancho in San Ygnacio, Texas.",
-      "tools": "",
-      "links": [
-        {
-          "label": "The Teaching of the Hands event page",
-          "href": "https://www.riverpierce.org/event-details/the-teaching-of-the-hands-experimental-documentary-screening-panel-discussion"
-        }
-      ]
+      "links": [],
+      "caseStudy": {
+        "brief": "This page indexes the studies on the site in one place. It covers 2022 to 2026 and links each entry to its page. The hub groups the same twelve studies by year, so the same set can be read two ways: by kind of project, and by date. Nothing here is a new piece. The value is the map: twelve studies, four years, one link per study, and no dead ends.",
+        "process": [
+          "Every entry is a project already on the site. No image on this page is new.",
+          "Rows are grouped by year, newest first: 2026, 2025, 2023, and 2022.",
+          "Each row carries a number, a title, a one-line summary, the discipline, the year, and a thumbnail.",
+          "The list is built from the site data file when the page loads, so one record feeds the work index, this index, and the study page.",
+          "Rows reuse the work-index component from the Work page, so the type scale, the hover state, and the thumbnail crop match the rest of the site.",
+          "A study is added with a record in the site data file and a page from the shared shell. Every list reads that one record, so the title, the discipline, and the year cannot drift. Each index numbers its own rows: Work counts down the sections, this index counts down the years.",
+          "The row preview is a gallery wall of framed works from the archive. The venue is unconfirmed.",
+          "Six clips from the archived pieces sit above the index, each with a poster frame. The player loads only when a clip is pressed.",
+          "The page opens on the work index row for this study, then numbered rows, the same layout as every other study page."
+        ],
+        "result": [
+          "Twelve studies indexed: four from 2026, three from 2025, three from 2023, and two from 2022.",
+          "Year range 2022 to 2026, read from the project records."
+        ],
+        "credits": [
+          {
+            "role": "Work",
+            "name": "Juan Licerio"
+          },
+          {
+            "role": "Row preview",
+            "name": "Gallery wall from the archive. Venue unconfirmed"
+          },
+          {
+            "role": "Years",
+            "name": "2022 to 2026, from the project records"
+          }
+        ],
+        "images": [
+          {
+            "src": "assets/images/projects/archived/hero.jpg",
+            "alt": "Three framed works on a painted brick gallery wall",
+            "caption": "Gallery wall from the archive."
+          },
+          {
+            "src": "assets/images/projects/archived/process.jpg",
+            "alt": "Two framed prints on the brick wall, detail crop",
+            "caption": "Detail: the left and centre prints in the wall hang."
+          },
+          {
+            "src": "assets/images/projects/archived/detail.jpg",
+            "alt": "Pink objects on a green table under the painted brick wall",
+            "caption": "Detail: the objects on the table below the hang."
+          }
+        ]
+      },
+      "discipline": "INDEX"
     }
   ],
   "contact": {
-    "note": "",
-    "links": []
+    "note": "For commissions, collaborations, and teaching.",
+    "links": [
+      {
+        "label": "Email",
+        "href": "mailto:juanclicerio@outlook.com"
+      }
+    ]
   },
   "cv": {
     "focus": [
       "Emerging Media and Digital Art",
+      "Architectural Design Technology",
       "Software Engineering",
       "3D Art and Animation",
       "Projection Mapping",
@@ -326,12 +1222,57 @@
     ],
     "selectedWork": [
       "Motion (2022)",
-      "Forget Me Not Exhibition \u2014 Technical Setup (2025)",
+      "Forget Me Not Exhibition — Technical Setup (2025)",
       "9ine5ive6eis (2023)",
       "Triqueta AR/VR Exhibition (2023)",
       "Tigers Blood (2023)",
-      "River Pierce Foundation AR Showcase (2025)"
+      "River Pierce Foundation AR Showcase (2025)",
+      "Collapsed Timelines In Felicitous Space — Technical Setup (2022)"
+    ],
+    "contact": [
+      {
+        "label": "Email",
+        "href": "mailto:juanclicerio@outlook.com"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/jlicerio"
+      },
+      {
+        "label": "Site",
+        "href": "https://jlicerio.github.io/portfolio/"
+      }
     ]
   },
-  "bioDetails": []
+  "bioDetails": [
+    "My passion lies in Emerging Media and Digital Art, where I continually develop and experiment with new technologies. My approach to art is informed by my studies in Architectural Design Technology and Software Engineering, which provide a structural and problem-solving framework.",
+    "My self-taught expertise includes a wide range of media: 3D art and animation such as detailed 3D artworks, logo renderings, and dynamic motion design, and immersive media, developing experiential works through projection mapping and actively exploring extended reality, including augmented reality and virtual reality. I focus on technically integrating these mediums to create high-quality, compelling visual experiences."
+  ],
+  "sections": [
+    {
+      "id": "real-time",
+      "label": "REAL-TIME / WEB",
+      "note": "Browser systems, shaders, and live data."
+    },
+    {
+      "id": "immersion",
+      "label": "IMMERSION / SPACE",
+      "note": "Projection, AR, and VR in a room."
+    },
+    {
+      "id": "commissions",
+      "label": "COMMISSIONS",
+      "note": "Client work: identity, 3D, and motion."
+    },
+    {
+      "id": "studies",
+      "label": "STUDIES",
+      "note": "Self-set experiments."
+    },
+    {
+      "id": "horror",
+      "label": "HORROR / GENRE",
+      "note": ""
+    }
+  ]
 }

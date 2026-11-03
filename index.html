@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Juan Licerio — emerging media and digital art.">
 <title>Juan Licerio — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
-<link rel="stylesheet" href="labs/live.css?v=2">
+<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="labs/live.css?v=3">
 </head>
 <body data-page="home" data-root="./">
 <header class="site-header"><a class="wordmark" href="index.html">JUAN LICERIO</a><nav class="site-nav" aria-label="Primary"><a href="work.html">WORK</a><a href="cv.html">CV</a><a href="contact.html">CONTACT</a><button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><span class="theme-dot"></span><span class="theme-label">LIGHT</span></button></nav></header>
@@ -21,10 +22,11 @@
       <div class="cover-copy">
         <h1 data-name>Juan Licerio</h1>
         <p class="cover-bio" data-bio></p>
+        <div class="cover-bio-detail" data-bio-detail></div>
         <a class="enter-link" href="work.html">ENTER WORK <span>↗</span></a>
       </div>
       <div class="world-row">
-        <span id="world-index">01 / 03</span>
+        <span id="world-index">01 / 04</span>
         <span class="world-title" id="world-title">Warp and Weft</span>
         <span class="world-medium" id="world-medium">WebGPU</span>
         <span class="world-nav">
@@ -40,12 +42,13 @@
   <section class="home-work section-rule"><div class="section-label"><span>SELECTED WORK</span><a href="work.html">VIEW ALL ↗</a></div><div class="work-list" data-home-projects></div></section>
 </main>
 <footer><span>JUAN LICERIO</span><span>MEDIA ART / SYSTEMS / RGV</span></footer>
-<script type="module" src="app.js?v=2"></script>
+<script type="module" src="app.js?v=12"></script>
 <script type="module">
   const worlds = [
     { title: 'Warp and Weft', medium: 'WebGPU / cloth', page: 'labs/embed/warp-and-weft.html' },
     { title: 'Isolines', medium: 'WGSL / contours', page: 'labs/embed/isolines.html' },
     { title: 'Strata', medium: 'WGSL / columns', page: 'labs/embed/strata.html' },
+    { title: 'Viscous Orb', medium: 'WebGL2 / fluid', page: 'labs/embed/viscous-orb.html' },
   ];
   const DURATION = 11000;
   const host = document.querySelector('#worlds');
@@ -70,7 +73,7 @@
 
   function mount(position) {
     const frame = frames[position];
-    if (!frame.src) frame.src = worlds[position].page;
+    if (!frame.getAttribute('src')) frame.setAttribute('src', worlds[position].page);
     frame.style.display = 'block';
   }
 
@@ -85,7 +88,10 @@
     if (previous !== active && frames[previous]) {
       const outgoing = frames[previous];
       setTimeout(() => {
-        if (frames[active] !== outgoing) outgoing.style.display = 'none';
+        if (frames[active] !== outgoing) {
+          outgoing.style.display = 'none';
+          outgoing.removeAttribute('src');
+        }
       }, 950);
     }
     indexEl.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(worlds.length).padStart(2, '0');

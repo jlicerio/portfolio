@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volumetric Diatom</title>
+<style>
+  :root{--bg:#05060a;--ink:#f2f0ec;--muted:#a8a4ad;--line:rgba(242,240,236,.16)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+  #view{display:block;width:100%;height:100%}
+  .bar{position:absolute;left:24px;right:24px;display:flex;justify-content:space-between;gap:18px;pointer-events:none}
+  .top{top:20px}
+  .bottom{bottom:20px;align-items:flex-end}
+  .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+  .label b{color:var(--ink);font-weight:400}
+  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
+  .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.webgpu.js",
+    "three/webgpu": "./vendor/three.webgpu.js",
+    "three/tsl": "./vendor/three.tsl.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div class="bar top">
+  <div class="label"><b>Volumetric diatom</b><br><span id="count">building</span></div>
+  <div class="label" style="text-align:right">depth field: dome + folds<br>particles · contours</div>
+</div>
+<div class="bar bottom">
+  <div class="label" id="readout">drag to orbit · scroll to zoom</div>
+  <div class="keys">
+    <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
+    <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
+    <button type="button" data-mode="contour" aria-pressed="false">Contour</button>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three/webgpu';
+
+const canvas = document.getElementById('view');
+const countEl = document.getElementById('count');
+const readout = document.getElementById('readout');
+
+window.__study = { ready: false, frames: 0, error: null, points: 0, mode: 'dither' };
+
+const TAU = Math.PI * 2;
+const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+const GLYPHS = '.:-=+*#%@';
+
+// Fixed seed and bounds; the same draw the 2D runner shows first.
+const FIELD = Math.max(1, Math.min(3, Number(new URLSearchParams(location.search).get('field')) || 1));
+const SEED = 114;
+const BASE = {
+  folds: 22, rings: 5, depth: 0.11, sharpness: 0.9, ringTurn: 0.75, pores: 0.5,
+  warpHarmonics: 3, warpAmount: 0.1, warpTurn: 0.5,
+  turn: 180, dither: 8,
+};
+const PALETTE = ['#ff5a3c', '#c6ff4a', '#7fd8ff'];
+
+function rng(seed) {
+  let s = seed >>> 0 || 1;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function buildRamp(stops, steps = 24) {
+  const rgb = stops.map(hexToRgb);
+  const out = [];
+  for (let i = 0; i < steps; i += 1) {
+    const t = (i / (steps - 1)) * (rgb.length - 1);
+    const low = Math.min(rgb.length - 1, Math.floor(t));
+    const high = Math.min(rgb.length - 1, low + 1);
+    const f = t - low;
+    out.push(new THREE.Color(
+      (rgb[low][0] + (rgb[high][0] - rgb[low][0]) * f) / 255,
+      (rgb[low][1] + (rgb[high][1] - rgb[low][1]) * f) / 255,
+      (rgb[low][2] + (rgb[high][2] - rgb[low][2]) * f) / 255,
+    ));
+  }
+  return out;
+}
+
+// ---- the field: a folded valve with real depth ----
+function sampleField() {
+  const samples = [];
+  const step = 0.0075;
+  const ramp = buildRamp(PALETTE);
+  const order = BAYER.length;
+  const tile = 2.35 / FIELD;
+  let index = 0;
+
+  for (let fy = 0; fy < FIELD; fy += 1) {
+    for (let fx = 0; fx < FIELD; fx += 1) {
+      const ox = (fx - (FIELD - 1) / 2) * tile;
+      const oy = (fy - (FIELD - 1) / 2) * tile;
+
+      for (let y = -1; y <= 1; y += step) {
+        for (let x = -1; x <= 1; x += step) {
+          const d = Math.hypot(x, y);
+          if (d > 1) { index += 1; continue; }
+          const a = Math.atan2(y, x);
+          const ringF = Math.min(d, 0.9999) * BASE.rings;
+          const ring = Math.floor(ringF);
+          const rim = (ring + 1) / BASE.rings;
+          const raw = Math.sin(BASE.folds * a + ring * BASE.ringTurn + ringF * BASE.ringTurn * 0.8);
+          const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), BASE.sharpness);
+          const warp = 1 + BASE.warpAmount * Math.sin(BASE.warpHarmonics * a + ring * BASE.warpTurn + ringF * BASE.warpTurn * 0.6);
+          const radius = rim * (1 + BASE.depth * shaped) * warp;
+          if (d > radius) { index += 1; continue; }
+
+          const depthN = 1 - d / radius;
+          const light = Math.max(0.05, Math.min(1, 0.06 + 0.94 * depthN * (0.9 + 0.1 * shaped)));
+          const threshold = (BAYER[index % order][Math.floor(index / order) % order] + 0.5) / 16;
+          if (light <= threshold) { index += 1; continue; }
+
+          const dome = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 0.42;
+
+          // Two frustules: the valve above and its mirror below, joined at the rim.
+          for (const side of [1, -1]) {
+            const z = side * (dome + BASE.depth * shaped * 0.6);
+            const shade = side > 0 ? 1 : 0.72;
+            const scale = tile / 2.35;
+            samples.push({
+              x: (x * scale + ox) * 2.4,
+              y: (y * scale + oy) * 2.4,
+              z: z * 2.4 * scale,
+              light,
+              colour: ramp[Math.min(ramp.length - 1, Math.round(light * (ramp.length - 1)))].clone().multiplyScalar(shade),
+              glyph: Math.min(GLYPHS.length - 1, Math.max(0, Math.round(light * (GLYPHS.length - 1)))),
+              radius: (0.016 + depthN * 0.014) * scale,
+            });
+          }
+          index += 1;
+        }
+      }
+    }
+  }
+  return samples;
+}
+
+// ---- renderer ----
+const renderer = new THREE.WebGPURenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight, false);
+
+let ready = false;
+try {
+  await renderer.init();
+  ready = true;
+} catch (error) {
+  window.__study.error = String(error);
+  throw error;
+}
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 100);
+
+const group = new THREE.Group();
+scene.add(group);
+
+// glyph textures, one per character, built once
+function glyphTexture(char) {
+  const size = 64;
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, size, size);
+  g.fillStyle = '#ffffff';
+  g.font = `600 ${Math.round(size * 0.86)}px 'DM Mono', ui-monospace, monospace`;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(char, size / 2, size / 2 + 2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+const samples = sampleField();
+window.__study.points = samples.length;
+countEl.textContent = `${samples.length.toLocaleString()} particles · ${BASE.folds} folds · ${BASE.rings} rings`;
+
+const quad = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+const ditherMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });
+
+const ditherMesh = new THREE.InstancedMesh(quad, ditherMaterial, samples.length);
+const matrix = new THREE.Matrix4();
+const colour = new THREE.Color();
+samples.forEach((sample, i) => {
+  matrix.makeScale(sample.radius * 2.2, 1, sample.radius * 2.2);
+  matrix.setPosition(sample.x, sample.z, sample.y);
+  ditherMesh.setMatrixAt(i, matrix);
+  colour.copy(sample.colour);
+  ditherMesh.setColorAt(i, colour);
+});
+ditherMesh.instanceMatrix.needsUpdate = true;
+if (ditherMesh.instanceColor) ditherMesh.instanceColor.needsUpdate = true;
+group.add(ditherMesh);
+
+// ASCII: one instanced mesh per glyph, so no shader work is needed
+const asciiGroup = new THREE.Group();
+asciiGroup.visible = false;
+group.add(asciiGroup);
+const asciiMeshes = GLYPHS.split('').map((char) => {
+  const material = new THREE.MeshBasicNodeMaterial({ map: glyphTexture(char), transparent: true, depthWrite: false });
+  const mesh = new THREE.InstancedMesh(quad, material, 1);
+  mesh.count = 0;
+  asciiGroup.add(mesh);
+  return mesh;
+});
+const asciiBuckets = GLYPHS.split('').map(() => []);
+samples.forEach((sample) => asciiBuckets[sample.glyph].push(sample));
+asciiMeshes.forEach((mesh, glyphIndex) => {
+  const bucket = asciiBuckets[glyphIndex];
+  mesh.count = bucket.length;
+  mesh.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(Math.max(1, bucket.length) * 16), 16);
+  bucket.forEach((sample, i) => {
+    matrix.makeScale(sample.radius * 5.2, 1, sample.radius * 5.2);
+    matrix.setPosition(sample.x, sample.z, sample.y);
+    matrix.toArray(mesh.instanceMatrix.array, i * 16);
+    mesh.setColorAt(i, sample.colour);
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+});
+
+// Contours: iso lines of the depth field, one set per ring and level.
+const contourGroup = new THREE.Group();
+contourGroup.visible = false;
+group.add(contourGroup);
+const contourMaterial = new THREE.LineBasicNodeMaterial({ vertexColors: true });
+const ramp24 = buildRamp(PALETTE);
+const LEVELS = [0.2, 0.4, 0.6, 0.8, 0.94];
+
+for (let ring = 0; ring < BASE.rings; ring += 1) {
+  for (const level of LEVELS) {
+    const positions = [];
+    const colours = [];
+    let previous = null;
+    for (let a = 0; a <= TAU + 0.001; a += 0.008) {
+      const ringF = ring + 1 - level;
+      const raw = Math.sin(BASE.folds * a + ring * BASE.ringTurn + ringF * BASE.ringTurn * 0.8);
+      const shaped = Math.sign(raw) * Math.pow(Math.abs(raw), BASE.sharpness);
+      const warp = 1 + BASE.warpAmount * Math.sin(BASE.warpHarmonics * a + ring * BASE.warpTurn + ringF * BASE.warpTurn * 0.6);
+      const rim = (ring + 1) / BASE.rings;
+      const radius = rim * (1 + BASE.depth * shaped) * warp;
+      const d = radius * (1 - level);
+      if (d > 1) { previous = null; continue; }
+      const height = Math.sqrt(Math.max(0, 1 - (d / radius) ** 2)) * 1.0 + BASE.depth * shaped * 1.44;
+      const point = [Math.cos(a) * d * 2.4, height * 2.4 * 0.55, Math.sin(a) * d * 2.4];
+      const c = ramp24[Math.min(ramp24.length - 1, Math.round(level * (ramp24.length - 1)))];
+      if (previous) {
+        positions.push(previous[0], previous[1], previous[2], point[0], point[1], point[2]);
+        colours.push(c.r, c.g, c.b, c.r, c.g, c.b);
+      }
+      previous = point;
+    }
+    if (!positions.length) continue;
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colours, 3));
+    contourGroup.add(new THREE.LineSegments(geometry, contourMaterial));
+  }
+}
+
+// ---- camera ----
+const orbit = { azimuth: 0.7, elevation: 0.95, radius: 9.2 };
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+canvas.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointerup', (e) => { dragging = false; canvas.releasePointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  orbit.azimuth -= (e.clientX - lastX) * 0.005;
+  orbit.elevation = Math.max(-1.2, Math.min(1.2, orbit.elevation + (e.clientY - lastY) * 0.004));
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); orbit.radius = Math.max(3.5, Math.min(20, orbit.radius + e.deltaY * 0.01)); }, { passive: false });
+
+// ---- modes ----
+const modes = { dither: [ditherMesh], ascii: [asciiGroup], contour: [contourGroup] };
+function setMode(mode) {
+  window.__study.mode = mode;
+  ditherMesh.visible = mode === 'dither';
+  asciiGroup.visible = mode === 'ascii';
+  contourGroup.visible = mode === 'contour';
+  for (const button of document.querySelectorAll('[data-mode]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+  }
+}
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => setMode(button.dataset.mode));
+}
+
+const requestedMode = new URLSearchParams(location.search).get('mode');
+if (requestedMode && ['dither', 'ascii', 'contour'].includes(requestedMode)) setMode(requestedMode);
+
+let clock = 0;
+renderer.setAnimationLoop(() => {
+  clock += 0.0022;
+  const azimuth = orbit.azimuth + clock;
+  camera.position.set(
+    Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+    Math.sin(orbit.elevation) * orbit.radius,
+    Math.sin(azimuth) * Math.cos(orbit.elevation) * orbit.radius,
+  );
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  window.__study.frames += 1;
+});
+
+window.__study.ready = true;
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight, false);
+});
+</script>
+</body>
+</html>
