@@ -106,7 +106,11 @@ function renderWork(site) {
   // A record whose section is not in the data still gets a row, so no number goes missing.
   const rest = indexed.filter(({ project }) => !labelOf.has(project.section || 'work'));
   if (rest.length) parts.push(workSectionMarkup('MORE', '', rest));
-  list.innerHTML = parts.filter(Boolean).join('');
+  const archive = site.projects.find(project => project.id === 'archived' && project.href);
+  const archiveLink = archive
+    ? `<div class="work-archive-link"><a href="${localUrl(archive.href)}">Browse the archive <span aria-hidden="true">↗</span></a></div>`
+    : '';
+  list.innerHTML = parts.filter(Boolean).join('') + archiveLink;
 }
 
 function renderArchiveIndex(site) {

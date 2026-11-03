@@ -48,7 +48,7 @@
           "One GLB chair sits on a dark square. The chair is the only hard edge in the frame, and it gives the field a human scale.",
           "A film pass adds halation, grain, and vignette. The grade stays low-contrast so the white chair holds against the grass.",
           "The camera keeps a low eye height. The horizon stays out of frame, so the field reads as cloth rather than a landscape.",
-          "The drawing buffer caps at the viewport size. The blade count is fixed when the scene starts, so the meadow holds 60 fps on a laptop and on a phone.",
+          "The drawing buffer caps at the viewport size, and the blade count stays fixed for each run. The phone layout keeps the chair readable without changing the scene geometry.",
           "A small status line reports frame rate and blade count. The test run read 265,744 blades at 60 fps.",
           "The GLB chair loads once and is drawn once. The meadow uses no textures; colour comes from the clump fields."
         ],
