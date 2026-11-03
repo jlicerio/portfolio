@@ -45,7 +45,7 @@
       "title": "Growth Instrument",
       "year": "2026",
       "summary": "A browser tool that grows an organic form from a typed seed, then exports it as a still, a vector, a solid mesh or a particle cloud.",
-      "description": "Five growth systems share one canvas: diffusion-limited aggregation, physarum, Gray-Scott reaction-diffusion, differential growth and space colonisation. Each grows from an integer seed, so any form is addressable by URL. Ink coverage picks a position on an eight-stop colour ramp and a band setting dithers between the tones, which turns a natural process into a printed gradient. Pause or finish the form and the volume exports unlock: a voxel mesh as GLB with vertex colours, a 25,000 to 400,000 particle cloud as PLY with per-particle colour, size and contour band, and a Bayer-dithered ASCII volume. One HTML file, no build step, no network after load.",
+      "description": "Five growth systems share one canvas: diffusion-limited aggregation, physarum, Gray-Scott reaction-diffusion, differential growth and space colonisation. Each grows from an integer seed, so any form is addressable by URL. Ink coverage picks a position on one of eight colour ramps, four stops each, and a band setting dithers between the tones, which turns a natural process into a printed gradient. Pause or finish the form and the volume exports unlock: a voxel mesh as GLB with vertex colours, a 25,000 to 400,000 particle cloud as PLY with per-particle colour, size and contour band, and a Bayer-dithered ASCII volume. One HTML file, no build step, no network after load.",
       "tools": "Vanilla JavaScript, Canvas 2D, custom GLB and PLY writers",
       "href": "projects/growth-instrument.html",
       "image": "assets/images/growth-instrument.svg",
