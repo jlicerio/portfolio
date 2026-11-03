@@ -12,7 +12,7 @@
 | River Pierce Foundation AR Showcase | case study | - | 0 | yes | 375 | 2026-11-02 | no canvas, no fps claim |
 | 9ine5ive6eis | case study | - | 0 | yes | 250 | 2026-11-03 | no canvas, no fps claim |
 | Triqueta AR/VR Exhibition | case study | - | 0 | yes | 289 | 2026-11-02 | no canvas, no fps claim |
-| Tigers Blood | case study | - | 0 | yes | 254 | 2026-11-03 | no canvas, no fps claim |
+| Tigers Blood | case study | - | 0 | yes | 297 | 2026-11-03 | no canvas, no fps claim |
 | Motion | case study | - | 0 | yes | 253 | 2026-11-03 | no canvas, no fps claim |
 | Collapsed Timelines In Felicitous Space | case study | - | 0 | yes | 302 | 2026-11-02 | no canvas, no fps claim |
 | Archived Works | case study | - | 0 | yes | 272 | 2026-11-02 | no canvas, no fps claim |

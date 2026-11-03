@@ -9,14 +9,15 @@
 3. The material is a frosted metal with heavy grain. Highlights break up at the edges, which gives the lo-fi chromotype look.
 4. The move is keyframed: a slow orbit that settles, with a small vibration on the settle so the mark never looks still.
 5. A video pass adds analog artefacts: scan lines, chroma offset, and a soft edge.
-6. The same geometry appears on burnt paper in the print still, so the animated and printed marks share one shape.
-7. The clip and the print were exported separately, from the same scene.
+6. The same geometry appears on burnt paper in the photograph of the printed sheet, so the animated and printed marks share one shape.
+7. The clip and the printed sheet were produced separately.
 
 **Result.**
 
-- One animated mark and one printed still, built from the same geometry.
-- The 2023 syllabus lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.
-- One clip survives at 1080 x 1080, and the printed still is 1080 x 1350.
+- One animated mark, one digital syllabus still, and one burnt-paper print, all carrying the same mark.
+- The 2023 syllabus still, 01.jpg at 720 x 1280, lists six dated entries across four venues: McAllen Convention Center, McAllen PAC, The Gremlin, and Cine El Rey.
+- 02.jpg is a burnt-paper print at 1080 x 1350, listing seven dated entries: six at The Gremlin and one at Cine El Rey.
+- The animated mark is a hosted player clip at 1080 x 1080; its poster frame is assets/images/clips/IdbY_pPbY9G.jpg. No video file is stored in the repo.
 
 **Credits.**
 
