@@ -667,9 +667,10 @@ function updateAudio() {
   });
 }
 
-// The form space is a rank-2 lattice: ring = fifth step, angle = fourth step.
-// That is a Wicki-Hayden generator pair, so a shape played anywhere has the
-// same intervals, and the tuning can move without the fingers moving.
+// The form space is a rank-2 lattice of our own: ring = fifth step,
+// angle = fourth step. Wicki-Hayden itself uses a major second and a perfect
+// fourth (Wikipedia, Isomorphic keyboard); we borrow the idea of a fixed shape,
+// not its generator pair.
 const LATTICE_FIFTH = 7;    // semitones along the ring axis
 const LATTICE_FOURTH = 5;   // semitones along the angle axis
 const ANGLE_BUCKETS = 12;
@@ -702,17 +703,24 @@ function playFormArp(spec) {
   const { band, bucket } = latticeOf(spec);
   const root = RING_FREQS[0];                              // C2; the lattice moves the pitch, not the root
   const shape = ARP_SHAPES[spec.config] || ARP_SHAPES.valve;
-  const accent = (CONFIG_ACCENTS[spec.config] || 0) + (spec.folds % 5) * 2;
-  const homeSemitones = bucket * LATTICE_FOURTH + band * LATTICE_FIFTH;
+  const accent = Math.max(-50, Math.min(50, (CONFIG_ACCENTS[spec.config] || 0) + (spec.folds % 5) * 2));
+  // fold the home pitch into one octave, so position picks the pitch class
+  const homeSemitones = (bucket * LATTICE_FOURTH + band * LATTICE_FIFTH) % 24;
 
   const now = ctx.currentTime;
   const spread = 108 + (1 - spec.complexity) * 46;          // simple forms speak slower
   const count = shape.length;
+
+  // transpose the whole phrase, never single notes, so the shape keeps its intervals
+  const rawSemitones = shape.map((step) => homeSemitones + semitonesOf(step));
+  const lowest = Math.min(...rawSemitones);
+  const highest = Math.max(...rawSemitones);
+  const phraseShift = lowest < 0 ? -lowest : (highest > 45 ? 45 - highest : 0);
   const direction = spec.complexity > 0.55 ? 1 : -1;        // complex forms rise, simple ones fall
 
   for (let i = 0; i < count; i += 1) {
     const step = direction > 0 ? i : count - 1 - i;
-    const semitones = Math.max(0, Math.min(45, homeSemitones + semitonesOf(shape[step])));
+    const semitones = homeSemitones + semitonesOf(shape[step]) + phraseShift;
     const cents = semitones * 100 + accent;
     const when = now + (i * spread) / 1000;
     const osc = ctx.createOscillator();
@@ -753,7 +761,8 @@ function playFormArp(spec) {
   window.__study.lastArp = {
     config: spec.config,
     lattice: { band, bucket },
-    semitones: shape.map((step) => Math.max(0, Math.min(45, homeSemitones + semitonesOf(step)))),
+    semitones: rawSemitones.map((value) => value + phraseShift),
+    phraseShift,
     accent,
     spread,
   };
