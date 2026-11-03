@@ -35,9 +35,28 @@ function visibleProjects(site) {
   return site.projects.filter(project => !project.archived && project.id !== 'archived');
 }
 
-function workRow(project, index) {
+function siteSections(site) {
+  return Array.isArray(site.sections) && site.sections.length ? site.sections : [{ id: 'work', label: 'WORK' }];
+}
+
+// One number per study, shared by the work index, the archive index, and the study page.
+function indexedProjects(site) {
+  const visible = visibleProjects(site);
+  const ordered = siteSections(site).flatMap(section => visible.filter(project => (project.section || 'work') === section.id));
+  const rest = visible.filter(project => !ordered.includes(project));
+  return [...ordered, ...rest].map((project, index) => ({ project, number: String(index + 1).padStart(2, '0') }));
+}
+
+// The intro headline takes one muted word, the way work.html does.
+function titleMarkup(title) {
+  const words = String(title || '').trim().split(/\s+/);
+  if (words.length < 2) return escapeHtml(words[0] || '');
+  const last = words.pop();
+  return `${escapeHtml(words.join(' '))} <em>${escapeHtml(last)}</em>`;
+}
+
+function workRow(project, number) {
   const discipline = String(project.discipline || String(project.tools || '').split(',')[0].trim() || '—');
-  const number = String(index + 1).padStart(2, '0');
   return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
     <span class="work-index-number">${number}</span>
     <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
@@ -65,18 +84,31 @@ function renderHome(site) {
 function renderWork(site) {
   const list = document.querySelector('[data-work-projects]');
   if (!list) return;
-  const sections = Array.isArray(site.sections) && site.sections.length
-    ? site.sections
-    : [{ id: 'work', label: 'WORK' }];
-  const projects = visibleProjects(site);
-  list.innerHTML = sections.map((section) => {
-    const rows = projects.filter((project) => (project.section || 'work') === section.id);
+  const indexed = indexedProjects(site);
+  list.innerHTML = siteSections(site).map((section) => {
+    const rows = indexed.filter(({ project }) => (project.section || 'work') === section.id);
     if (!rows.length) return '';
     const count = String(rows.length).padStart(2, '0');
     return `<section class="work-section" aria-label="${escapeHtml(section.label)}">
       <div class="work-section-head"><span class="work-section-label">${escapeHtml(section.label)}</span><span class="work-section-note">${escapeHtml(section.note || '')}</span><span class="work-section-count">${count}</span></div>
-      <ul class="work-index-list">${rows.map((project, index) => workRow(project, index)).join('')}</ul>
+      <ul class="work-index-list">${rows.map(({ project, number }) => workRow(project, number)).join('')}</ul>
     </section>`;
+  }).join('');
+}
+
+function renderArchiveIndex(site) {
+  const holder = document.querySelector('[data-archive]');
+  if (!holder) return;
+  const indexed = indexedProjects(site);
+  const years = [...new Set(indexed.map(({ project }) => project.year).filter(Boolean))].sort().reverse();
+  let position = 0;
+  holder.innerHTML = years.map((year) => {
+    const rows = indexed.filter(({ project }) => project.year === year);
+    return `<h2 class="archive-year">${escapeHtml(year)}</h2>
+      <ul class="work-index-list">${rows.map(({ project }) => {
+        position += 1;
+        return workRow(project, String(position).padStart(2, '0'));
+      }).join('')}</ul>`;
   }).join('');
 }
 
@@ -93,88 +125,126 @@ function renderCv(site) {
   }
 }
 
-function renderProject(site) {
-  const project = site.projects.find(item => item.id === document.body.dataset.project);
-  if (!project) return;
-  document.title = `${project.title} — Juan Licerio`;
-  document.querySelectorAll('[data-project-title]').forEach(node => node.textContent = project.title);
-  document.querySelector('[data-project-year]').textContent = project.year;
-  const roleNode = document.querySelector('[data-project-role]');
-  if (roleNode) { if (project.role) roleNode.textContent = '[' + project.role.toUpperCase() + ']'; else roleNode.remove(); }
-  document.querySelector('[data-project-summary]').textContent = project.summary;
-  document.querySelector('[data-project-description]').textContent = project.description || 'Project details are being prepared.';
-  const tools = document.querySelector('[data-project-tools]');
-  if (project.tools && tools) tools.textContent = `TOOLS / ${project.tools}`;
-  else tools?.remove();
-  const cover = document.querySelector('[data-project-cover]');
-  if (project.image) cover.innerHTML = `<img src="${localUrl(project.image)}" alt="${escapeHtml(project.title)} project cover">`;
-  else cover?.remove();
-
-  const mediaSection = document.querySelector('[data-project-media-section]');
-  if (mediaSection && project.videos?.length) {
-    mediaSection.hidden = false;
-    const clips = project.videos.length;
-    const label = mediaSection.querySelector('[data-project-media-label]');
-    if (label) label.textContent = `MEDIA / ${clips} CLIP${clips === 1 ? '' : 'S'}`;
-    const note = mediaSection.querySelector('[data-project-media-note]');
-    if (note) {
-      const kinds = [...new Set(project.videos.map((media) => media.type || 'player'))];
-      note.textContent = kinds.join(' / ').replace(/-/g, ' ').toUpperCase();
-    }
-    document.querySelector('[data-project-media]').innerHTML = project.videos.map((media, index) => {
-      const href = externalUrl(media.url || media.embedUrl);
-      const embed = media.embedUrl ? externalUrl(media.embedUrl) : '';
-      const ratio = media.width && media.height && media.width > 2
-        ? media.width + ' / ' + media.height
-        : '16 / 10';
-      const number = String(index + 1).padStart(2, '0');
-      const poster = media.poster
-        ? `<img src="${localUrl(media.poster)}" alt="${escapeHtml(project.title)} clip ${number}" loading="lazy" decoding="async">`
-        : `<span class="clip-plate">${escapeHtml((media.type || 'clip').replace(/-/g, ' ').toUpperCase())}</span>`;
-      return `<figure class="clip" style="--clip-ratio:${ratio}">
+function clipMarkup(project) {
+  const clips = project.videos || [];
+  return clips.map((media, index) => {
+    const href = externalUrl(media.url || media.embedUrl);
+    const embed = media.embedUrl ? externalUrl(media.embedUrl) : '';
+    const ratio = media.width && media.height && media.width > 2
+      ? media.width + ' / ' + media.height
+      : '16 / 10';
+    const number = String(index + 1).padStart(2, '0');
+    const poster = media.poster
+      ? `<img src="${localUrl(media.poster)}" alt="${escapeHtml(project.title)} clip ${number}" loading="lazy" decoding="async">`
+      : `<span class="clip-plate">${escapeHtml((media.type || 'clip').replace(/-/g, ' ').toUpperCase())}</span>`;
+    return `<figure class="clip" style="--clip-ratio:${ratio}">
         ${poster}
         ${embed ? `<button class="clip-play" type="button" data-clip-embed="${embed}" data-clip-ratio="${ratio}"><span>PLAY</span><em>${number}</em></button>` : ''}
         <figcaption><span>${number}</span><a href="${href}" target="_blank" rel="noreferrer">OPEN ↗</a></figcaption>
       </figure>`;
-    }).join('');
-  }
-
-  const gallerySection = document.querySelector('[data-project-gallery-section]');
-  if (gallerySection && project.gallery?.length) {
-    gallerySection.hidden = false;
-    document.querySelector('[data-project-gallery]').innerHTML = project.gallery.map((image, index) => `<figure><img src="${localUrl(image)}" alt="${escapeHtml(project.title)} documentation image ${index + 1}" loading="lazy"></figure>`).join('');
-  }
-
-  const linksSection = document.querySelector('[data-project-links-section]');
-  if (project.links?.length) {
-    linksSection.hidden = false;
-    document.querySelector('[data-project-links]').innerHTML = project.links.map(link => `<a href="${externalUrl(link.href)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)} ↗</a>`).join('');
-  }
-
-  renderCaseStudy(project);
+  }).join('');
 }
 
-function renderCaseStudy(project) {
-  const study = project.caseStudy;
-  if (!study?.brief) return;
-  const anchor = document.querySelector('.project-description');
-  if (!anchor) return;
+function caseRow({ title, note = '', content = '', wide = false }) {
+  return `<section class="case-row${wide ? ' case-row--wide' : ''}">
+    <span class="case-row-number" aria-hidden="true"></span>
+    <div class="case-row-main">
+      <div class="case-row-head"><h2>${escapeHtml(title)}</h2>${note ? `<span class="case-row-note">${escapeHtml(note)}</span>` : ''}</div>
+      ${content}
+    </div>
+  </section>`;
+}
 
+function buildCaseBody(project) {
+  const body = document.querySelector('[data-case-body]');
+  if (!body) return;
+  const study = project.caseStudy || {};
+  const rows = [];
   const list = (items = []) => items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const credits = (items = []) => items.map(item => `<dt>${escapeHtml(item.role)}</dt><dd>${escapeHtml(item.name)}</dd>`).join('');
-  const figures = (items = []) => items.map((image, index) => `<figure><img src="${localUrl(image.src)}" alt="${escapeHtml(image.alt)}" loading="lazy" decoding="async"><figcaption><span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(image.caption || '')}</figcaption></figure>`).join('');
-  const section = document.createElement('section');
-  section.className = 'project-case';
-  section.innerHTML = `
-    <div class="section-label"><span>CASE STUDY</span><span>${escapeHtml(project.year || '')}</span></div>
-    <div class="case-grid">
-      <div class="case-block"><h2>Brief</h2><p>${escapeHtml(study.brief)}</p></div>
-      <div class="case-block"><h2>Process</h2><ol>${list(study.process)}</ol></div>
-      <div class="case-block"><h2>Result</h2><ul>${list(study.result)}</ul></div>
-      <div class="case-block"><h2>Credits</h2><dl>${credits(study.credits)}</dl></div>
-    </div>
-    ${study.images?.length ? `<div class="case-gallery" data-count="${study.images.length}">${figures(study.images)}</div>` : ''}`;
-  anchor.after(section);
+
+  const about = [project.description || 'Project details are being prepared.'];
+  rows.push(caseRow({
+    title: 'About',
+    note: project.tools || '',
+    content: about.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join(''),
+  }));
+
+  if (study.brief) rows.push(caseRow({ title: 'Brief', content: `<p>${escapeHtml(study.brief)}</p>` }));
+  if (study.process?.length) rows.push(caseRow({
+    title: 'Process',
+    note: `${String(study.process.length).padStart(2, '0')} STEPS`,
+    content: `<ol>${list(study.process)}</ol>`,
+  }));
+  if (study.result?.length) rows.push(caseRow({
+    title: 'Result',
+    note: `${String(study.result.length).padStart(2, '0')} NOTES`,
+    content: `<ul>${list(study.result)}</ul>`,
+  }));
+  if (study.credits?.length) rows.push(caseRow({
+    title: 'Credits',
+    note: `${String(study.credits.length).padStart(2, '0')} ROLES`,
+    content: `<dl class="case-credits">${credits(study.credits)}</dl>`,
+  }));
+
+  const clips = project.videos?.length ? clipMarkup(project) : '';
+  if (clips) rows.push(caseRow({
+    title: 'Media',
+    note: `${String(project.videos.length).padStart(2, '0')} CLIP${project.videos.length === 1 ? '' : 'S'}`,
+    content: `<div class="project-media-grid">${clips}</div>`,
+    wide: true,
+  }));
+
+  const studyFrames = (study.images || []).filter(image => image.src !== project.image);
+  const frames = studyFrames.length
+    ? studyFrames.map(image => ({ src: image.src, alt: image.alt, caption: image.caption || '' }))
+    : (project.gallery || []).map((src, index) => ({ src, alt: `${project.title} documentation image ${index + 1}`, caption: '' }));
+
+  if (frames.length) rows.push(caseRow({
+    title: 'Documentation',
+    note: `${String(frames.length).padStart(2, '0')} IMAGES`,
+    content: `<div class="case-gallery" data-count="${frames.length}">${frames.map((image, index) => `<figure><img src="${localUrl(image.src)}" alt="${escapeHtml(image.alt)}" loading="lazy" decoding="async"><figcaption><span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(image.caption)}</figcaption></figure>`).join('')}</div>`,
+    wide: true,
+  }));
+
+  if (project.links?.length) rows.push(caseRow({
+    title: 'Links',
+    note: `${String(project.links.length).padStart(2, '0')} LINK${project.links.length === 1 ? '' : 'S'}`,
+    content: `<div class="project-links">${project.links.map(link => `<a href="${externalUrl(link.href)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)} ↗</a>`).join('')}</div>`,
+    wide: true,
+  }));
+
+  body.innerHTML = rows.join('');
+}
+
+function renderProject(site) {
+  const project = site.projects.find(item => item.id === document.body.dataset.project);
+  if (!project) return;
+  const isIndex = project.id === 'archived';
+  const entry = indexedProjects(site).find(item => item.project.id === project.id);
+  const number = entry ? entry.number : '—';
+  const discipline = project.discipline || '';
+
+  document.title = `${project.title} — Juan Licerio`;
+  document.querySelectorAll('[data-project-kicker]').forEach(node => node.textContent = isIndex ? 'ARCHIVE' : 'STUDY');
+  document.querySelectorAll('[data-project-number]').forEach(node => node.textContent = isIndex ? (project.year || '') : number);
+  document.querySelectorAll('[data-project-discipline]').forEach(node => node.textContent = discipline);
+  document.querySelectorAll('[data-project-title]').forEach(node => node.innerHTML = titleMarkup(project.title));
+  document.querySelectorAll('[data-project-summary]').forEach(node => node.textContent = project.summary || '');
+
+  const meta = document.querySelector('[data-case-meta]');
+  if (meta) {
+    meta.innerHTML = `<li class="work-index-item"><div class="work-index-row case-meta-row">
+      <span class="work-index-number">${isIndex ? '—' : number}</span>
+      <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span></span>
+      <span class="work-index-discipline">${escapeHtml(discipline)}</span>
+      <span class="work-index-year">${escapeHtml(project.year || '')}</span>
+      <span class="work-index-preview" aria-hidden="true"><img src="${escapeHtml(localUrl(project.image))}" alt=""></span>
+    </div></li>`;
+  }
+
+  buildCaseBody(project);
+  renderArchiveIndex(site);
 }
 
 function setupClipPlayers() {
@@ -193,7 +263,7 @@ function setupClipPlayers() {
 async function init() {
   setupTheme();
   setupClipPlayers();
-  const response = await fetch(`${root}data/site.json?v=2`, { cache: 'no-store' });
+  const response = await fetch(`${root}data/site.json?v=3`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Portfolio data request failed: ${response.status}`);
   const site = await response.json();
   if (page === 'home') renderHome(site);

@@ -35,7 +35,7 @@ Use two families only. Use uppercase for labels, never for long body text.
 - Gutters: 4vw on each side.
 - Section separation: one 1 px rule, then 25 px to the label.
 - Work index: number, title and summary, discipline, year, preview.
-- Project page order: heading, live stage, about, case study, gallery, links.
+- Study page order: intro block, one index row, numbered rows (about, live stage, brief, process, result, credits, media, documentation, links).
 
 ## Components
 
@@ -65,6 +65,13 @@ The iframe fills the stage. The study owns its own canvas size.
 Four blocks: Brief, Process, Result, Credits.
 Then a gallery. Captions use a two-digit number and one sentence.
 Target 300 to 900 words. Every result needs a measured number.
+
+A study page uses the work index as its layout.
+The intro block is `work-intro`: a label, a title with one muted word, and a 38ch note.
+The next block is that study's own `work-index` row: number, title and role, discipline, year, preview.
+Every block after it is a `case-row` on a 54 px number lane and one content lane, and the rows count from 01.
+The number lane counts in CSS with `counter-increment`, so row order and numbering cannot drift.
+Rows drop out when the data file has nothing for them; the counter closes the gap.
 
 ### Gallery
 

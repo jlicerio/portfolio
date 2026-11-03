@@ -4,43 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="../assets/images/favicon.svg" type="image/svg+xml">
-<meta name="description" content="A commissioned augmented reality project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio, Texas on 10 May 2025.">
+<meta name="description" content="A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="River Pierce Foundation AR Showcase — Juan Licerio">
-<meta property="og:description" content="A commissioned augmented reality project for the River Pierce Foundation, debuted at the Treviño–Uribe Rancho in San Ygnacio, Texas on 10 May 2025.">
-<meta property="og:image" content="../assets/images/projects/river-pierce/hero.jpg">
+<meta property="og:description" content="A commissioned AR project for the River Pierce Foundation: a library of Carrizo Comecrudo objects and an 1871 San Ygnacio inscription.">
+<meta property="og:image" content="https://jlicerio.github.io/portfolio/assets/images/projects/river-pierce/hero.jpg">
+<meta property="og:url" content="https://jlicerio.github.io/portfolio/projects/river-pierce.html">
 <title>River Pierce Foundation AR Showcase — Juan Licerio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=11">
+<link rel="stylesheet" href="../style.css?v=12">
 </head>
 <body data-page="project" data-project="river-pierce" data-root="../">
 <header class="site-header site-header--page"><a class="wordmark" href="../index.html">JUAN LICERIO</a><nav class="site-nav" aria-label="Primary"><a href="../work.html" aria-current="page">WORK</a><a href="../cv.html">CV</a><a href="../contact.html">CONTACT</a><button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><span class="theme-dot"></span><span class="theme-label">LIGHT</span></button></nav></header>
-<main class="project-main">
+<main class="case-main">
   <a class="back-link" href="../work.html">← BACK TO WORK</a>
-  <section class="project-heading">
-    <div class="project-heading-copy">
-      <span class="section-label"><span>PROJECT / <span data-project-year></span></span><span class="role-tag" data-project-role></span></span>
-      <h1 data-project-title></h1>
-      <p class="project-summary" data-project-summary></p>
+  <section class="work-intro case-intro">
+    <span class="section-label"><span><span data-project-kicker>STUDY</span> / <span data-project-number></span></span><span data-project-discipline></span></span>
+    <div class="work-intro-grid">
+      <h1 id="case-title" data-project-title></h1>
+      <p data-project-summary></p>
     </div>
-    <figure class="project-cover" data-project-cover></figure>
   </section>
-  <section class="project-media-section" data-project-media-section hidden>
-    <div class="section-label"><span data-project-media-label>MEDIA</span><span data-project-media-note></span></div>
-    <div class="project-media-grid" data-project-media></div>
+  <section class="work-index case-index" aria-labelledby="case-title">
+    <div class="work-index-head" aria-hidden="true"><span>NO.</span><span>PROJECT</span><span>DISCIPLINE</span><span>YEAR</span><span>PREVIEW</span></div>
+    <ul class="work-index-list" data-case-meta></ul>
   </section>
-  <section class="project-description">
-    <div><span class="section-label">ABOUT</span></div>
-    <div><p data-project-description></p><p class="project-tools" data-project-tools></p></div>
-  </section>
-  <section class="project-links-section" data-project-links-section hidden>
-    <div class="section-label">LINKS</div>
-    <div class="project-links" data-project-links></div>
-  </section>
+  <div class="case-body" data-case-body></div>
 </main>
 <footer><span>JUAN LICERIO</span><span>MEDIA ART / SYSTEMS / RGV</span></footer>
-<script type="module" src="../app.js?v=11"></script>
+<script type="module" src="../app.js?v=12"></script>
 </body>
 </html>
