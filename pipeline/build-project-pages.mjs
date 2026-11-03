@@ -81,6 +81,18 @@ const stages = {
     </div>
   </section>`,
   },
+  'form-space': {
+    head: '<link rel="stylesheet" href="../labs/live.css?v=4">',
+    script: '',
+    row: `<section class="case-row case-stage">
+    <span class="case-row-number" aria-hidden="true"></span>
+    <div class="case-row-main">
+      <div class="case-row-head"><h2>Live / WebGPU</h2><span class="case-row-note">One rule, 72 forms</span></div>
+      <div class="live-stage"><iframe src="../labs/embed/form-graph.html" title="Form Space, live in the page" loading="lazy"></iframe></div>
+      <div class="live-foot"><span>Dither, ASCII and edges / click a form</span><span><a class="media-link" href="../labs/embed/form-graph.html" target="_blank" rel="noreferrer">OPEN FULL SCREEN ↗</a></span></div>
+    </div>
+  </section>`,
+  },
   'surveillance-status': {
     head: '<link rel="stylesheet" href="../labs/live.css?v=4">',
     script: '',
@@ -116,6 +128,7 @@ const shareImages = {
   'viscous-orb': 'assets/images/projects/viscous-orb/01.jpg',
   'quarter-turn': 'assets/images/projects/quarter-turn/sheet-desktop.png',
   'growth-instrument': 'assets/images/projects/growth-instrument/desktop-4x3.png',
+  'form-space': 'assets/images/projects/form-space/desktop-4x3.png',
 };
 const shareImage = (project) => shareImages[project.id] || project.image;
 
