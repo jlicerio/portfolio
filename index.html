@@ -9,124 +9,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <link rel="stylesheet" href="labs/live.css?v=3">
 </head>
 <body data-page="home" data-root="./">
 <header class="site-header"><a class="wordmark" href="index.html">JUAN LICERIO</a><nav class="site-nav" aria-label="Primary"><a href="work.html">WORK</a><a href="cv.html">CV</a><a href="contact.html">CONTACT</a><button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><span class="theme-dot"></span><span class="theme-label">LIGHT</span></button></nav></header>
 <main>
-  <section class="cover cover--worlds">
-    <div class="worlds" id="worlds"></div>
-    <div class="scrim"></div>
-    <div class="cover-stack">
-      <div class="cover-copy">
-        <h1 data-name>Juan Licerio</h1>
-        <p class="cover-bio" data-bio></p>
-        <div class="cover-bio-detail" data-bio-detail></div>
-        <a class="enter-link" href="work.html">ENTER WORK <span>↗</span></a>
-      </div>
-      <div class="world-row">
-        <span id="world-index">01 / 04</span>
-        <span class="world-title" id="world-title">Warp and Weft</span>
-        <span class="world-medium" id="world-medium">WebGPU</span>
-        <span class="world-nav">
-          <button type="button" id="world-pause" aria-label="Pause rotation" aria-pressed="false">❚❚</button>
-          <button type="button" id="world-prev" aria-label="Previous study">←</button>
-          <button type="button" id="world-next" aria-label="Next study">→</button>
-        </span>
-      </div>
-      <span class="world-progress"><span id="world-progress"></span></span>
+  <section class="home-hero" aria-labelledby="home-title">
+    <div class="home-hero-copy">
+      <h1 id="home-title" data-name>Juan Licerio</h1>
+      <p class="cover-bio" data-bio>I work across 3D, motion, projection mapping, and XR.</p>
+      <a class="enter-link" href="work.html">VIEW ALL WORK <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="cover-meta"><span>EMERGING MEDIA / DIGITAL ART</span><span>RGV · TEXAS</span></div>
+    <section class="home-feature" data-home-feature aria-label="Featured project">
+      <iframe class="home-feature-live" src="labs/embed/form-graph.html" title="Form Space live WebGPU experience" loading="eager"></iframe>
+      <a class="home-feature-caption" data-home-feature-link href="projects/form-space.html">
+        <span><strong data-home-feature-title>Form Space</strong><span data-home-feature-summary>Artwork and code · 2026</span></span>
+        <span class="home-feature-arrow" aria-hidden="true">↗</span>
+      </a>
+    </section>
   </section>
   <section class="home-work section-rule"><div class="section-label"><span>SELECTED WORK</span><a href="work.html">VIEW ALL ↗</a></div><div class="work-list" data-home-projects></div></section>
 </main>
-<footer><span>JUAN LICERIO</span><span>MEDIA ART / SYSTEMS / RGV</span></footer>
-<script type="module" src="app.js?v=12"></script>
-<script type="module">
-  const worlds = [
-    { title: 'Warp and Weft', medium: 'WebGPU / cloth', page: 'labs/embed/warp-and-weft.html' },
-    { title: 'Isolines', medium: 'WGSL / contours', page: 'labs/embed/isolines.html' },
-    { title: 'Strata', medium: 'WGSL / columns', page: 'labs/embed/strata.html' },
-    { title: 'Viscous Orb', medium: 'WebGL2 / fluid', page: 'labs/embed/viscous-orb.html' },
-  ];
-  const DURATION = 11000;
-  const host = document.querySelector('#worlds');
-  const indexEl = document.querySelector('#world-index');
-  const titleEl = document.querySelector('#world-title');
-  const mediumEl = document.querySelector('#world-medium');
-  const progressEl = document.querySelector('#world-progress');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  let active = 0;
-  let started = performance.now();
-  let paused = false;
-
-  const frames = worlds.map((world) => {
-    const frame = document.createElement('iframe');
-    frame.className = 'world-embed';
-    frame.title = world.title;
-    frame.loading = 'lazy';
-    host.append(frame);
-    return frame;
-  });
-
-  function mount(position) {
-    const frame = frames[position];
-    if (!frame.getAttribute('src')) frame.setAttribute('src', worlds[position].page);
-    frame.style.display = 'block';
-  }
-
-  function show(position) {
-    const previous = active;
-    active = (position + worlds.length) % worlds.length;
-    mount(active);
-    frames[active].dataset.active = 'true';
-    frames.forEach((frame, index) => {
-      if (index !== active) frame.dataset.active = 'false';
-    });
-    if (previous !== active && frames[previous]) {
-      const outgoing = frames[previous];
-      setTimeout(() => {
-        if (frames[active] !== outgoing) {
-          outgoing.style.display = 'none';
-          outgoing.removeAttribute('src');
-        }
-      }, 950);
-    }
-    indexEl.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(worlds.length).padStart(2, '0');
-    titleEl.textContent = worlds[active].title;
-    mediumEl.textContent = worlds[active].medium;
-    started = performance.now();
-  }
-
-  function tick(now) {
-    if (!paused && !reduced) {
-      const elapsed = now - started;
-      progressEl.style.transform = 'scaleX(' + Math.min(1, elapsed / DURATION).toFixed(4) + ')';
-      if (elapsed > DURATION) show(active + 1);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  document.querySelector('#world-next').addEventListener('click', () => show(active + 1));
-  document.querySelector('#world-prev').addEventListener('click', () => show(active - 1));
-  const pauseButton = document.querySelector('#world-pause');
-  pauseButton.addEventListener('click', () => {
-    paused = !paused;
-    pauseButton.setAttribute('aria-pressed', String(paused));
-    pauseButton.setAttribute('aria-label', paused ? 'Play rotation' : 'Pause rotation');
-    pauseButton.textContent = paused ? '▶' : '❚❚';
-  });
-  host.addEventListener('mouseenter', () => { paused = true; });
-  host.addEventListener('mouseleave', () => { paused = false; });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') show(active + 1);
-    if (event.key === 'ArrowLeft') show(active - 1);
-  });
-
-  show(0);
-  requestAnimationFrame(tick);
-</script>
+<footer><span>JUAN LICERIO</span><span>RIO GRANDE VALLEY · TEXAS</span></footer>
+<script type="module" src="app.js?v=13"></script>
 </body>
 </html>

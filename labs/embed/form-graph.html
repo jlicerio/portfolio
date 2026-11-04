@@ -14,14 +14,15 @@
   .bottom{bottom:20px;align-items:flex-end}
   .label{font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;line-height:1.7}
   .label b{color:var(--ink);font-weight:400}
-  .keys{display:flex;gap:8px;pointer-events:auto}
+  .keys{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;pointer-events:auto}
   .keys button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.08em;padding:7px 10px;cursor:pointer}
   .keys button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
-  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}}
   .detailbar[hidden]{display:none}
-  .detailbar{position:absolute;left:24px;right:24px;bottom:64px;display:flex;justify-content:space-between;align-items:center;gap:16px;font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .detailbar{position:absolute;left:24px;right:24px;bottom:64px;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 10px;background:rgba(5,6,10,.94);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;z-index:2}
   .detailbar button{appearance:none;border:1px solid var(--line);background:rgba(5,6,10,.8);color:var(--ink);font:10px 'DM Mono',ui-monospace,monospace;letter-spacing:.09em;padding:8px 12px;cursor:pointer}
   .detailbar button:hover{border-color:var(--ink)}
+  @media(max-width:700px){.bar{left:14px;right:14px}.top{top:12px}.bottom{bottom:12px;flex-direction:column;gap:8px}.keys{max-width:100%}.keys button{padding:6px 8px;font-size:9px}.detailbar{top:12px;bottom:auto;left:14px;right:14px}}
+  @media(max-width:700px){body[data-detail-open="true"] .bar{display:none}}
 </style>
 <script type="importmap">
 {
@@ -45,12 +46,13 @@
   <span id="detailcaption"></span>
 </div>
 <div class="bar bottom">
-  <div class="label" id="readout">drag to orbit · scroll to zoom</div>
+  <div class="label" id="readout">drag to orbit · ctrl-scroll to zoom</div>
   <div class="keys">
     <button type="button" data-mode="dither" aria-pressed="true">Dither</button>
     <button type="button" data-mode="ascii" aria-pressed="false">ASCII</button>
     <button type="button" data-mode="edges" aria-pressed="false">Edges</button>
     <button type="button" id="soundToggle" aria-pressed="false">Sound</button>
+    <button type="button" id="rotationToggle" aria-pressed="false">Pause motion</button>
   </div>
 </div>
 <script type="module">
@@ -458,6 +460,7 @@ function buildDetail(spec) {
   document.getElementById('detailcaption').textContent =
     `${spec.config} · ${spec.folds} folds · ${spec.rings} rings · warp ${spec.warpAmount.toFixed(2)} · ${samples.length.toLocaleString()} particles`;
   document.getElementById('detailbar').hidden = false;
+  document.body.dataset.detailOpen = 'true';
   duckBed(0.35, 0.9);
   playFormArp(spec);
 }
@@ -475,6 +478,11 @@ function openDetail(spec) {
     orbit.spaceRadius = orbit.radius;
     orbit.spaceElevation = orbit.elevation;
     orbit.spaceAzimuth = orbit.azimuth;
+    window.__study.edgesWereVisible = edgeMesh.visible;
+    window.__study.motionWasPaused = motionPaused;
+    motionPaused = true;
+    updateMotionControl();
+    document.querySelectorAll('[data-mode]').forEach(button => { button.disabled = true; });
   }
   detailOpen = true;
   window.__study.mode = 'detail';
@@ -489,11 +497,16 @@ function openDetail(spec) {
 }
 function closeDetail() {
   detailOpen = false;
+  document.querySelectorAll('[data-mode]').forEach(button => { button.disabled = false; });
+  motionPaused = reducedMotion.matches || Boolean(window.__study.motionWasPaused);
+  updateMotionControl();
   window.__study.mode = window.__study.cardMode || 'dither';
   detailGroup.visible = false;
   group.visible = true;
   guidesGroup.visible = true;
+  edgeMesh.visible = Boolean(window.__study.edgesWereVisible);
   document.getElementById('detailbar').hidden = true;
+  delete document.body.dataset.detailOpen;
   duckBed(1, 3);
   orbit.radius = orbit.spaceRadius ?? SPACE_VIEW.radius;
   orbit.elevation = orbit.spaceElevation ?? SPACE_VIEW.elevation;
@@ -852,6 +865,12 @@ canvasEl.addEventListener('pointermove', (e) => {
   lastY = e.clientY;
 });
 canvasEl.addEventListener('wheel', (e) => {
+  if (!e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    const scale = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? innerHeight : 1;
+    parent.postMessage({ type: 'form-space-wheel', deltaY: e.deltaY * scale }, location.origin);
+    return;
+  }
   e.preventDefault();
   const next = Math.max(8, Math.min(60, orbit.radius + e.deltaY * 0.02));
   if (detailOpen && Math.abs(next - orbit.radius) > 0.001) orbit.detailZoomed = true;
@@ -880,14 +899,29 @@ const params = new URLSearchParams(location.search);
 const requested = params.get('mode');
 if (requested === 'ascii') setMode('ascii');
 if (params.get('sound') === '1') toggleSound();
+let clock = 0;
+const rotationToggle = document.getElementById('rotationToggle');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let motionPaused = reducedMotion.matches;
+function updateMotionControl() {
+  rotationToggle.setAttribute('aria-pressed', String(motionPaused));
+  rotationToggle.textContent = motionPaused ? 'Resume motion' : 'Pause motion';
+}
+rotationToggle.addEventListener('click', () => {
+  motionPaused = !motionPaused;
+  updateMotionControl();
+});
+reducedMotion.addEventListener('change', (event) => {
+  if (event.matches) motionPaused = true;
+  updateMotionControl();
+});
+updateMotionControl();
 if (params.has('open')) {
   const openIndex = Number(params.get('open'));
   if (Number.isFinite(openIndex) && specimens[openIndex]) openDetail(specimens[openIndex]);
 }
-
-let clock = 0;
 renderer.setAnimationLoop(() => {
-  clock += 0.00035;
+  if (!motionPaused) clock += 0.00035;
   const azimuth = orbit.azimuth + clock;
   camera.position.set(
     Math.cos(azimuth) * Math.cos(orbit.elevation) * orbit.radius,

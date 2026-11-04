@@ -21,7 +21,11 @@
       "href": "contact.html"
     }
   ],
-  "bio": "A multidisciplinary practice across emerging media and digital art: 3D, motion, projection mapping, and XR. Procedural design shapes the work.",
+  "bio": "I work across 3D, motion, projection mapping, and XR.",
+  "bioDetails": [
+    "My passion lies in Emerging Media and Digital Art, where I continually develop and experiment with new technologies. My approach to art is informed by my studies in Architectural Design Technology and Software Engineering, which provide a structural and problem-solving framework.",
+    "My self-taught expertise includes a wide range of media: 3D art and animation such as detailed 3D artworks, logo renderings, and dynamic motion design, and immersive media, developing experiential works through projection mapping and actively exploring extended reality, including augmented reality and virtual reality. I focus on technically integrating these mediums to create high-quality, compelling visual experiences."
+  ],
   "projects": [
     {
       "id": "warp-and-weft",
@@ -1328,10 +1332,6 @@
       }
     ]
   },
-  "bioDetails": [
-    "My passion lies in Emerging Media and Digital Art, where I continually develop and experiment with new technologies. My approach to art is informed by my studies in Architectural Design Technology and Software Engineering, which provide a structural and problem-solving framework.",
-    "My self-taught expertise includes a wide range of media: 3D art and animation such as detailed 3D artworks, logo renderings, and dynamic motion design, and immersive media, developing experiential works through projection mapping and actively exploring extended reality, including augmented reality and virtual reality. I focus on technically integrating these mediums to create high-quality, compelling visual experiences."
-  ],
   "sections": [
     {
       "id": "real-time",

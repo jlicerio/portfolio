@@ -65,9 +65,7 @@ function workRow(project, number) {
   const discipline = disciplineOf(project);
   return `<li class="work-index-item"><a class="work-index-row" href="${localUrl(project.href)}">
     <span class="work-index-number">${number}</span>
-    <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
-    <span class="work-index-discipline">${escapeHtml(discipline)}</span>
-    <span class="work-index-year">${escapeHtml(project.year)}</span>
+    <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-meta"><span class="work-index-discipline">${escapeHtml(discipline)}</span><span class="work-index-year">${escapeHtml(project.year)}</span></span><span class="work-index-summary">${escapeHtml(project.summary)}</span></span>
     <span class="work-index-preview" aria-hidden="true"><img src="${escapeHtml(localUrl(project.image))}" alt="" loading="lazy" decoding="async"></span>
   </a></li>`;
 }
@@ -75,23 +73,35 @@ function workRow(project, number) {
 function renderHome(site) {
   const name = document.querySelector('[data-name]');
   const bio = document.querySelector('[data-bio]');
-  const bioDetail = document.querySelector('[data-bio-detail]');
-  if (bioDetail) {
-    const parts = Array.isArray(site.bioDetails) ? site.bioDetails.filter(Boolean) : [];
-    if (parts.length) bioDetail.innerHTML = parts.map((part) => `<p>${escapeHtml(part)}</p>`).join('');
-    else bioDetail.remove();
-  }
   const projects = document.querySelector('[data-home-projects]');
+  const feature = document.querySelector('[data-home-feature]');
+  const featuredProject = site.projects.find(project => project.id === 'form-space') || visibleProjects(site)[0];
   if (name) name.textContent = site.name;
   if (bio) bio.textContent = site.bio;
+  if (feature && featuredProject) {
+    const featureLink = feature.querySelector('[data-home-feature-link]');
+    const title = feature.querySelector('[data-home-feature-title]');
+    const summary = feature.querySelector('[data-home-feature-summary]');
+    if (featureLink) featureLink.href = localUrl(featuredProject.href);
+    if (title) title.textContent = featuredProject.title;
+    if (summary) summary.textContent = featuredProject.role ? `${featuredProject.role} · ${featuredProject.year}` : `${featuredProject.year}`;
+  }
   if (projects) projects.innerHTML = visibleProjects(site).slice(0, 6).map(projectRow).join('');
+}
+
+function setupEmbeddedStudyScroll() {
+  window.addEventListener('message', event => {
+    if (event.origin !== location.origin || event.data?.type !== 'form-space-wheel') return;
+    const frame = [...document.querySelectorAll('iframe')].find(item => item.contentWindow === event.source);
+    if (frame) window.scrollBy({ top: event.data.deltaY, behavior: 'instant' });
+  });
 }
 
 function workSectionMarkup(label, note, rows) {
   if (!rows.length) return '';
   const count = String(rows.length).padStart(2, '0');
   return `<section class="work-section" aria-label="${escapeHtml(label)}">
-      <div class="work-section-head"><span class="work-section-label">${escapeHtml(label)}</span><span class="work-section-note">${escapeHtml(note || '')}</span><span class="work-section-count">${count}</span></div>
+      <div class="work-section-head"><h2 class="work-section-label">${escapeHtml(label)}</h2><span class="work-section-note">${escapeHtml(note || '')}</span><span class="work-section-count">${count}</span></div>
       <ul class="work-index-list">${rows.map(({ project, number }) => workRow(project, number)).join('')}</ul>
     </section>`;
 }
@@ -268,9 +278,7 @@ function renderProject(site) {
   if (meta) {
     meta.innerHTML = `<li class="work-index-item"><div class="work-index-row case-meta-row">
       <span class="work-index-number">${isIndex ? '—' : number}</span>
-      <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span></span>
-      <span class="work-index-discipline">${escapeHtml(discipline)}</span>
-      <span class="work-index-year">${escapeHtml(project.year || '')}</span>
+      <span class="work-index-copy"><span class="work-index-title">${escapeHtml(project.title)}${roleTag(project)}</span><span class="work-index-meta"><span class="work-index-discipline">${escapeHtml(discipline)}</span><span class="work-index-year">${escapeHtml(project.year || '')}</span></span></span>
       <span class="work-index-preview" aria-hidden="true"><img src="${escapeHtml(localUrl(project.image))}" alt=""></span>
     </div></li>`;
   }
@@ -295,6 +303,7 @@ function setupClipPlayers() {
 async function init() {
   setupTheme();
   setupClipPlayers();
+  setupEmbeddedStudyScroll();
   const response = await fetch(`${root}data/site.json?v=4`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Portfolio data request failed: ${response.status}`);
   const site = await response.json();
